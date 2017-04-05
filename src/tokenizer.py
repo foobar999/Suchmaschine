@@ -3,8 +3,7 @@ import re
 
 class Tokenizer(object):
 
-    def tok_lowercase(self, filename, tokens):
-        
+    def tok_lowercase(self, filename, tokens):     
         content = open(filename, "r").read()
         logging.debug("read content of " + filename)
         tokens = re.split(tokens, content)
