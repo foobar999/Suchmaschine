@@ -1,5 +1,6 @@
 
 import logging
+import os
 from src.tokenizer import Tokenizer
 from src.boolean_query_parser import BooleanQueryParser
 
@@ -17,4 +18,24 @@ if __name__ == '__main__':
     logging.info('')
     logging.info(Tokenizer().tok_lowercase('data/myfile.txt', ' |\t|\n|\.|,|;|:|!|\?|"|-'))
     
-    # git test
+    
+    
+    # Reading Files
+    # This works even if subfolders are used
+    data_folder = os.getcwd() + "/data/"
+    for root, dirs, files in os.walk(data_folder):
+        for file in files:
+            if file.endswith(".txt"):    # Is there anything else?
+                Tokenizer().tok_lowercase(os.path.join(root, file), ' |\t|\n|\.|,|;|:|!|\?|"|-')
+                #logging.info(Tokenizer().tok_lowercase(os.path.join(root, file), ' |\t|\n|\.|,|;|:|!|\?|"|-'))
+                #input("Press Enter to continue...")
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    print("Done.")
