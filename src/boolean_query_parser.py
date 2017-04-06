@@ -1,6 +1,6 @@
 import re
 import logging
-from tree_node import TreeNode
+from src.tree_node import TreeNode
 
 class BooleanQueryParser(object):
 

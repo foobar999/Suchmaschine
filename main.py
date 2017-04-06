@@ -1,6 +1,7 @@
+
 import logging
-from tokenizer import Tokenizer
-from boolean_query_parser import BooleanQueryParser
+from src.tokenizer import Tokenizer
+from src.boolean_query_parser import BooleanQueryParser
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
