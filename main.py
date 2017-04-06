@@ -17,3 +17,4 @@ if __name__ == '__main__':
     logging.info('')
     logging.info(Tokenizer().tok_lowercase('data/myfile.txt', ' |\t|\n|\.|,|;|:|!|\?|"|-'))
     
+    # git test
