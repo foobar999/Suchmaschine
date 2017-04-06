@@ -3,15 +3,21 @@ import logging
 #from src.tree_node import TreeNode
 
 class BooleanQueryParser(object):
+    
+    AND = 'AND'
+    OR = 'OR'
+    NOT = 'NOT' 
+    LBRACKET = '('
+    RBRACKET = ')'
 
     def parse_dnf_query(self, query):  
         logging.info('parsing query: ' + query)  
         
-        if 'AND' in query and 'OR' not in query:
-            query = '(' + query + ')'
+        if self.AND in query and self.OR not in query:
+            query = self.LBRACKET + query + self.RBRACKET
             logging.debug('query has 1+ ANDs, 0 ORs -> added brackets: ' + str(query))  
         
-        query_toks = re.split("(\(|\)| )", query)
+        query_toks = re.split('(\(|\)| )', query)
         query_toks = list(filter(str.strip, query_toks))
         logging.debug('parsed query tokens: ' + str(query_toks))  
         
@@ -20,20 +26,20 @@ class BooleanQueryParser(object):
         current_list = outer_list
         for i in range(0, len(query_toks)):
             tok = query_toks[i]
-            if tok == '(':
+            if tok == self.LBRACKET:
                 inner_list = []
                 current_list = inner_list
-            elif tok == ')':
+            elif tok == self.RBRACKET:
                 outer_list.append(inner_list)
                 current_list = outer_list
             elif self._is_word(tok):
-                is_pos_literal = (i == 0 or query_toks[i-1] != 'NOT')
+                is_pos_literal = (i == 0 or query_toks[i-1] != self.NOT)
                 current_list.append((tok, is_pos_literal))
         
         return outer_list     
     
     def _is_word(self, token):
-        return token not in ('AND', 'OR', 'NOT', '(', ')')
+        return token not in (self.AND, self.OR, self.NOT, self.LBRACKET, self.RBRACKET)
     
     #===========================================================================
     # def parse(self, query):      

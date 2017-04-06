@@ -7,7 +7,7 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     logging.info(BooleanQueryParser().parse_dnf_query("Hexe"))
     logging.info('')
-    logging.info(BooleanQueryParser().parse_dnf_query("Hexe AND Prinzessin AND HalloWelt"))
+    logging.info(BooleanQueryParser().parse_dnf_query("NOT Hexe AND NOT Prinzessin AND HalloWelt"))
     logging.info('')
     logging.info(BooleanQueryParser().parse_dnf_query("Hexe OR Prinzessin OR (A AND NOT B AND NOT 78) OR NOT test OR (NOT A AND NOT B)"))
     logging.info('')
