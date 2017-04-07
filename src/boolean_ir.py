@@ -56,7 +56,7 @@ class BooleanIR(object):
                 iu += 1
         return res + universe[iu:]
     
-    def union_complement(self, posting1, posting2):
+    def intersect_complement(self, posting1, posting2):
         logging.debug("union complement of {}, {}".format(posting1, posting2))
         res = []
         i1, i2 = 0, 0
@@ -71,4 +71,25 @@ class BooleanIR(object):
             else:
                 i2 += 1
         return res + posting1[i1:]
-        
+    
+    def intersect_literals(self, literals, universe):
+        logging.debug("union literals {}, universe {}".format(literals, universe))
+        # TODO vllt doc in-place?
+        # sortiere nach Größe der Postinglisten
+        sorted_literals = sorted(literals, key=lambda literal: len(literal[0]))
+        while len(sorted_literals) > 1:
+            logging.debug("sorted literals {}".format(sorted_literals))
+            lit1, lit2 = sorted_literals[0], sorted_literals[1]            
+            is_lit1_pos, is_lit2_pos = (lit1[1] == True), (lit2[1] == True)
+            res = None
+            if is_lit1_pos and is_lit2_pos:
+                res = (self.intersect(lit1[0], lit2[0]), True)
+            elif is_lit1_pos and not is_lit2_pos:
+                res = (self.intersect_complement(lit1[0], lit2[0]), True)
+            elif not is_lit1_pos and is_lit2_pos:
+                res = (self.intersect_complement(lit2[0], lit1[0]), True)
+            else:
+                res = (self.intersect(self.complement(lit1[0], universe), self.complement(lit2[0], universe)), True)
+            sorted_literals[0:2] = [res]
+            sorted_literals = sorted(sorted_literals, key=lambda literal: len(literal[0]))
+        return sorted_literals
