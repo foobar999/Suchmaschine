@@ -4,6 +4,7 @@ import os
 from src.tokenizer import Tokenizer
 from src.boolean_query_parser import BooleanQueryParser
 from src.boolean_ir import BooleanIR
+from src.boolean_ir import Literal
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
@@ -44,7 +45,9 @@ if __name__ == '__main__':
     # dnf_formula = [([1,5,6], True), ([6,8,9, True), [([2,3], True), ([7]], False), ([6,10], False)], ([1,9], False), [([3,4,6], False), ([8,9], False)]]
     # (A AND NOT B AND NOT 78)
     universe = list(range(1,11))
-    dnf_formula = [([1,2,3,7,8], True), ([7,8,9,10], False), ([6,10], False)]
+    dnf_formula = [Literal([1,2,3,7,8], True), Literal([7,8,9,10], False), Literal([6,10], False)]
     print(BooleanIR().intersect_literals(dnf_formula, universe))
-    dnf_formula = [([1,2,10], True), ([9,10], False), ([10], False), ([1,3,5,6,9], False)]
+    dnf_formula = [Literal([1,2,10], True), Literal([9,10], False), Literal([10], False), Literal([1,3,5,6,9], False)]
+    print(BooleanIR().intersect_literals(dnf_formula, universe))
+    dnf_formula = [Literal([1,2], True), Literal([1,2,3], False), Literal([1,2,3,4], False)]
     print(BooleanIR().intersect_literals(dnf_formula, universe))
