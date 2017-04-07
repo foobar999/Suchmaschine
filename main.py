@@ -19,5 +19,7 @@ if __name__ == '__main__':
     logging.info(Tokenizer().tok_lowercase('data/myfile.txt', ' |\t|\n|\.|,|;|:|!|\?|"|-'))
     
     logging.info('')
-    logging.info(BooleanIR().intersect([4,5,6,9,10], [3,4,5,6,11]))
+    logging.info(BooleanIR().intersect([4,5,6,9,10], [3,4,5,6,11,12]))
+    logging.info('')
+    logging.info(BooleanIR().union([4,5,6,9,10], [3,4,5,6,11,12]))
     
