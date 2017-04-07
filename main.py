@@ -24,4 +24,6 @@ if __name__ == '__main__':
     logging.info(BooleanIR().union([4,5,6,9,10], [3,4,5,6,11,12]))
     logging.info('')
     logging.info(BooleanIR().complement([4,5,6,9,10], [3,4,5,6,9,10,11,12]))
+    logging.info('')
+    logging.info(BooleanIR().union_complement([4,5,6,9,10], [3,4,5,6,11,12]))
     
