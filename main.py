@@ -1,5 +1,6 @@
 
 import logging
+import os
 from src.tokenizer import Tokenizer
 from src.boolean_query_parser import BooleanQueryParser
 from src.boolean_ir import BooleanIR
@@ -25,5 +26,16 @@ if __name__ == '__main__':
     logging.info('')
     logging.info(BooleanIR().complement([4,5,6,9,10], [3,4,5,6,9,10,11,12]))
     logging.info('')
-    logging.info(BooleanIR().union_complement([4,5,6,9,10], [3,4,5,6,11,12]))
+    logging.info(BooleanIR().union_complement([4,5,6,9,10], [3,4,5,6,11,12]))   
     
+    # Reading Files
+    # This works even if subfolders are used
+    data_folder = os.getcwd() + "/data/"
+    for root, dirs, files in os.walk(data_folder):
+        for file in files:
+            if file.endswith(".txt"):    # Is there anything else?
+                Tokenizer().tok_lowercase(os.path.join(root, file), ' |\t|\n|\.|,|;|:|!|\?|"|-')
+                #logging.info(Tokenizer().tok_lowercase(os.path.join(root, file), ' |\t|\n|\.|,|;|:|!|\?|"|-'))
+                #input("Press Enter to continue...")
+          
+    print("Done.")
