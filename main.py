@@ -2,6 +2,7 @@
 import logging
 from src.tokenizer import Tokenizer
 from src.boolean_query_parser import BooleanQueryParser
+from src.boolean_ir import BooleanIR
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
@@ -16,4 +17,7 @@ if __name__ == '__main__':
     logging.info(BooleanQueryParser().parse_dnf_query("(Hexe AND Prinzessin) OR (NOT Hexe AND Koenig)"))
     logging.info('')
     logging.info(Tokenizer().tok_lowercase('data/myfile.txt', ' |\t|\n|\.|,|;|:|!|\?|"|-'))
+    
+    logging.info('')
+    logging.info(BooleanIR().intersect([4,5,6,9,10], [3,4,5,6,11]))
     
