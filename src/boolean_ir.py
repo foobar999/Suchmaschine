@@ -59,7 +59,7 @@ class BooleanIR(object):
         return res + universe[iu:]
     
     def intersect_complement(self, posting1, posting2):
-        logging.debug("union complement of {}, {}".format(posting1, posting2))
+        logging.debug("intersect complement of {}, {}".format(posting1, posting2))
         res = []
         i1, i2 = 0, 0
         while i1 < len(posting1) and i2 < len(posting2):
@@ -73,6 +73,50 @@ class BooleanIR(object):
             else:
                 i2 += 1
         return res + posting1[i1:]
+
+    def intersect_literals(self, literals, universe):
+        logging.debug("intersect literals {}, universe {}".format(literals, universe))
+        # TODO vllt doch in-place?
+        # TODO heap?
+        # sortiere nach Größe der Postinglisten
+        sorted_literals = sorted(literals)
+        while len(sorted_literals) > 1:
+            logging.debug("sorted literals {}".format(sorted_literals))
+            lit1, lit2 = sorted_literals[0], sorted_literals[1]            
+            res = self._intersect_2_literals(universe, lit1, lit2)
+            
+            # falls leere Menge ein Zwischenergebnis => gib diese direkt zurück    
+            if len(res.postings) == 0:
+                logging.debug("returning empty posting immediately")
+                return res
+            
+            # entferne die 2 alten Literale
+            # füge das neue Literal effizent in die sortierte Liste ein
+            del sorted_literals[0:2]
+            bisect.insort(sorted_literals, res)
+            
+        return sorted_literals[0]
+    
+    def union_literals(self, literals, universe):
+        # TODO refactoring ?
+        logging.debug("union literals {}, universe {}".format(literals, universe))
+        sorted_literals = sorted(literals)
+        while len(sorted_literals) > 1:
+            logging.debug("sorted literals {}".format(sorted_literals))
+            lit1, lit2 = sorted_literals[0], sorted_literals[1]            
+            res = self._union_2_literals(universe, lit1, lit2)
+            
+            # falls leere Menge ein Zwischenergebnis => gib diese direkt zurück    
+            if len(res.postings) == len(universe):
+                logging.debug("returning universal posting immediately")
+                return res
+            
+            # entferne die 2 alten Literale
+            # füge das neue Literal effizent in die sortierte Liste ein
+            del sorted_literals[0:2]
+            bisect.insort(sorted_literals, res)
+            
+        return sorted_literals[0]
     
     def _intersect_2_literals(self, universe, lit1, lit2):
         if lit1.is_positive and lit2.is_positive:
@@ -85,25 +129,9 @@ class BooleanIR(object):
             complement1 = self.complement(lit1.postings, universe)
             complement2 = self.complement(lit2.postings, universe)
             return Literal(self.intersect(complement1, complement2), True)
-
-    def intersect_literals(self, literals, universe):
-        logging.debug("union literals {}, universe {}".format(literals, universe))
-        # TODO vllt doch in-place?
-        # sortiere nach Größe der Postinglisten
-        sorted_literals = sorted(literals)
-        while len(sorted_literals) > 1:
-            logging.debug("sorted literals {}".format(sorted_literals))
-            lit1, lit2 = sorted_literals[0], sorted_literals[1]            
-            res = self._intersect_2_literals(universe, lit1, lit2)
-            
-            # falls leere Menge ein Zwischenergebnis => gib diese direkt zurück    
-            if len(res.postings) == 0:
-                logging.debug("returnin empty posting immediately")
-                return res
-            
-            # entferne die 2 alten Literale
-            # füge das neue Literal effizent in die sortierte Liste ein
-            del sorted_literals[0:2]
-            bisect.insort(sorted_literals, res)
-            
-        return sorted_literals[0]
+        
+    def _union_2_literals(self, universe, lit1, lit2):
+        postings1 = lit1.postings if lit1.is_positive else self.complement(lit1.postings, universe)
+        postings2 = lit2.postings if lit2.is_positive else self.complement(lit2.postings, universe)
+        return Literal(self.union(postings1, postings2), True)
+        

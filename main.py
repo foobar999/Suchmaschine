@@ -42,12 +42,27 @@ if __name__ == '__main__':
     print("Done.")
     
     # Hexe OR Prinzessin OR (A AND NOT B AND NOT 78) OR NOT test OR (NOT A AND NOT B)
-    # dnf_formula = [([1,5,6], True), ([6,8,9, True), [([2,3], True), ([7]], False), ([6,10], False)], ([1,9], False), [([3,4,6], False), ([8,9], False)]]
+    # and_clause = [([1,5,6], True), ([6,8,9, True), [([2,3], True), ([7]], False), ([6,10], False)], ([1,9], False), [([3,4,6], False), ([8,9], False)]]
     # (A AND NOT B AND NOT 78)
     universe = list(range(1,11))
-    dnf_formula = [Literal([1,2,3,7,8], True), Literal([7,8,9,10], False), Literal([6,10], False)]
-    print(BooleanIR().intersect_literals(dnf_formula, universe))
-    dnf_formula = [Literal([1,2,10], True), Literal([9,10], False), Literal([10], False), Literal([1,3,5,6,9], False)]
-    print(BooleanIR().intersect_literals(dnf_formula, universe))
-    dnf_formula = [Literal([1,2], True), Literal([1,2,3], False), Literal([1,2,3,4], False)]
-    print(BooleanIR().intersect_literals(dnf_formula, universe))
+    and_clause = [Literal([1,2,3,7,8], True), Literal([7,8,9,10], False), Literal([6,10], False)]
+    print(BooleanIR().intersect_literals(and_clause, universe))
+    and_clause = [Literal([1,2,10], True), Literal([9,10], False), Literal([10], False), Literal([1,3,5,6,9], False)]
+    print(BooleanIR().intersect_literals(and_clause, universe))
+    and_clause = [Literal([1,2], True), Literal([1,2,3], False), Literal([1,2,3,4], False)]
+    print(BooleanIR().intersect_literals(and_clause, universe))
+    
+    # {1,2,3} OR {7,8,9,10} OR {6,10}
+    or_clause = [Literal([1,2,3],True), Literal([7,8,9,10],True), Literal([6,10],True)]
+    print(BooleanIR().union_literals(or_clause, universe))
+    # {} OR {1,2,3} OR NOT {}
+    or_clause = [Literal([],True), Literal([1,2,3],True), Literal([],False)]
+    print(BooleanIR().union_literals(or_clause, universe))
+    # {} OR {1,2,3} OR NOT {}
+    or_clause = [Literal([],True), Literal([1,2,3],True), Literal([],False)]
+    print(BooleanIR().union_literals(or_clause, universe))
+    # NOT {1,2,3,4,5} OR NOT {1,2,3} OR {1}
+    or_clause = [Literal([1,2,3,4,5],False), Literal([1,2,3],False), Literal([1],True)]
+    print(BooleanIR().union_literals(or_clause, universe))
+    
+    
