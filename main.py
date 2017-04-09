@@ -5,6 +5,9 @@ from src.tokenizer import Tokenizer
 from src.boolean_query_parser import BooleanQueryParser
 from src.boolean_ir import BooleanIR
 from src.boolean_ir import Literal
+from src.term import Term
+from src.posting import Posting
+from src.singly_linked_list import SingleList
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
@@ -31,6 +34,7 @@ if __name__ == '__main__':
     
     # Reading Files
     # This works even if subfolders are used
+    print("Start:")
     data_folder = os.getcwd() + "/data/"
     for root, dirs, files in os.walk(data_folder):
         for file in files:
@@ -64,5 +68,40 @@ if __name__ == '__main__':
     # NOT {1,2,3,4,5} OR NOT {1,2,3} OR {1} = {1,4,5}
     or_clause = [Literal([1,2,3,4,5],False), Literal([1,2,3],False), Literal([1],True)]
     print(BooleanIR().union_literals(or_clause, universe))
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    # currently the classes 'term' and 'posting' only contain a String and an int respectively but as per the task the can now be extended
+    
+    print("Testing")
+
+ 
+    s = SingleList()
+    print("init:", s)
+    s.append(1)
+    s.append(2)
+    s.append(3)
+    s.append(4)
+    print("appended:", s)
+    s.remove(1)
+    s.remove(4)
+    s.remove(2)
+    print("fin:", s)
+
+
+    print("Testing done.")
+    
+    
+    
+    
+    
     
     
