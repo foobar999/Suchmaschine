@@ -22,6 +22,10 @@ class SingleList(object):
         fullListString = fullListString + "None"
         return fullListString
  
+    # ToDo
+    # - make this list sorted
+    # - do not allow duplicates
+    # - add a counter (len)
     def append(self, data):
         node = Node(data, None)
         if self.head is None:

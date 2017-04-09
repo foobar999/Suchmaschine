@@ -1,5 +1,8 @@
-
+# fail fail fail
 class Term(object):
+    __slots__ = []
+    
+    literal = None
     
     def __init__(self, literal):
         self.literal = literal
