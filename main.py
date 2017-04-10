@@ -5,6 +5,10 @@ from src.tokenizer import Tokenizer
 from src.boolean_query_parser import BooleanQueryParser
 from src.boolean_ir import BooleanIR
 from src.boolean_ir import Literal
+from src.term import Term
+from src.posting import Posting
+from src.singly_linked_list import SingleList
+from collections import defaultdict
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
@@ -29,17 +33,7 @@ if __name__ == '__main__':
     logging.info('')
     logging.info(BooleanIR().intersect_complement([4,5,6,9,10], [3,4,5,6,11,12]))   
     
-    # Reading Files
-    # This works even if subfolders are used
-    data_folder = os.getcwd() + "/data/"
-    for root, dirs, files in os.walk(data_folder):
-        for file in files:
-            if file.endswith(".txt"):    # Is there anything else?
-                Tokenizer().tok_lowercase(os.path.join(root, file), ' |\t|\n|\.|,|;|:|!|\?|"|-')
-                #logging.info(Tokenizer().tok_lowercase(os.path.join(root, file), ' |\t|\n|\.|,|;|:|!|\?|"|-'))
-                #input("Press Enter to continue...")
-          
-    print("Done.")
+    
     
     # Hexe OR Prinzessin OR (A AND NOT B AND NOT 78) OR NOT test OR (NOT A AND NOT B)
     # and_clause = [([1,5,6], True), ([6,8,9, True), [([2,3], True), ([7]], False), ([6,10], False)], ([1,9], False), [([3,4,6], False), ([8,9], False)]]
@@ -64,5 +58,37 @@ if __name__ == '__main__':
     # NOT {1,2,3,4,5} OR NOT {1,2,3} OR {1} = {1,4,5}
     or_clause = [Literal([1,2,3,4,5],False), Literal([1,2,3],False), Literal([1],True)]
     print(BooleanIR().union_literals(or_clause, universe))
+    
+    
+    
+    dictionary = {}
+#    dictionary = defaultdict(SingleList)    # this does not do what I want!
+    docID = 0
+    # Reading Files
+    # This works even if subfolders are used
+    print("Start:")
+    data_folder = os.getcwd() + "/data/"
+    for root, dirs, files in os.walk(data_folder):
+        for file in files:
+            if file.endswith(".txt"):    # Is there anything else?
+                terms = Tokenizer().tok_lowercase(os.path.join(root, file), ' |\t|\n|\.|,|;|:|!|\?|"|-')
+                for t in terms:
+                    if t not in dictionary:
+                        dictionary[t] = SingleList()
+                    dictionary[t].append(docID)
+#                   dictionary[Term(t)].append(docID)    # class Term would need to be immutable
+                docID += 1
+          
+    print("number of dict entries:", len(dictionary))
+#    print(dictionary)
+#    alaList = dictionary["und"]
+#    print(alaList)
+    print("Done.")
+    
+    # currently the classes 'term' and 'posting' only contain a String and an int respectively but as per the task the can now be extended
+    
+    
+    
+    
     
     
