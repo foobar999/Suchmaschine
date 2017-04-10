@@ -46,13 +46,13 @@ if __name__ == '__main__':
     # UNIVERSE = {1,2,3,4,5}
     universe = list(range(1,6))
     # {1,2} AND {1,2,3,4} AND NOT {2} = {1}
-    and_clause = [Literal([1,2], True), Literal([1,2,3,4], True), Literal([2], False)]
+    and_clause = [Literal([1,2],True), Literal([1,2,3,4],True), Literal([2],False)]
     print(BooleanIR().intersect_literals(and_clause, universe))
     # {1} AND {1,2} AND NOT {1,2,3} = {}
-    and_clause = [Literal([1], True), Literal([1,2], True), Literal([1,2,3], False)]
+    and_clause = [Literal([1],True), Literal([1,2],True), Literal([1,2,3],False)]
     print(BooleanIR().intersect_literals(and_clause, universe))
     # NOT {} AND {1,2,4} AND {1,2,3,5} = {1,2}
-    and_clause = [Literal([], False), Literal([1,2,4], True), Literal([1,2,3,5], True)]
+    and_clause = [Literal([],False), Literal([1,2,4],True), Literal([1,2,3,5],True)]
     print(BooleanIR().intersect_literals(and_clause, universe))
     
     # {1,2} OR {4,5} OR {1,4} = {1,2,4,5}
