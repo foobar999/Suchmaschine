@@ -61,7 +61,8 @@ if __name__ == '__main__':
     
     
     
-    dictionary = {}
+    dictionary = {} # matches a Term with an occurrence list
+    docsDict = {}   # matches DocID and DocName
 #    dictionary = defaultdict(SingleList)    # this does not do what I want!
     docID = 0
     # Reading Files
@@ -71,6 +72,8 @@ if __name__ == '__main__':
     for root, dirs, files in os.walk(data_folder):
         for file in files:
             if file.endswith(".txt"):    # Is there anything else?
+                if docID not in docsDict:
+                    docsDict[docID] = file
                 terms = Tokenizer().tok_lowercase(os.path.join(root, file), ' |\t|\n|\.|,|;|:|!|\?|"|-')
                 for t in terms:
                     if t not in dictionary:
@@ -80,14 +83,14 @@ if __name__ == '__main__':
                 docID += 1
           
     print("number of dict entries:", len(dictionary))
+    print(docsDict)
 #    print(dictionary)
 #    alaList = dictionary["und"]
 #    print(alaList)
+#    print(dictionary["und"].len)
     print("Done.")
     
     # currently the classes 'term' and 'posting' only contain a String and an int respectively but as per the task the can now be extended
-    
-    
     
     
     
