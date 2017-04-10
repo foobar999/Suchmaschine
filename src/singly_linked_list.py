@@ -21,10 +21,6 @@ class SingleList(object):
         fullListString = fullListString + "None"
         return fullListString
  
-    # ToDo
-    # - make this list sorted
-    # - do not allow duplicates
-    # - add a counter (len)
     def append(self, data):
         node = Node(data, None)
         if self.head is None:   # first element in empty list
@@ -35,13 +31,6 @@ class SingleList(object):
             lastNode = None
 #            while currentNode != None:
             while True:
-                
-#                print(" ")
-#                print("lastNode", lastNode)
-#                print("currentNode", currentNode)
-#                print(".next", currentNode.next)
-#                print("CND:", currentNode.data)
-#                print("NND:", node.data)
                 
                 if currentNode is None  :           # insert as last element
                     lastNode.next = node
@@ -67,9 +56,6 @@ class SingleList(object):
                     self.len += 1
                     break
                     
-#                print("lastNode", lastNode)
-#                print("currentNode", currentNode)
-#                print(".next", currentNode.next)
                 lastNode = currentNode
                 currentNode = currentNode.next
             '''
