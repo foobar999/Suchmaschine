@@ -1,6 +1,6 @@
 import logging
 import os
-from src.indexterm_postings_reader import IndextermPostingsReader
+from src.index_builder import IndexBuilder
 from src.boolean_ir_handler import BooleanIRHandler
 
 if __name__ == '__main__':
@@ -71,7 +71,7 @@ if __name__ == '__main__':
     #===========================================================================
     
     data_folder = os.path.join(os.getcwd(), "data")
-    dictionary, docsDict = IndextermPostingsReader().read_from_folder(data_folder)
+    dictionary, docsDict = IndexBuilder().build_from_folder(data_folder)
      
     print("number of dict entries:", len(dictionary))
     print(docsDict)

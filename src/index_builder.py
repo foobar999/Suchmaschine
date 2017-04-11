@@ -3,9 +3,9 @@ from src.tokenizer import Tokenizer
 from src.term_postings import TermPostings
 from src.posting import Posting
 
-class IndextermPostingsReader(object):
+class IndexBuilder(object):
     
-    def read_from_folder(self, data_folder):
+    def build_from_folder(self, data_folder):
         
         dictionary = {} # matches a Term with an occurrence mylist
         docsDict = {}   # matches DocID and DocName
