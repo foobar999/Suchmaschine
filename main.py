@@ -77,13 +77,13 @@ if __name__ == '__main__':
                 for t in terms:
                     if t not in dictionary:
                         dictionary[t] = TermPostings()
-                    dictionary[t].postings.append(docID)
+                    dictionary[t].postings.append(Posting(docID))
 #                   dictionary[Term(t)].append(docID)    # class Term would need to be immutable
                 docID += 1
      
     print("number of dict entries:", len(dictionary))
     print(docsDict)
-#    print(dictionary)
+    print(dictionary)
 #    alaList = dictionary["und"]
 #    print(alaList)
 #    print(dictionary["und"].len)

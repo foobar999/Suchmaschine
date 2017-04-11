@@ -16,11 +16,11 @@ class SingleList(object):
  
     def __str__(self):
         current_node = self.head
-        fullListString = ""
+        fullListString = "["
         while current_node is not None:
-            fullListString = fullListString + str(current_node.data) + " -> "
+            fullListString = fullListString + str(current_node.data) + "->"
             current_node = current_node.next
-        fullListString = fullListString + "None"
+        fullListString = fullListString + "None]"
         return fullListString
  
     def __iter__(self):
