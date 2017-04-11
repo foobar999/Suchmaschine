@@ -1,6 +1,6 @@
 import re
 import logging
-from literal import Literal
+from src.literal import Literal
 
 class BooleanQueryParser(object):
     

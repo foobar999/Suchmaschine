@@ -1,4 +1,4 @@
-from singly_linked_list import SingleList
+from src.singly_linked_list import SingleList
 
 class TermPostings(object):
 

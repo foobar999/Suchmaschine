@@ -1,7 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import logging
 import os
 import sys
 import time
+import unicodedata
 from src.index_builder import IndexBuilder
 from src.boolean_ir_handler import BooleanIRHandler
 
@@ -81,9 +84,6 @@ if __name__ == '__main__':
     print("number of dict entries:", len(dictionary))
     print(docsDict)
     print(dictionary)
-#    alaList = dictionary["und"]
-#    print(alaList)
-#    print(dictionary["und"].len)
     print("Done.")
     
     # currently the classes 'term' and 'posting' only contain a String and an int respectively but as per the task the can now be extended
@@ -94,6 +94,7 @@ if __name__ == '__main__':
         try:
             print("Please enter a query or command:")
             query = input().strip()
+            unicodedata.normalize('NFC', query)
             if len(query) < 1:
                 continue    # ask for input again
             else:
@@ -125,8 +126,8 @@ if __name__ == '__main__':
 
 # (hexe AND prinzessin) OR (frosch  AND tellerlein)
 
-    
-    
+# Works:
+# Gemüsehändlerin
     
     
     
