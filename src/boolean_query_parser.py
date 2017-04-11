@@ -26,24 +26,30 @@ class BooleanQueryParser(object):
     def _generate_nested_tuple_list(self, query_toks):
         outer_list = []
         inner_list = None
-        current_list = outer_list
+        is_outside = True
         for i in range(0, len(query_toks)):
             tok = query_toks[i]
             if tok == self.LBRACKET:
                 inner_list = []
-                current_list = inner_list
+                is_outside = False
             elif tok == self.RBRACKET:
                 outer_list.append(inner_list)
-                current_list = outer_list
+                is_outside = True
             elif self._is_word(tok):
                 is_pos_literal = i == 0 or query_toks[i - 1] != self.NOT
-                current_list.append(Literal(tok.lower(), is_pos_literal))
+                literal = Literal(tok.lower(), is_pos_literal)
+                if is_outside:
+                    outer_list.append([literal])
+                else:
+                    inner_list.append(literal)
         
         # ersetze alle 1-Element-Klauseln durch Listen mit genau diesem Literal
-        for i in range(0, len(outer_list)):
-            clause = outer_list[i]
-            if isinstance(clause, Literal):
-                outer_list[i] = [clause]    
+        #=======================================================================
+        # for i in range(0, len(outer_list)):
+        #     clause = outer_list[i]
+        #     if isinstance(clause, Literal):
+        #         outer_list[i] = [clause]    
+        #=======================================================================
             
         return outer_list
     
