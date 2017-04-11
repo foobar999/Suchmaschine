@@ -10,13 +10,13 @@ class Term(object):
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self.__dict__ == other.__dict__  # Dictionary of class members
+            return self.__dict__ == other.__dict__ # Dictionary of class members
         else:
             return False
 
     def __ne__(self, other):
         return not self.__eq__(other)
-    
+        
     def __str__(self):
         return str(self.literal)
     

@@ -7,8 +7,7 @@ from src.boolean_ir import BooleanIR
 from src.boolean_ir import Literal
 from src.term import Term
 from src.posting import Posting
-from src.singly_linked_list import SingleList
-from collections import defaultdict
+from src.term_postings import TermPostings
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
@@ -77,8 +76,8 @@ if __name__ == '__main__':
                 terms = Tokenizer().tok_lowercase(os.path.join(root, file), ' |\t|\n|\.|,|;|:|!|\?|"|-')
                 for t in terms:
                     if t not in dictionary:
-                        dictionary[t] = SingleList()
-                    dictionary[t].append(docID)
+                        dictionary[t] = TermPostings()
+                    dictionary[t].postings.append(docID)
 #                   dictionary[Term(t)].append(docID)    # class Term would need to be immutable
                 docID += 1
           
