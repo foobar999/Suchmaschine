@@ -1,4 +1,5 @@
 from platform import node
+
 class Node(object):
  
     def __init__(self, data, next):
@@ -8,9 +9,10 @@ class Node(object):
  
 class SingleList(object):
  
-    head = None
-    tail = None
-    len = 0
+    def __init__(self):
+        self.head = None
+        self.tail = None
+        self.len = 0
  
     def __str__(self):
         current_node = self.head
@@ -20,6 +22,9 @@ class SingleList(object):
             current_node = current_node.next
         fullListString = fullListString + "None"
         return fullListString
+ 
+    def __iter__(self):
+        return SingleListIter(self.head)
  
     def append(self, data):
         node = Node(data, None)
@@ -87,3 +92,17 @@ class SingleList(object):
             current_node = current_node.next
 
 
+
+
+class SingleListIter(object):
+
+    def __init__(self, node):
+        self.node = node
+ 
+    def __next__(self):
+        if self.node == None:
+            raise StopIteration()
+        else:
+            data = self.node.data
+            self.node = self.node.next
+            return data

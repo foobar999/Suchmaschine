@@ -18,7 +18,7 @@ class BooleanQueryParser(object):
             logging.debug('query has 1+ ANDs, 0 ORs -> added brackets: ' + str(query))  
         
         query_toks = re.split('(\(|\)| )', query)
-        query_toks = list(filter(str.strip, query_toks))
+        query_toks = mylist(filter(str.strip, query_toks))
         logging.debug('parsed query tokens: ' + str(query_toks))  
         
         return self._generate_nested_tuple_list(query_toks)
@@ -48,7 +48,7 @@ class BooleanQueryParser(object):
     # def parse(self, query):      
     #     logging.debug('parsing query ' + query)  
     #     tok_query_whitespace = re.split("(\(|\)| )", query)
-    #     tok_query = list(filter(str.strip, tok_query_whitespace))
+    #     tok_query = mylist(filter(str.strip, tok_query_whitespace))
     #     logging.debug('tokenized query without whitespace ' + str(tok_query))
     #     
     #     i = 0
@@ -81,7 +81,7 @@ class BooleanQueryParser(object):
     #     logging.debug('parsing query ' + query)  
     #     
     #     query_toks = re.split("(\(|\)| )", query)
-    #     query_toks = list(filter(str.strip, query_toks))
+    #     query_toks = mylist(filter(str.strip, query_toks))
     #     logging.debug('parsed query tokens ' + str(query_toks))  
     #     
     #     tuple_toks = self._replace_words_by_tuples(query_toks)       

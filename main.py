@@ -37,7 +37,7 @@ if __name__ == '__main__':
     # Hexe OR Prinzessin OR (A AND NOT B AND NOT 78) OR NOT test OR (NOT A AND NOT B)
     # and_clause = [([1,5,6], True), ([6,8,9, True), [([2,3], True), ([7]], False), ([6,10], False)], ([1,9], False), [([3,4,6], False), ([8,9], False)]]
     # UNIVERSE = {1,2,3,4,5}
-    universe = list(range(1,6))
+    universe = mylist(range(1,6))
     # {1,2} AND {1,2,3,4} AND NOT {2} = {1}
     and_clause = [Literal([1,2],True), Literal([1,2,3,4],True), Literal([2],False)]
     print(BooleanIR().intersect_literals(and_clause, universe))
@@ -60,7 +60,7 @@ if __name__ == '__main__':
     
     
     
-    dictionary = {} # matches a Term with an occurrence list
+    dictionary = {} # matches a Term with an occurrence mylist
     docsDict = {}   # matches DocID and DocName
 #    dictionary = defaultdict(SingleList)    # this does not do what I want!
     docID = 0
@@ -91,6 +91,13 @@ if __name__ == '__main__':
     
     # currently the classes 'term' and 'posting' only contain a String and an int respectively but as per the task the can now be extended
     
-    
-    
+    #===========================================================================
+    # from singly_linked_list import SingleList
+    # mylist = SingleList()
+    # for i in range(1, 20):
+    #     mylist.append(i)
+    # print(mylist)
+    # for ele in mylist:
+    #     print(ele)
+    #===========================================================================
     
