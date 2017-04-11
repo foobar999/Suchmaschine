@@ -1,11 +1,11 @@
 import logging
 import os
-from src.boolean_query_parser import BooleanQueryParser
-from src.boolean_ir import BooleanIR
-from src.boolean_ir import Literal
-from src.term import Term
+#from src.boolean_query_parser import BooleanQueryParser
+#from src.boolean_ir import BooleanIR
+#from src.boolean_ir import Literal
+#from src.term import Term
 from src.indexterm_postings_reader import IndextermPostingsReader
-from boolean_ir_handler import BooleanIRHandler
+from src.boolean_ir_handler import BooleanIRHandler
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
