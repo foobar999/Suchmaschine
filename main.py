@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+import time
 from src.index_builder import IndexBuilder
 from src.boolean_ir_handler import BooleanIRHandler
 
@@ -72,7 +73,10 @@ if __name__ == '__main__':
     #===========================================================================
     
     data_folder = os.path.join(os.getcwd(), "data")
+    index_build_start = time.time()
     dictionary, docsDict = IndexBuilder().build_from_folder(data_folder)
+    index_build_elapsed = time.time() - index_build_start
+    print("built index in {0:.5f} seconds".format(index_build_elapsed))
      
     print("number of dict entries:", len(dictionary))
     print(docsDict)
@@ -105,9 +109,12 @@ if __name__ == '__main__':
                 else:                           # process QUERY
                     if mode == "bool":
                         print("Processing query with boolean logic.")
-                        result_docIDs = BooleanIRHandler().handle_query(query, dictionary, docsDict)
-                        result_docnames = [docsDict[docID] for docID in result_docIDs]
-                        print('result', result_docIDs, result_docnames)
+                        query_handle_start = time.time()
+                        res_docIDs = BooleanIRHandler().handle_query(query, dictionary, docsDict)
+                        query_handle_elapsed = time.time() - query_handle_start
+                        res_displayed = [(docID, docsDict[docID]) for docID in res_docIDs]
+                        print('documents {} '.format(res_displayed), end='')
+                        print('in {0:.5f} seconds'.format(query_handle_elapsed))
                         
                     if mode == "fuzzy":
                         print("Processing query with fuzzy logic.")
