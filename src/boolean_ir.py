@@ -10,27 +10,20 @@ class BooleanIR(object):
     #===========================================================================
     
     def union_literals(self, literals, universe):
-        logging.debug("_union literals {}, universe {}".format(literals, universe))
-        sorted_literals = sorted(literals)
-        while len(sorted_literals) > 1:
-            logging.debug("sorted literals {}".format(sorted_literals))
-            lit1, lit2 = sorted_literals[0], sorted_literals[1]            
-            res = self._union_2_literals(universe, lit1, lit2)
+        logging.debug("union literals {}, universe {}".format(literals, universe))
+        current_res = Literal([], True)
+        for literal in literals:
+            logging.debug("current union result: {}".format(current_res))        
+            current_res = self._union_2_literals(universe, current_res, literal)
             
-            # falls leere Menge ein Zwischenergebnis => gib diese direkt zurück    
-            if len(res.postings) == len(universe):
-                logging.debug("returning universal posting immediately")
-                return res
-            
-            # entferne die 2 alten Literale
-            # füge das neue Literal effizent in die sortierte Liste ein
-            del sorted_literals[0:2]
-            bisect.insort(sorted_literals, res)
-            
-        return sorted_literals[0]
+            # falls Universum das Zwischenergebnis => gib es direkt zurück    
+            if len(current_res.postings) == len(universe):
+                logging.debug("returning universe immediately")
+                return current_res          
+        return current_res
     
     def intersect_literals(self, literals, universe):
-        logging.debug("_intersect literals {}, universe {}".format(literals, universe))
+        logging.debug("intersect literals {}, universe {}".format(literals, universe))
         # sortiere nach Größe der Postinglisten
         sorted_literals = sorted(literals)
         while len(sorted_literals) > 1:
