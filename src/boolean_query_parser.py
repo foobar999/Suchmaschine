@@ -1,5 +1,6 @@
 import re
 import logging
+from literal import Literal
 #from src.tree_node import TreeNode
 
 class BooleanQueryParser(object):
@@ -10,7 +11,7 @@ class BooleanQueryParser(object):
     LBRACKET = '('
     RBRACKET = ')'
     
-    def parse_dnf_query(self, query):  
+    def parse_query(self, query):  
         logging.info('parsing query: ' + query)  
         
         if self.AND in query and self.OR not in query:
@@ -37,7 +38,7 @@ class BooleanQueryParser(object):
                 current_list = outer_list
             elif self._is_word(tok):
                 is_pos_literal = i == 0 or query_toks[i - 1] != self.NOT
-                current_list.append((tok.lower(), is_pos_literal))
+                current_list.append(Literal(tok.lower(), is_pos_literal))
                 
         return outer_list
     

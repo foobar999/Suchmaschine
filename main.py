@@ -11,15 +11,15 @@ from src.term_postings import TermPostings
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
-    logging.info(BooleanQueryParser().parse_dnf_query("Hexe"))
+    logging.info(BooleanQueryParser().parse_query("Hexe"))
     logging.info('')
-    logging.info(BooleanQueryParser().parse_dnf_query("NOT Hexe AND NOT Prinzessin AND HalloWelt"))
+    logging.info(BooleanQueryParser().parse_query("NOT Hexe AND NOT Prinzessin AND HalloWelt"))
     logging.info('')
-    logging.info(BooleanQueryParser().parse_dnf_query("Hexe OR Prinzessin OR (A AND NOT B AND NOT 78) OR NOT test OR (NOT A AND NOT B)"))
+    logging.info(BooleanQueryParser().parse_query("Hexe OR Prinzessin OR (A AND NOT B AND NOT 78) OR NOT test OR (NOT A AND NOT B)"))
     logging.info('')
-    logging.info(BooleanQueryParser().parse_dnf_query("(Hexe AND Prinzessin) OR (Frosch AND Koenig AND Tellerlein)"))
+    logging.info(BooleanQueryParser().parse_query("(Hexe AND Prinzessin) OR (Frosch AND Koenig AND Tellerlein)"))
     logging.info('')
-    logging.info(BooleanQueryParser().parse_dnf_query("(Hexe AND Prinzessin) OR (NOT Hexe AND Koenig)"))
+    logging.info(BooleanQueryParser().parse_query("(Hexe AND Prinzessin) OR (NOT Hexe AND Koenig)"))
     logging.info('')
     logging.info(Tokenizer().tok_lowercase('data/myfile.txt', ' |\t|\n|\.|,|;|:|!|\?|"|-'))
     
@@ -108,23 +108,42 @@ if __name__ == '__main__':
     print("Boolean logic activated.")
     while True: # user input loop
         print("Please enter a query or command:")
-        my_input = input()
-        if len(my_input) < 1:
+        query = input().strip()
+        if len(query) < 1:
             continue    # ask for input again
         else:
-            if my_input.startswith("/"):    # execute COMMAND
-                if my_input == "/bool":
+            if query.startswith("/"):    # execute COMMAND
+                if query == "/bool":
                     print("Boolean logic activated.")   # fake :D
                     mode = "bool"
-                elif my_input == "/fuzzy":
+                elif query == "/fuzzy":
                     print("Fuzzy logic activated.")
                     mode = "fuzzy"
+                else:
+                    print("Unknown command!", query)
             else:                           # process QUERY
                 if mode == "bool":
                     print("Processing query with boolean logic.")
+                    parse_result = BooleanQueryParser().parse_query(query)
+                    print(parse_result)
+                    for inner_list in parse_result:
+                        for literal in inner_list:
+                            key = literal.postings
+                            term_postings = dictionary[key]
+                            literal.postings = term_postings.get_postings_list()
+                    print(parse_result)
+                    universe = list(docsDict.keys())
+                    and_result = [BooleanIR().intersect_literals(inner_clause, universe) for inner_clause in parse_result]
+                    print('ergebbbnis', and_result)
+                    total_result = BooleanIR().union_literals(and_result, universe).postings
+                    print('result', total_result, [docsDict[key] for key in total_result])
+                    
                 if mode == "fuzzy":
                     print("Processing query with fuzzy logic.")
-        
+
+
+# (hexe AND prinzessin) OR (frosch  AND tellerlein)
+
     
     
     
