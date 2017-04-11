@@ -101,3 +101,32 @@ if __name__ == '__main__':
     #     print(ele)
     #===========================================================================
     
+    
+    
+    
+    mode = "bool"
+    print("Boolean logic activated.")
+    while True: # user input loop
+        print("Please enter a query or command:")
+        my_input = input()
+        if len(my_input) < 1:
+            continue    # ask for input again
+        else:
+            if my_input.startswith("/"):    # execute COMMAND
+                if my_input == "/bool":
+                    print("Boolean logic activated.")   # fake :D
+                    mode = "bool"
+                elif my_input == "/fuzzy":
+                    print("Fuzzy logic activated.")
+                    mode = "fuzzy"
+            else:                           # process QUERY
+                if mode == "bool":
+                    print("Processing query with boolean logic.")
+                if mode == "fuzzy":
+                    print("Processing query with fuzzy logic.")
+        
+    
+    
+    
+    
+    
