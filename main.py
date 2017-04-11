@@ -56,30 +56,6 @@ if __name__ == '__main__':
     #===========================================================================
     
     
-    
-#===============================================================================
-#     dictionary = {} # matches a Term with an occurrence mylist
-#     docsDict = {}   # matches DocID and DocName
-# #    dictionary = defaultdict(SingleList)    # this does not do what I want!
-#     docID = 0
-#     # Reading Files
-#     # This works even if subfolders are used
-#     print("Start:")
-#     data_folder = os.getcwd() + "/data/"
-#     for root, dirs, files in os.walk(data_folder):
-#         for file in files:
-#             if file.endswith(".txt"):    # Is there anything else?
-#                 if docID not in docsDict:
-#                     docsDict[docID] = file
-#                 terms = Tokenizer().tok_lowercase(os.path.join(root, file), ' |\t|\n|\.|,|;|:|!|\?|"|-')
-#                 for t in terms:
-#                     if t not in dictionary:
-#                         dictionary[t] = TermPostings()
-#                     dictionary[t].postings.append(Posting(docID))
-# #                   dictionary[Term(t)].append(docID)    # class Term would need to be immutable
-#                 docID += 1
-#===============================================================================
-    
     data_folder = os.path.join(os.getcwd(), "data")
     dictionary, docsDict = IndextermPostingsReader().read_from_folder(data_folder)
      
@@ -92,19 +68,6 @@ if __name__ == '__main__':
     print("Done.")
     
     # currently the classes 'term' and 'posting' only contain a String and an int respectively but as per the task the can now be extended
-    
-    #===========================================================================
-    # from singly_linked_list import SingleList
-    # mylist = SingleList()
-    # for i in range(1, 20):
-    #     mylist.append(i)
-    # print(mylist)
-    # for ele in mylist:
-    #     print(ele)
-    #===========================================================================
-    
-    
-    
     
     mode = "bool"
     print("Boolean logic activated.")
