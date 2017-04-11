@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 from src.index_builder import IndexBuilder
 from src.boolean_ir_handler import BooleanIRHandler
 
@@ -86,30 +87,34 @@ if __name__ == '__main__':
     mode = "bool"
     print("Boolean logic activated.")
     while True: # user input loop
-        print("Please enter a query or command:")
-        query = input().strip()
-        if len(query) < 1:
-            continue    # ask for input again
-        else:
-            if query.startswith("/"):    # execute COMMAND
-                if query == "/bool":
-                    print("Boolean logic activated.")   # fake :D
-                    mode = "bool"
-                elif query == "/fuzzy":
-                    print("Fuzzy logic activated.")
-                    mode = "fuzzy"
-                else:
-                    print("Unknown command!", query)
-            else:                           # process QUERY
-                if mode == "bool":
-                    print("Processing query with boolean logic.")
-                    result_docIDs = BooleanIRHandler().handle_query(query, dictionary, docsDict)
-                    result_docnames = [docsDict[docID] for docID in result_docIDs]
-                    print('result', result_docIDs, result_docnames)
-                    
-                if mode == "fuzzy":
-                    print("Processing query with fuzzy logic.")
-
+        try:
+            print("Please enter a query or command:")
+            query = input().strip()
+            if len(query) < 1:
+                continue    # ask for input again
+            else:
+                if query.startswith("/"):    # execute COMMAND
+                    if query == "/bool":
+                        print("Boolean logic activated.")   # fake :D
+                        mode = "bool"
+                    elif query == "/fuzzy":
+                        print("Fuzzy logic activated.")
+                        mode = "fuzzy"
+                    else:
+                        print("Unknown command!", query)
+                else:                           # process QUERY
+                    if mode == "bool":
+                        print("Processing query with boolean logic.")
+                        result_docIDs = BooleanIRHandler().handle_query(query, dictionary, docsDict)
+                        result_docnames = [docsDict[docID] for docID in result_docIDs]
+                        print('result', result_docIDs, result_docnames)
+                        
+                    if mode == "fuzzy":
+                        print("Processing query with fuzzy logic.")
+        except KeyError as err:
+            msg = '{} not found'.format(err)
+            logging.error(msg)
+            sys.stderr.write('{}\n'.format(msg))
 
 # (hexe AND prinzessin) OR (frosch  AND tellerlein)
 
