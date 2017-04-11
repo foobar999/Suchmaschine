@@ -37,7 +37,7 @@ if __name__ == '__main__':
     # Hexe OR Prinzessin OR (A AND NOT B AND NOT 78) OR NOT test OR (NOT A AND NOT B)
     # and_clause = [([1,5,6], True), ([6,8,9, True), [([2,3], True), ([7]], False), ([6,10], False)], ([1,9], False), [([3,4,6], False), ([8,9], False)]]
     # UNIVERSE = {1,2,3,4,5}
-    universe = mylist(range(1,6))
+    universe = list(range(1,6))
     # {1,2} AND {1,2,3,4} AND NOT {2} = {1}
     and_clause = [Literal([1,2],True), Literal([1,2,3,4],True), Literal([2],False)]
     print(BooleanIR().intersect_literals(and_clause, universe))
@@ -80,7 +80,7 @@ if __name__ == '__main__':
                     dictionary[t].postings.append(docID)
 #                   dictionary[Term(t)].append(docID)    # class Term would need to be immutable
                 docID += 1
-          
+     
     print("number of dict entries:", len(dictionary))
     print(docsDict)
 #    print(dictionary)
