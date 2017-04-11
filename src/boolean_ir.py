@@ -14,34 +14,35 @@ class BooleanIR(object):
         current_res = Literal([], True)
         for literal in literals:
             logging.debug("current union result: {}".format(current_res))        
-            current_res = self._union_2_literals(universe, current_res, literal)
-            
+            current_res = self._union_2_literals(universe, current_res, literal)      
             # falls Universum das Zwischenergebnis => gib es direkt zurück    
             if len(current_res.postings) == len(universe):
                 logging.debug("returning universe immediately")
-                return current_res          
+                break          
         return current_res
     
     def intersect_literals(self, literals, universe):
         logging.debug("intersect literals {}, universe {}".format(literals, universe))
-        # sortiere nach Größe der Postinglisten
+        if len(literals) == 0:
+            return Literal([], True)
         sorted_literals = sorted(literals)
-        while len(sorted_literals) > 1:
-            logging.debug("sorted literals {}".format(sorted_literals))
-            lit1, lit2 = sorted_literals[0], sorted_literals[1]            
-            res = self._intersect_2_literals(universe, lit1, lit2)
-            
-            # falls leere Menge ein Zwischenergebnis => gib diese direkt zurück    
-            if len(res.postings) == 0:
-                logging.debug("returning empty posting immediately")
-                return res
-            
-            # entferne die 2 alten Literale
-            # füge das neue Literal effizent in die sortierte Liste ein
-            del sorted_literals[0:2]
-            bisect.insort(sorted_literals, res)
-            
-        return sorted_literals[0]
+        logging.debug("sorted intersect literals {}".format(sorted_literals, universe))
+        current_res = sorted_literals[0]
+        
+        # füge Komplement hier durch, falls nur 1 Element, da  kein "Partner" vorhanden
+        if len(sorted_literals) == 1 and not current_res.is_positive:
+            current_res = Literal(self._complement(current_res.postings, universe), True)
+        
+        for i in range(1, len(sorted_literals)):
+            literal = sorted_literals[i]
+            logging.debug("current intersect result: {}".format(current_res))        
+            current_res = self._intersect_2_literals(universe, current_res, literal)      
+            # falls leere Menge das Zwischenergebnis => gib es direkt zurück    
+            if len(current_res.postings) == 0:
+                logging.debug("returning empty postings immediately")
+                break
+    
+        return current_res
     
     def _union_2_literals(self, universe, lit1, lit2):
         postings1 = lit1.postings if lit1.is_positive else self._complement(lit1.postings, universe)
@@ -61,7 +62,7 @@ class BooleanIR(object):
             return Literal(self._intersect(complement1, complement2), True)
     
     def _intersect(self, posting1, posting2):
-        logging.debug("intersect of {}, {}".format(posting1, posting2))
+        logging.debug("intersect of {}, {}".format(posting1, posting2))        
         res = []
         i1, i2 = 0, 0
         while i1 < len(posting1) and i2 < len(posting2):
@@ -77,7 +78,7 @@ class BooleanIR(object):
         return res
     
     def _union(self, posting1, posting2):
-        logging.debug("union of {}, {}".format(posting1, posting2))
+        logging.debug("union of {}, {}".format(posting1, posting2))    
         res = []
         i1, i2 = 0, 0
         while i1 < len(posting1) and i2 < len(posting2):
@@ -109,8 +110,9 @@ class BooleanIR(object):
                 iu += 1
         return res + universe[iu:]
     
+    # posting1 positiv, posting2 negativ
     def _intersect_complement(self, posting1, posting2):
-        logging.debug("intersect _complement of {}, {}".format(posting1, posting2))
+        logging.debug("intersect_complement of {}, {}".format(posting1, posting2))
         res = []
         i1, i2 = 0, 0
         while i1 < len(posting1) and i2 < len(posting2):

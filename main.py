@@ -26,34 +26,47 @@ if __name__ == '__main__':
     # logging.info(BooleanIR().complement([4,5,6,9,10], [3,4,5,6,9,10,11,12]))
     # logging.info('')
     # logging.info(BooleanIR().intersect_complement([4,5,6,9,10], [3,4,5,6,11,12]))   
-    #  
-    # # Hexe OR Prinzessin OR (A AND NOT B AND NOT 78) OR NOT test OR (NOT A AND NOT B)
-    # # and_clause = [([1,5,6], True), ([6,8,9, True), [([2,3], True), ([7]], False), ([6,10], False)], ([1,9], False), [([3,4,6], False), ([8,9], False)]]
-    # # UNIVERSE = {1,2,3,4,5}
-    # # {1,2} AND {1,2,3,4} AND NOT {2} = {1}
-    # and_clause = [Literal([1,2],True), Literal([1,2,3,4],True), Literal([2],False)]
-    # print(BooleanIR().intersect_literals(and_clause, universe))
-    # # {1} AND {1,2} AND NOT {1,2,3} = {}
-    # and_clause = [Literal([1],True), Literal([1,2],True), Literal([1,2,3],False)]
-    # print(BooleanIR().intersect_literals(and_clause, universe))
-    # # NOT {} AND {1,2,4} AND {1,2,3,5} = {1,2}
-    # and_clause = [Literal([],False), Literal([1,2,4],True), Literal([1,2,3,5],True)]
-    # print(BooleanIR().intersect_literals(and_clause, universe))
     #===========================================================================
-     
+
     #===========================================================================
     # from src.literal import Literal
     # from src.boolean_ir import BooleanIR
-    # universe = list(range(1,6))
+    # 
+    # universe = list(range(1,6))    
+    # # {1,2} AND {1,2,3,4} AND NOT {2} = {1}
+    # and_clause = [Literal([1,2],True), Literal([1,2,3,4],True), Literal([2],False)]
+    # logging.info(BooleanIR().intersect_literals(and_clause, universe))
+    # # {1} AND {1,2} AND NOT {1,2,3} = {}
+    # and_clause = [Literal([1],True), Literal([1,2],True), Literal([1,2,3],False)]
+    # logging.info(BooleanIR().intersect_literals(and_clause, universe))
+    # # NOT {} AND {1,2,4} AND {1,2,3,5} = {1,2}
+    # and_clause = [Literal([],False), Literal([1,2,4],True), Literal([1,2,3,5],True)]
+    # logging.info(BooleanIR().intersect_literals(and_clause, universe))
+    # # NOT {} AND {} = {}
+    # and_clause = [Literal([],False), Literal([],True)]
+    # logging.info(BooleanIR().intersect_literals(and_clause, universe))
+    # # NOT {3} = {1,2,4,5}
+    # and_clause = [Literal([3],False)]
+    # logging.info(BooleanIR().intersect_literals(and_clause, universe))
+    # # {3} = {3}
+    # and_clause = [Literal([3],True)]
+    # logging.info(BooleanIR().intersect_literals(and_clause, universe))
+    # # {} = {}
+    # and_clause = [Literal([],True)]
+    # logging.info(BooleanIR().intersect_literals(and_clause, universe))
+    # # NOT {} = UNIVERSE
+    # and_clause = [Literal([],False)]
+    # logging.info(BooleanIR().intersect_literals(and_clause, universe))
+    #  
     # # {1,2} OR {4,5} OR {1,4} = {1,2,4,5}
     # or_clause = [Literal([1,2],True), Literal([4,5],True), Literal([1,4],True)]
-    # print(BooleanIR().union_literals(or_clause, universe))
+    # logging.info(BooleanIR().union_literals(or_clause, universe))
     # # {} OR {1,2,3} OR NOT {} = UNIVERSE
     # or_clause = [Literal([],True), Literal([1,2,3],True), Literal([],False)]
-    # print(BooleanIR().union_literals(or_clause, universe))
+    # logging.info(BooleanIR().union_literals(or_clause, universe))
     # # NOT {1,2,3,4,5} OR NOT {1,2,3} OR {1} = {1,4,5}
     # or_clause = [Literal([1,2,3,4,5],False), Literal([1,2,3],False), Literal([1],True)]
-    # print(BooleanIR().union_literals(or_clause, universe))
+    # logging.info(BooleanIR().union_literals(or_clause, universe))
     # exit() 
     #===========================================================================
     
