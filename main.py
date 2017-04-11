@@ -5,6 +5,7 @@ from src.boolean_ir import BooleanIR
 from src.boolean_ir import Literal
 from src.term import Term
 from src.indexterm_postings_reader import IndextermPostingsReader
+from boolean_ir_handler import BooleanIRHandler
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
@@ -89,19 +90,9 @@ if __name__ == '__main__':
             else:                           # process QUERY
                 if mode == "bool":
                     print("Processing query with boolean logic.")
-                    parse_result = BooleanQueryParser().parse_query(query)
-                    print(parse_result)
-                    for inner_list in parse_result:
-                        for literal in inner_list:
-                            key = literal.postings
-                            term_postings = dictionary[key]
-                            literal.postings = term_postings.get_postings_list()
-                    print(parse_result)
-                    universe = list(docsDict.keys())
-                    and_result = [BooleanIR().intersect_literals(inner_clause, universe) for inner_clause in parse_result]
-                    print('ergebbbnis', and_result)
-                    total_result = BooleanIR().union_literals(and_result, universe).postings
-                    print('result', total_result, [docsDict[key] for key in total_result])
+                    result_docIDs = BooleanIRHandler().handle_query(query, dictionary, docsDict)
+                    result_docnames = [docsDict[docID] for docID in result_docIDs]
+                    print('result', result_docIDs, result_docnames)
                     
                 if mode == "fuzzy":
                     print("Processing query with fuzzy logic.")
