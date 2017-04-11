@@ -7,8 +7,8 @@ class BooleanIRHandler(object):
     def handle_query(self, query, indexterms_dict, docs_dict):
         parse_result = BooleanQueryParser().parse_query(query)
         logging.debug('result of parsing boolean query: {}'.format(parse_result))
-        for inner_list in parse_result:
-            for literal in inner_list:
+        for clause in parse_result:
+            for literal in clause:
                 key = literal.postings
                 term_postings = indexterms_dict[key]
                 literal.postings = term_postings.get_postings_list()

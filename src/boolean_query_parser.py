@@ -1,7 +1,6 @@
 import re
 import logging
 from literal import Literal
-#from src.tree_node import TreeNode
 
 class BooleanQueryParser(object):
     
@@ -39,7 +38,13 @@ class BooleanQueryParser(object):
             elif self._is_word(tok):
                 is_pos_literal = i == 0 or query_toks[i - 1] != self.NOT
                 current_list.append(Literal(tok.lower(), is_pos_literal))
-                
+        
+        # ersetze alle 1-Element-Klauseln durch Listen mit genau diesem Literal
+        for i in range(0, len(outer_list)):
+            clause = outer_list[i]
+            if isinstance(clause, Literal):
+                outer_list[i] = [clause]    
+            
         return outer_list
     
     def _is_word(self, token):
