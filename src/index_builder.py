@@ -20,7 +20,7 @@ class IndexBuilder(object):
                 if file.endswith(".txt"):    # Is there anything else?
                     if docID not in docsDict:
                         docsDict[docID] = file
-                    terms = Tokenizer().tok_lowercase(os.path.join(root, file), ' |\t|\n|\.|,|;|:|!|\?|"|-')
+                    terms = Tokenizer().tok_lowercase(os.path.join(root, file), ' |\t|\n|\.|,|;|:|!|\?|"|-|´|`')
                     for t in terms:
                         if Term(t) not in dictionary:
                             dictionary[Term(t)] = TermPostings()
