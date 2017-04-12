@@ -30,9 +30,25 @@ class BooleanQueryParser(object):
         quotesPos = [i for i,x in enumerate(query_toks) if x==self.QUOTES]
         print(query_toks)
         print(quotesPos)
-        l = query_toks[quotesPos[0]+1:quotesPos[1]]
-        query_toks[quotesPos[0]:quotesPos[1]+1] = [l]
+        
+        # ersetze in query_toks von hinten alles, was zwischen 2 '"' liegt, durch
+        # eine list mit diesen Elementen
+        # von vorne Ersetzen is problematisch, da dies die nachfolgenden Indizes ändert
+        for i in range(len(quotesPos)-1, -1, -2):
+            pos_quote_1, pos_quote_2 = quotesPos[i-1], quotesPos[i]
+            eles_between_quotes = query_toks[pos_quote_1+1:pos_quote_2]
+            query_toks[pos_quote_1:pos_quote_2+1] = [eles_between_quotes]
         print(query_toks)
+        
+        # (a /5 b AND "c d" /6 e) OR f
+        regex = re.compile("^/[2-9]$")
+        for i in range(len(query_toks)-1, -1, -1):
+            tok = query_toks[i]
+            if 1 <= i <= len(query_toks)-2 and isinstance(tok, str) and regex.match(tok) != None:
+                operand1, operand2 = query_toks[i-1], query_toks[i+1]
+                query_toks[i-1:i+2] = [(operand1, operand2)]
+        print('regex result', query_toks)
+        
         
         outer_list = []
         inner_list = None
