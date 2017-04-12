@@ -15,7 +15,7 @@ class IndexBuilder(object):
         # This works even if subfolders are used
         print("Start:")
         for root, dirs, files in os.walk(data_folder):
-            for file in files:
+            for file in sorted(files):
                 if file.endswith(".txt"):    # Is there anything else?
                     if docID not in docsDict:
                         docsDict[docID] = file

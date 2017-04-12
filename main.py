@@ -4,12 +4,12 @@ import logging
 import os
 import sys
 import time
-import unicodedata
+import pprint
 from src.index_builder import IndexBuilder
 from src.boolean_ir_handler import BooleanIRHandler
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.WARN)
     
     #===========================================================================
     # logging.info(BooleanQueryParser().parse_query("Hexe"))
@@ -82,8 +82,8 @@ if __name__ == '__main__':
     print("built index in {0:.5f} seconds".format(index_build_elapsed))
      
     print("number of dict entries:", len(dictionary))
-    print(docsDict)
-    print(dictionary)
+    pprint.pprint(docsDict)
+    logging.info(dictionary)
     print("Done.")
     
     # currently the classes 'term' and 'posting' only contain a String and an int respectively but as per the task the can now be extended
@@ -94,7 +94,6 @@ if __name__ == '__main__':
         try:
             print("Please enter a query or command:")
             query = input().strip()
-            unicodedata.normalize('NFC', query)
             if len(query) < 1:
                 continue    # ask for input again
             else:
@@ -105,6 +104,8 @@ if __name__ == '__main__':
                     elif query == "/fuzzy":
                         print("Fuzzy logic activated.")
                         mode = "fuzzy"
+                    elif query == "/q":
+                        break
                     else:
                         print("Unknown command!", query)
                 else:                           # process QUERY
