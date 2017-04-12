@@ -22,10 +22,20 @@ class IndexBuilder(object):
                     if docID not in docsDict:
                         docsDict[docID] = file
                     terms = Tokenizer().tok_lowercase(os.path.join(root, file), ' |\t|\n|\.|,|;|:|!|\?|"|-|´|`')
-                    for t in terms:
-                        if Term(t) not in dictionary:
-                            dictionary[Term(t)] = TermPostings()
-                        dictionary[Term(t)].postings.append(Posting(docID))
+                    
+                    positions_of_term = {}
+                    for pos in range(0, len(terms)):
+                        t = Term(terms[pos])
+                        if t not in positions_of_term:
+                            positions_of_term[t] = []
+                        positions_of_term[t].append(pos)
+                    
+                    for pos in range(0, len(terms)):
+                        t = Term(terms[pos])
+                        if t not in dictionary:
+                            dictionary[t] = TermPostings()
+                        dictionary[t].postings.append(Posting(docID, positions_of_term[t]))
+#                        dictionary[Term(t)].postings.at(docID).data.positions.append(pos)
                         # dictionary[Term(t)].append(docID)    # class Term would need to be immutable
                     docID += 1
                     

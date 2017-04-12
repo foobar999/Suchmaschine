@@ -20,5 +20,8 @@ class Term(object):
     def __str__(self):
         return str(self.literal)
 
+    def __repr__(self):
+        return str(self.literal)
+
     def __hash__(self, *args, **kwargs):
         return hash(self.literal)

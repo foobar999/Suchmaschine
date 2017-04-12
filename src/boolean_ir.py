@@ -18,7 +18,7 @@ class BooleanIR(object):
             # falls Universum das Zwischenergebnis => gib es direkt zurück    
             if len(current_res.postings) == len(universe):
                 logging.debug("returning universe immediately")
-                break          
+                break
         return current_res
     
     def intersect_literals(self, literals, universe):
@@ -60,7 +60,7 @@ class BooleanIR(object):
             complement1 = self._complement(lit1.postings, universe)
             complement2 = self._complement(lit2.postings, universe)
             return Literal(self._intersect(complement1, complement2), True)
-    
+
     def _intersect(self, posting1, posting2):
         logging.debug("intersect of {}, {}".format(posting1, posting2))        
         res = []
