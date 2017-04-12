@@ -1,6 +1,7 @@
 import logging
 from src.boolean_query_parser import BooleanQueryParser
 from src.boolean_ir import BooleanIR
+from src.term import Term
 
 class BooleanIRHandler(object):
 
@@ -10,7 +11,7 @@ class BooleanIRHandler(object):
         for clause in parse_result:
             for literal in clause:
                 key = literal.postings
-                term_postings = indexterms_dict[key]
+                term_postings = indexterms_dict[Term(key)]
                 literal.postings = term_postings.get_postings_list()
         logging.info('replaced index terms in boolean query: {}'.format(parse_result))
         universe = list(docs_dict.keys())

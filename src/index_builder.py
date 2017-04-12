@@ -2,6 +2,7 @@ import os
 from src.tokenizer import Tokenizer
 from src.term_postings import TermPostings
 from src.posting import Posting
+from src.term import Term
 
 class IndexBuilder(object):
     
@@ -15,15 +16,15 @@ class IndexBuilder(object):
         # This works even if subfolders are used
         print("Start:")
         for root, dirs, files in os.walk(data_folder):
-            for file in sorted(files):
+            for file in sorted(files, key=lambda s: s.lower()):
                 if file.endswith(".txt"):    # Is there anything else?
                     if docID not in docsDict:
                         docsDict[docID] = file
                     terms = Tokenizer().tok_lowercase(os.path.join(root, file), ' |\t|\n|\.|,|;|:|!|\?|"|-')
                     for t in terms:
-                        if t not in dictionary:
-                            dictionary[t] = TermPostings()
-                        dictionary[t].postings.append(Posting(docID))
+                        if Term(t) not in dictionary:
+                            dictionary[Term(t)] = TermPostings()
+                        dictionary[Term(t)].postings.append(Posting(docID))
                         # dictionary[Term(t)].append(docID)    # class Term would need to be immutable
                     docID += 1
                     

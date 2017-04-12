@@ -1,6 +1,6 @@
 # fail fail fail
 class Term(object):
-    __slots__ = []
+#    __slots__ = []
     
     literal = None
     
@@ -19,4 +19,6 @@ class Term(object):
         
     def __str__(self):
         return str(self.literal)
-    
+
+    def __hash__(self, *args, **kwargs):
+        return hash(self.literal)

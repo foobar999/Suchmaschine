@@ -9,7 +9,7 @@ from src.index_builder import IndexBuilder
 from src.boolean_ir_handler import BooleanIRHandler
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.WARN)
+    logging.basicConfig(level=logging.DEBUG)
     
     #===========================================================================
     # logging.info(BooleanQueryParser().parse_query("Hexe"))
@@ -115,8 +115,12 @@ if __name__ == '__main__':
                         res_docIDs = BooleanIRHandler().handle_query(query, dictionary, docsDict)
                         query_handle_elapsed = time.time() - query_handle_start
                         res_displayed = [(docID, docsDict[docID]) for docID in res_docIDs]
-                        print('documents {} '.format(res_displayed), end='')
-                        print('in {0:.5f} seconds'.format(query_handle_elapsed))
+                        
+                        print('{} results -  '.format(len(res_displayed)), end='')
+                        print('took {0:.5f} seconds:'.format(query_handle_elapsed))
+                        pprint.pprint(res_displayed)
+                        
+                        
                         
                     if mode == "fuzzy":
                         print("Processing query with fuzzy logic.")
