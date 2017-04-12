@@ -8,7 +8,7 @@ from src.index_builder import IndexBuilder
 from src.boolean_ir_handler import BooleanIRHandler
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
     
     #===========================================================================
     # logging.info(BooleanQueryParser().parse_query("Hexe"))

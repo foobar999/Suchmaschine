@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 import logging
 from src.literal import Literal
@@ -9,6 +10,7 @@ class BooleanQueryParser(object):
     NOT = 'NOT' 
     LBRACKET = '('
     RBRACKET = ')'
+    QUOTES = '"'
     
     def parse_query(self, query):  
         logging.info('parsing query: ' + query)  
@@ -17,13 +19,21 @@ class BooleanQueryParser(object):
             query = self.LBRACKET + query + self.RBRACKET
             logging.debug('query has 1+ ANDs, 0 ORs -> added brackets: ' + str(query))  
         
-        query_toks = re.split('(\(|\)| )', query)
+        query_toks = re.split('(\(|\)| |")', query)
         query_toks = list(filter(str.strip, query_toks))
         logging.debug('parsed query tokens: ' + str(query_toks))  
         
         return self._generate_nested_tuple_list(query_toks)
 
     def _generate_nested_tuple_list(self, query_toks):
+        
+        quotesPos = [i for i,x in enumerate(query_toks) if x==self.QUOTES]
+        print(query_toks)
+        print(quotesPos)
+        l = query_toks[quotesPos[0]+1:quotesPos[1]]
+        query_toks[quotesPos[0]:quotesPos[1]+1] = [l]
+        print(query_toks)
+        
         outer_list = []
         inner_list = None
         is_outside = True
