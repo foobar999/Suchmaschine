@@ -13,12 +13,6 @@ class BooleanIRHandler(object):
         logging.info('replaced index terms in boolean query: {}'.format(root_node))
         universe = [Posting(key) for key in docs_dict.keys()]        
         dispatcher = QueryOperatorDispatcher(universe)
-        #=======================================================================
-        # intersect_result = [BooleanIR().intersect_literals(inner_clause, universe) for inner_clause in root_node]
-        # logging.info('calculated and-clauses: {}'.format(intersect_result))
-        # union_result = BooleanIR().union_literals(intersect_result, universe)
-        # logging.info('calculated or-clause: {}'.format(union_result))
-        #=======================================================================
         result = dispatcher.dispatch(root_node)
         return result
 
