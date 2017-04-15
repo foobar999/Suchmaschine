@@ -7,18 +7,24 @@ from src.processors.phrase_processor import PhraseProcessor
 
 class QueryOperatorDispatcher(object):
 
+    def __init__(self, universe):
+        self.universe = universe
+
     def dispatch(self, node):
         op = node.key
+        # Blattknoten
+        if isinstance(op, list):
+            return node
         if op.name == QueryOp.PROXIMITY(None).name:
-            return ProximityProcessor().process(op.val, node.children)
+            return ProximityProcessor(self).process(op.val, node.children)
         elif op == QueryOp.NOT:
-            return NotProcessor().process(node.children)
+            return NotProcessor(self).process(node.children)
         elif op in (QueryOp.AND, QueryOp.OR, QueryOp.PHRASE):
             arbitrary_args_operators = {
-                QueryOp.AND: AndProcessor(),
-                QueryOp.OR: OrProcessor(),
-                QueryOp.PHRASE: PhraseProcessor()
+                QueryOp.AND: AndProcessor(self),
+                QueryOp.OR: OrProcessor(self),
+                QueryOp.PHRASE: PhraseProcessor(self)
             }
-            return arbitrary_args_operators[op].process(node.children)
+            return arbitrary_args_operators[op].process(node.children, self.universe)
         else:
-            return node.key
+            raise KeyError()

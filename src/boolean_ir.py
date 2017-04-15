@@ -14,7 +14,7 @@ class BooleanIR(object):
         current_res = Literal([], True)
         for literal in literals:
             logging.debug("current union result: {}".format(current_res))        
-            current_res = self._union_2_literals(universe, current_res, literal)      
+            current_res = self._union_2_postings(universe, current_res, literal)      
             # falls Universum das Zwischenergebnis => gib es direkt zurück    
             if len(current_res.postings) == len(universe):
                 logging.debug("returning universe immediately")
@@ -44,7 +44,7 @@ class BooleanIR(object):
     
         return current_res
     
-    def _union_2_literals(self, universe, lit1, lit2):
+    def _union_2_postings(self, universe, lit1, lit2):
         postings1 = lit1.postings if lit1.is_positive else self._complement(lit1.postings, universe)
         postings2 = lit2.postings if lit2.is_positive else self._complement(lit2.postings, universe)
         return Literal(self._union(postings1, postings2), True)

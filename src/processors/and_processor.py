@@ -1,5 +1,11 @@
+from src.processors.query_operator_processor import QueryOperatorProcessor
 
-class AndProcessor(object):
+class AndProcessor(QueryOperatorProcessor):
     
-    def process(self, child_nodes):
+    def __init__(self, dispatcher):
+        super().__init__(dispatcher)
+        
+    def process(self, dispatcher, child_nodes):
         pass
+    
+    

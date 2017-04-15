@@ -1,7 +1,7 @@
 
 class Posting(object):
     
-    def __init__(self, docID, positions):
+    def __init__(self, docID, positions = None):
         self.docID = docID
         # Here be extensions (as per the task)
         # TODO Positional Index

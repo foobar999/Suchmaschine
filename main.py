@@ -111,10 +111,10 @@ if __name__ == '__main__':
                     if mode == "bool":
                         print("Processing query with boolean logic.")
                         query_handle_start = time.time()
-                        res_docIDs = BooleanIRHandler().handle_query(query, dictionary, docsDict)
+                        res_postings = BooleanIRHandler().handle_query(query, dictionary, docsDict)
                         query_handle_elapsed = time.time() - query_handle_start
+                        res_docIDs = [posting.docID for posting in res_postings]
                         res_displayed = [(docID, docsDict[docID]) for docID in res_docIDs]
-                        
                         print('{} results -  '.format(len(res_displayed)), end='')
                         print('took {0:.5f} seconds:'.format(query_handle_elapsed))
                         pprint.pprint(res_displayed)
