@@ -8,7 +8,7 @@ class OrProcessor(QueryOperatorProcessor):
         super().__init__(dispatcher)
     
     def process(self, child_nodes, universe):
-        postings = self._get_postings_of_nodes(self._process_all_nodes(child_nodes))
+        postings = self._process_all_nodes(child_nodes)
         logging.debug("union postings {}, universe {}".format(postings, universe))
         current_res = []
         for posting in postings:

@@ -14,7 +14,7 @@ class QueryOperatorDispatcher(object):
         op = node.key
         # Blattknoten
         if isinstance(op, list):
-            return node
+            return op
         if op.name == QueryOp.PROXIMITY(None).name:
             return ProximityProcessor(self).process(op.val, node.children)
         elif op == QueryOp.NOT:
