@@ -17,7 +17,6 @@ class BooleanQueryParserTest(unittest.TestCase):
 
     def test_queries(self):
         parser = BooleanQueryParser()
-        print(parser.parse('A /3 B') == self.to_tree((QueryOp.PROXIMITY(3), ['a', 'b'])))
         queries = [
             'HaLlO',
             'A AND B AND C',
@@ -43,6 +42,4 @@ class BooleanQueryParserTest(unittest.TestCase):
             self.to_tree((QueryOp.OR, [(QueryOp.NOT, [(QueryOp.PHRASE, ['a', 'b'])]),(QueryOp.NOT, [(QueryOp.PROXIMITY(3), ['a', 'b'])])]))
             ]
         for q, res in zip(queries, results):
-            #print(res)
-            #print(parser.parse(q))
             self.assertEqual(res, parser.parse(q))

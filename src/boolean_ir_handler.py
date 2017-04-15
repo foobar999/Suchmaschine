@@ -22,3 +22,4 @@ class BooleanIRHandler(object):
             node.key = [tp for tp in term_postings.postings]
         for ch in node.children:
             self._replace_leaf_terms_by_postings(ch, index)
+            
