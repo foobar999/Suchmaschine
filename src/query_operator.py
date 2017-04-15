@@ -21,6 +21,4 @@ class QueryOp(object):
 QueryOp.AND = QueryOp('AND')
 QueryOp.OR = QueryOp('OR')
 QueryOp.NOT = QueryOp('NOT')
-QueryOp.LBRACKET = QueryOp('LBRACKET')
-QueryOp.RBRACKET = QueryOp('RBRACKET')
 QueryOp.PHRASE = QueryOp('PHRASE')

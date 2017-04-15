@@ -1,4 +1,5 @@
 
+# TODO remove
 class Literal(object):
     
     def __init__(self, postings, is_positive):
