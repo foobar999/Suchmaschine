@@ -13,8 +13,7 @@ class BooleanIRHandler(object):
         logging.info('replaced index terms in boolean query: {}'.format(root_node))
         universe = [Posting(key) for key in docs_dict.keys()]        
         dispatcher = QueryOperatorDispatcher(universe)
-        result = dispatcher.dispatch(root_node)
-        return result
+        return dispatcher.dispatch(root_node)
 
     def _replace_leaf_terms_by_postings(self, node, index):
         if len(node.children) == 0:
