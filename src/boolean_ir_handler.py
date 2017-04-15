@@ -1,4 +1,5 @@
 import logging
+from src.posting import Posting
 from src.boolean_query_parser import BooleanQueryParser
 from src.boolean_ir import BooleanIR
 from src.term import Term
@@ -11,7 +12,7 @@ class BooleanIRHandler(object):
         logging.info('result of parsing boolean query: {}'.format(root_node))
         self._replace_leaf_terms_by_postings(root_node, indexterms_dict)
         logging.info('replaced index terms in boolean query: {}'.format(root_node))
-        universe = list(docs_dict.keys())        
+        universe = [Posting(key) for key in docs_dict.keys()]        
         dispatcher = QueryOperatorDispatcher(universe)
         #=======================================================================
         # intersect_result = [BooleanIR().intersect_literals(inner_clause, universe) for inner_clause in root_node]
