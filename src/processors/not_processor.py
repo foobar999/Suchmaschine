@@ -6,16 +6,16 @@ class NotProcessor(QueryOperatorProcessor):
     def __init__(self, dispatcher):
         super().__init__(dispatcher)
     
-    def process(self, child_nodes, universe):
-        assert len(child_nodes) == 1
-        return self.complement(self._process_all_nodes(child_nodes)[0], universe)
+    def process(self, nodes, universe):
+        assert len(nodes) == 1
+        return self.complement(self._process_all_nodes(nodes)[0], universe)
     
-    def complement(self, posting, universe):
-        logging.debug("complement of {}, universe {}".format(posting, universe))
+    def complement(self, postings, universe):
+        logging.debug("complement of {}, universe {}".format(postings, universe))
         res = []
         ip, iu = 0, 0
-        while ip < len(posting):
-            postp, postu = posting[ip], universe[iu]
+        while ip < len(postings):
+            postp, postu = postings[ip], universe[iu]
             docp, docu = postp.docID, postu.docID
             if docu == docp:
                 ip += 1
@@ -24,3 +24,4 @@ class NotProcessor(QueryOperatorProcessor):
                 res.append(postu)
                 iu += 1
         return res + universe[iu:]
+    
