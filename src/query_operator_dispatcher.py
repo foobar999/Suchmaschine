@@ -18,7 +18,7 @@ class QueryOperatorDispatcher(object):
         if op.name == QueryOp.PROXIMITY(None).name:
             return ProximityProcessor(self).process(op.val, node.children)
         elif op == QueryOp.NOT:
-            return NotProcessor(self).process(node.children)
+            return NotProcessor(self).process(node.children, self.universe)
         elif op in (QueryOp.AND, QueryOp.OR, QueryOp.PHRASE):
             arbitrary_args_operators = {
                 QueryOp.AND: AndProcessor(self),

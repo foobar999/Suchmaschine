@@ -1,7 +1,6 @@
 import logging
 from src.posting import Posting
 from src.boolean_query_parser import BooleanQueryParser
-from src.boolean_ir import BooleanIR
 from src.term import Term
 from src.query_operator_dispatcher import QueryOperatorDispatcher
 

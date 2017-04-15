@@ -6,11 +6,11 @@ class NotProcessor(QueryOperatorProcessor):
     def __init__(self, dispatcher):
         super().__init__(dispatcher)
     
-    def process(self, child_nodes):
+    def process(self, child_nodes, universe):
         assert len(child_nodes) == 1
-        return self._complement(self._process_all_nodes(child_nodes)[0], self.dispatcher.universe)
+        return self.complement(self._process_all_nodes(child_nodes)[0], universe)
     
-    def _complement(self, posting, universe):
+    def complement(self, posting, universe):
         logging.debug("complement of {}, universe {}".format(posting, universe))
         res = []
         ip, iu = 0, 0
