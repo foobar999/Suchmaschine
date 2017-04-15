@@ -1,4 +1,9 @@
 from src.query_operator import QueryOp
+from src.processors.and_processor import AndProcessor
+from src.processors.or_processor import OrProcessor
+from src.processors.not_processor import NotProcessor
+from src.processors.proximity_processor import ProximityProcessor
+from src.processors.phrase_processor import PhraseProcessor
 
 class QueryOperatorDispatcher(object):
 
