@@ -6,7 +6,7 @@ from src.term import Term
 class BooleanIRHandler(object):
 
     def handle_query(self, query, indexterms_dict, docs_dict):
-        parse_result = BooleanQueryParser().parse_query(query)
+        parse_result = BooleanQueryParser().parse(query)
         logging.info('result of parsing boolean query: {}'.format(parse_result))
         for clause in parse_result:
             for literal in clause:
