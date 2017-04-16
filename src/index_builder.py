@@ -21,7 +21,7 @@ class IndexBuilder(object):
                 if file.endswith(".txt"):    # Is there anything else?
                     if docID not in docsDict:
                         docsDict[docID] = file
-                    terms = Tokenizer().tok_lowercase(os.path.join(root, file), ' |\t|\n|\.|,|;|:|!|\?|"|-|´|`')
+                    terms = Tokenizer().tok_lowercase(os.path.join(root, file), '\s|\.|,|;|:|!|\?|"|-|´|`')
                     
                     positions_of_term = {}
                     for pos in range(0, len(terms)):
