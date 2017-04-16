@@ -39,6 +39,6 @@ class ProximityProcessor(QueryOperatorProcessor):
                     pp1 += 1
             if docID1 <= docID2:
                 p1 += 1
-            if docID2 >= docID1:
+            if docID2 <= docID1:
                 p2 += 1
         return answer
