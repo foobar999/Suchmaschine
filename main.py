@@ -115,6 +115,7 @@ if __name__ == '__main__':
                         query_handle_elapsed = time.time() - query_handle_start
                         res_docIDs = [posting.docID for posting in res_postings]
                         res_displayed = [(docID, docsDict[docID]) for docID in res_docIDs]
+                        logging.info('results with postings {} '.format(res_postings))
                         print('{} results -  '.format(len(res_displayed)), end='')
                         print('took {0:.5f} seconds:'.format(query_handle_elapsed))
                         pprint.pprint(res_displayed)
