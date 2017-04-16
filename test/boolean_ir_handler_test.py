@@ -28,3 +28,5 @@ class BooleanIRHandlerTest(unittest.TestCase):
     def test_1_not_2_ands_1_or(self):
         self._test_query([0, 2, 3, 4, 7, 9, 15, 18, 21, 22, 25], '(hexe AND prinzessin) OR (NOT hexe AND könig)')
         
+    def test_prox_5(self):
+        self._test_query([9, 20], 'KuchEn /5 WEIN')
