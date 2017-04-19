@@ -1,4 +1,5 @@
 import logging
+from src.posting import Posting
 from src.processors.query_operator_processor import QueryOperatorProcessor
 
 class NotProcessor(QueryOperatorProcessor):
@@ -21,7 +22,7 @@ class NotProcessor(QueryOperatorProcessor):
                 ip += 1
                 iu += 1
             if docu < docp:
-                res.append(postu)
+                res.append(Posting(postu.docID))
                 iu += 1
         return res + universe[iu:]
     

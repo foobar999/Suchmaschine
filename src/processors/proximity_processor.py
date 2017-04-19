@@ -8,12 +8,11 @@ class ProximityProcessor(QueryOperatorProcessor):
         super().__init__(dispatcher)
     
     def process(self, nodes, k):
-        # assert len(nodes) == 2 ???
+        assert len(nodes) == 2
         nodes_postings = self._process_all_nodes(nodes) 
         logging.debug('processing proximity: k {}, postings {}'.format(k, nodes_postings))
         return self._positional_intersect(nodes_postings[0], nodes_postings[1], k)
         
-    # mann /3 frau
     def _positional_intersect(self, postings1, postings2, k):
         answer = []
         p1, p2 = 0, 0
@@ -21,6 +20,7 @@ class ProximityProcessor(QueryOperatorProcessor):
             posting1, posting2 = postings1[p1], postings2[p2]
             docID1, docID2 = posting1.docID, posting2.docID
             if docID1 == docID2:
+                found_positions = []
                 logging.debug('terms appearing both in doc {}'.format(docID1)) 
                 l = []
                 pos1, pos2 = posting1.positions, posting2.positions
@@ -34,8 +34,11 @@ class ProximityProcessor(QueryOperatorProcessor):
                         pp2 += 1
                     while len(l) > 0 and abs(l[0] - pos1[pp1]) > k:
                         del l[0]
-                    answer.extend([Posting(docID1, [pos1[pp1], ps]) for ps in l])
+                    for ps in l:
+                        found_positions.append((pos1[pp1], ps))
                     pp1 += 1
+                if len(found_positions) > 0:
+                    answer.append(Posting(docID1, found_positions))
             if docID1 <= docID2:
                 p1 += 1
             if docID2 <= docID1:

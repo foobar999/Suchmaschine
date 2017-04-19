@@ -1,4 +1,5 @@
 import logging
+from src.posting import Posting
 from src.query_operator import QueryOp
 from src.tree_node import TreeNode
 from src.processors.query_operator_processor import QueryOperatorProcessor
@@ -22,8 +23,8 @@ class AndProcessor(QueryOperatorProcessor):
         super().__init__(dispatcher)
         
     # erzeugt aus Knoten Literale
-    # jedes Literal ist entweder positiv und enthält das Ergebnis der Auswertung des Knotens
-    # oder es ist negatic und es enthält das Ergebnis der Auswertung des 1 Kindsknotens vom NOT-Knoten
+    # jedes Literal ist entweder positiv und enthï¿½lt das Ergebnis der Auswertung des Knotens
+    # oder es ist negatic und es enthï¿½lt das Ergebnis der Auswertung des 1 Kindsknotens vom NOT-Knoten
     def _process_nodes_by_complement(self, nodes):
         results = []
         for node in nodes:
@@ -48,7 +49,7 @@ class AndProcessor(QueryOperatorProcessor):
             literal = sorted_literals[i]
             logging.debug("current intersect result: {}".format(current_res))        
             current_res = self._intersect_2_literals(current_res, literal, universe)      
-            # falls leere Menge das Zwischenergebnis => gib es direkt zurück    
+            # falls leere Menge das Zwischenergebnis => gib es direkt zurï¿½ck    
             if len(current_res.postings) == 0:
                 logging.debug("returning empty postings immediately")
                 break
@@ -79,7 +80,7 @@ class AndProcessor(QueryOperatorProcessor):
             post1, post2 = postings1[i1], postings2[i2]
             doc1, doc2 = post1.docID, post2.docID
             if doc1 == doc2:
-                res.append(post1)
+                res.append(Posting(post1.docID))
                 i1 += 1
                 i2 += 1
             elif doc1 < doc2:
@@ -99,7 +100,7 @@ class AndProcessor(QueryOperatorProcessor):
                 i1 += 1
                 i2 += 1
             elif doc1 < doc2:
-                res.append(doc1)
+                res.append(Posting(doc1.docID))
                 i1 += 1
             else:
                 i2 += 1

@@ -23,6 +23,9 @@ class PhraseProcessor(QueryOperatorProcessor):
 
             # all elements equal?
             if docIDs[1:] == docIDs[:-1]:
+                
+                found_positions = []
+                
                 docID = docIDs[0]
                 logging.debug('all terms occuring in document {}'.format(docID))
                 poses = [0] * len(nodes_postings)
@@ -32,13 +35,16 @@ class PhraseProcessor(QueryOperatorProcessor):
                     if text_poses_reduced[1:] == text_poses_reduced[:-1]:
                         text_pos = text_poses[0]
                         logging.debug('phrase found in doc {} at position {}'.format(docID, text_pos))
-                        ret.append(Posting(docID, [text_pos]))
+                        found_positions.append(text_pos)
                         poses = [pos+1 for pos in poses]
                         
                     for i in range(0, len(text_poses)):
                         if text_poses[i] < max(text_poses_reduced):
                             poses[i] += 1
-                        
+                
+                if len(found_positions) > 0:
+                    ret.append(Posting(docID, found_positions))
+                
                 docs = [doc+1 for doc in docs]
                 
             # erhöhe die Zeiger, deren docIDs nicht dem Maximum entsprechen

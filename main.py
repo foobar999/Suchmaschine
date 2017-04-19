@@ -41,6 +41,7 @@ if __name__ == '__main__':
                         mode = "fuzzy"
                     elif query == "/q":
                         break
+                    
                     else:
                         print("Unknown command!", query)
                 else:                           # process QUERY
@@ -49,12 +50,11 @@ if __name__ == '__main__':
                         query_handle_start = time.time()
                         res_postings = BooleanIRHandler().handle_query(query, dictionary, docsDict)
                         query_handle_elapsed = time.time() - query_handle_start
-                        res_docIDs = [posting.docID for posting in res_postings]
-                        res_displayed = [(docID, docsDict[docID]) for docID in res_docIDs]
+                        res_displayed = [(docsDict[p.docID], p.docID, p.positions if p.positions != None else '') for p in res_postings]
                         logging.info('results with postings {} '.format(res_postings))
                         print('{} results -  '.format(len(res_displayed)), end='')
                         print('took {0:.5f} seconds:'.format(query_handle_elapsed))
-                        pprint.pprint(res_displayed)
+                        pprint.pprint(res_displayed, width=2000)
                         
                         
                         
