@@ -55,20 +55,10 @@ if __name__ == '__main__':
                         print('{} results -  '.format(len(res_displayed)), end='')
                         print('took {0:.5f} seconds:'.format(query_handle_elapsed))
                         pprint.pprint(res_displayed, width=2000)
-                        
-                        
-                        
+                                                
                     if mode == "fuzzy":
                         print("Processing query with fuzzy logic.")
         except KeyError as err:
             msg = '{} not found'.format(err)
             logging.error(msg)
             sys.stderr.write('{}\n'.format(msg))
-
-# (hexe AND prinzessin) OR (frosch  AND tellerlein)
-
-# Works:
-# Gemüsehändlerin
-    
-    
-    

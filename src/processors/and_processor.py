@@ -68,8 +68,9 @@ class AndProcessor(QueryOperatorProcessor):
         else:
             not_processor = NotProcessor(self.dispatcher)
             complement1 = not_processor.complement(lit1.postings, universe)
-            complement2 = not_processor.complement(lit2.postings, universe)
-            res_postings = self._intersect(complement1, complement2)
+            #complement2 = not_processor.complement(lit2.postings, universe)
+            #res_postings = self._intersect(complement1, complement2)
+            res_postings = self._intersect_complement(complement1, lit2.postings)
         return AndProcessor.Literal(res_postings, True)
 
     def _intersect(self, postings1, postings2):
