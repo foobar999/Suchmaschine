@@ -22,7 +22,6 @@ class ProximityProcessor(QueryOperatorProcessor):
             docID1, docID2 = posting1.docID, posting2.docID
             if docID1 == docID2:
                 logging.debug('terms appearing both in doc {}'.format(docID1)) 
-                # TODO verkettete Liste?
                 l = []
                 pos1, pos2 = posting1.positions, posting2.positions
                 pp1, pp2 = 0, 0

@@ -11,9 +11,11 @@ class PhraseProcessor(QueryOperatorProcessor):
     def process(self, nodes, universe):
         nodes_postings = self._process_all_nodes(nodes) 
         logging.debug('processing phrase operator on postings {}, universe{}'.format(nodes_postings, universe))
-        assert 1 <= len(nodes) <= 3
+        #assert 1 <= len(nodes) <= 3
         # TODO 2er-Phrases
         
+        
+        '''
         ret = []
         postings1, postings2, postings3 = nodes_postings[0], nodes_postings[1], nodes_postings[2]
         doc1, doc2, doc3 = 0, 0, 0
@@ -37,16 +39,79 @@ class PhraseProcessor(QueryOperatorProcessor):
                         pos3 += 1
                 
                 doc1, doc2, doc3 = doc1+1, doc2+1, doc3+1
-            # erhöhe die Zeiger, deren docIDs nicht dem Maximum entsprechen
+            # erhï¿½he die Zeiger, deren docIDs nicht dem Maximum entsprechen
             if docID1 < max(docID1, docID2, docID3):
                 doc1 += 1
             if docID2 < max(docID1, docID2, docID3):
                 doc2 += 1
             if docID3 < max(docID1, docID2, docID3):
                 doc3 += 1
+        '''
+        
+        
+        ret = []
+        #nodes_postings[]
+        docs = [0] * len(nodes_postings)
+        
+        while self.doc_valid(docs, nodes_postings):
+            #posts = [nodes_postings[doc] for doc in nodes_postings]
+            posts = [nodes_postings[i][docs[i]] for i in range(0,len(docs))]
+            logging.debug('posts: {}'.format(posts))
+            docIDs = [nodes_postings[i][docs[i]].docID for i in range(0,len(posts))]
+            #docIDs = [p.docID for p in posts]
+            #current_posts = [posts[i][docs[i]] for i in range(0, len(docs))]
+
+            # all elements equal?
+            if docIDs[1:] == docIDs[:-1]:
+                docID = docIDs[0]
+                logging.debug('all terms occuring in document {}'.format(docID))
+                poses = [0] * len(nodes_postings)
+                while self.pos_valid(poses, posts):
+                    text_poses = [posts[i].positions[poses[i]] for i in range(0,len(poses))]
+                    text_poses_reduced = [text_poses[i]-i for i in range(0, len(text_poses))]
+                    if text_poses_reduced[1:] == text_poses_reduced[:-1]:
+                        text_pos = text_poses[0]
+                        logging.debug('phrase found in doc {} at position {}'.format(docID, text_pos))
+                        ret.append(Posting(docID, [text_pos]))
+                        poses = [pos+1 for pos in poses]
+                        
+                    for i in range(0, len(text_poses)):
+                        if text_poses[i] < max(text_poses_reduced):
+                            poses[i] += 1
+                        
+                docs = [doc+1 for doc in docs]
+                
+            # erhï¿½he die Zeiger, deren docIDs nicht dem Maximum entsprechen
+            else:
+                for i in range(0, len(docIDs)):
+                    if docIDs[i] < max(docIDs):
+                        docs[i] += 1
+                    
         
         return ret
         
+        
+    def text_poses_identical(self, text_poses_reduced):
+        val = text_poses_reduced[0]
+        for i in 1,len(text_poses_reduced):
+            if text_poses_reduced[i] != val:
+                return False
+        return True
+    
+        
+    def doc_valid(self, docs, nodes_postings):
+        for i in range(0,len(nodes_postings)):
+            if(docs[i] >= len(nodes_postings[i])):
+                return False
+        return True
+        
+        
+    def pos_valid(self, poses, posts):
+        for i in range(0,len(posts)):
+            if(poses[i] >= len(posts[i].positions)):
+                return False
+        return True
+    
         """
         i2, i3 = 0, 0
         post1, post2, post3 = nodes_postings[0], nodes_postings[3], nodes_postings[2]
