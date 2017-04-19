@@ -17,7 +17,7 @@ class BooleanIRHandlerTest(unittest.TestCase):
         self.assertEqual(expected_res, res)
         
     def test_0_operators(self):
-        self._test_query([6, 10, 14], 'hexe')
+        self._test_query([6, 10, 12], 'hexe')
         
     def test_1_and(self):
         self._test_query([], 'hexe AND prinzessin')
@@ -30,3 +30,9 @@ class BooleanIRHandlerTest(unittest.TestCase):
         
     def test_prox_5(self):
         self._test_query([9, 20], 'KuchEn /5 WEIN')
+
+    def test_phrase_2(self):
+        self._test_query([22], '"sieben Zwerge"')
+        
+    def test_phrase_3(self):
+        self._test_query([12], '"Hänsel und Gretel"')
