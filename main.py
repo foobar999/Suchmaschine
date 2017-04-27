@@ -6,6 +6,8 @@ import time
 import pprint
 from src.index_builder import IndexBuilder
 from src.boolean_ir_handler import BooleanIRHandler
+from src.fuzzy.membership_calculator import MembershipCalculator
+from src.fuzzy.fuzzy_ir_handler import FuzzyIRHandler
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
@@ -15,7 +17,17 @@ if __name__ == '__main__':
     dictionary, docsDict = IndexBuilder().build_from_folder(data_folder)
     index_build_elapsed = time.time() - index_build_start
     print("built index in {0:.5f} seconds".format(index_build_elapsed))
-     
+
+    start_time = time.time()
+    corr = MembershipCalculator().calc_correlation_mat(dictionary, 123)
+    elapsed_time = time.time() - start_time
+    print("built correlation matrix in {0:.5f} seconds".format(elapsed_time))
+    start_time = time.time()
+    fuzzy_index = MembershipCalculator().build_fuzzy_index(dictionary, corr, 456)
+    elapsed_time = time.time() - start_time
+    print("built fuzzy index in {0:.5f} seconds".format(elapsed_time))
+    
+
     print("number of dict entries:", len(dictionary))
     pprint.pprint(docsDict)
     logging.info(dictionary)
