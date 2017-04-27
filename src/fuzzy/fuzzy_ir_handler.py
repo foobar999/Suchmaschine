@@ -11,8 +11,8 @@ class FuzzyIRHandler(object):
         logging.info('result of parsing fuzzy query: {}'.format(root_node))
         self._replace_leaf_terms_by_postings(root_node, fuzzy_index)
         logging.info('replaced index terms in boolean query: {}'.format(root_node))
-        universe = [FuzzyPosting(key, None) for key in docs_dict.keys()]     
-        return FuzzyOperatorDispatcher().dispatch(root_node, universe)
+        universe = [FuzzyPosting(key, 1) for key in docs_dict.keys()]     
+        return FuzzyOperatorDispatcher(universe).dispatch(root_node)
 
     def _replace_leaf_terms_by_postings(self, node, fuzzy_index):
         if len(node.children) == 0:

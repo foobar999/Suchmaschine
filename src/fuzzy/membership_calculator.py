@@ -22,4 +22,5 @@ class MembershipCalculator(object):
     def build_fuzzy_index(self, index, corr, threshold):
         return {'a': [FuzzyPosting(1, 0.1), FuzzyPosting(3, 0.6), FuzzyPosting(4, 0.01)],
                 'b': [FuzzyPosting(2, 0.8), FuzzyPosting(4, 0.9)],
-                'a': [FuzzyPosting(1, 0.01), FuzzyPosting(4, 0.75)]}
+                'c': [FuzzyPosting(1, 0.01), FuzzyPosting(4, 0.75)]}
+        

@@ -5,21 +5,22 @@ from src.fuzzy.fuzzy_not_processor import FuzzyNotProcessor
 
 class FuzzyOperatorDispatcher(object):
     
-    def __init__(self):
+    def __init__(self, universe):
+        self.universe = universe
         self.processors = {
-            QueryOp.AND: FuzzyAndProcessor(self),
+            QueryOp.AND: FuzzyAndProcessor(self, universe),
             QueryOp.OR: FuzzyOrProcessor(self),
-            QueryOp.NOT: FuzzyNotProcessor(self)
+            QueryOp.NOT: FuzzyNotProcessor(self, universe)
         }
     
-    def dispatch(self, node, universe):
+    def dispatch(self, node):
         
         op = node.key
         # Blattknoten
         if isinstance(op, list):
             return op
         elif op in self.processors.keys():
-            return self.processors[op].process(node.children, universe)
+            return self.processors[op].process(node.children)
         else:
             raise KeyError()
         

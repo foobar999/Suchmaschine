@@ -3,10 +3,11 @@ from src.processors.query_operator_processor import QueryOperatorProcessor
 
 class FuzzyAndProcessor(QueryOperatorProcessor):
 
-    def __init__(self, dispatcher):
+    def __init__(self, dispatcher, universe):
         super().__init__(dispatcher)
+        self.universe = universe
         
-    def process(self, nodes, universe):
+    def process(self, nodes):
         pass
 
         
