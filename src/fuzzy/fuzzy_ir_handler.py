@@ -17,8 +17,7 @@ class FuzzyIRHandler(object):
     def _replace_leaf_terms_by_postings(self, node, fuzzy_index):
         if len(node.children) == 0:
             logging.debug('searching for term {} in index'.format(node.key))
-            term_postings = fuzzy_index[node.key]
-            node.key = [tp for tp in term_postings.postings]
+            node.key = fuzzy_index[node.key]
         for ch in node.children:
             self._replace_leaf_terms_by_postings(ch, fuzzy_index)
             

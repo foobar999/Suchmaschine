@@ -70,6 +70,11 @@ if __name__ == '__main__':
                                                 
                     if mode == "fuzzy":
                         print("Processing query with fuzzy logic.")
+                        start_time = time.time()
+                        res = FuzzyIRHandler().handle_query(query, fuzzy_index, docsDict)
+                        elapsed_time = time.time() - start_time
+                        print('fuzzy result: {}'.format(res))
+                    
         except KeyError as err:
             msg = '{} not found'.format(err)
             logging.error(msg)
