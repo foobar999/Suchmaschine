@@ -1,6 +1,6 @@
 from src.posting import Posting
 
-class FuzzyPosting(Posting):
+class RankedPosting(Posting):
     
     # speichert eine Dokument-ID docID und einen Zugehörigkeitswert mem_val
     def __init__(self, docID, mem_val):

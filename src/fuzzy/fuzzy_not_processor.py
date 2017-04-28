@@ -1,5 +1,5 @@
 import logging
-from src.fuzzy.fuzzy_posting import FuzzyPosting
+from src.ranked_posting import RankedPosting
 from src.processors.query_operator_processor import QueryOperatorProcessor
 
 class FuzzyNotProcessor(QueryOperatorProcessor):
@@ -26,11 +26,11 @@ class FuzzyNotProcessor(QueryOperatorProcessor):
             docp, docu = postp.docID, postu.docID
             mem_valp = postp.mem_val
             if docu == docp:
-                self.append_if_nonzero_memval(res, FuzzyPosting(docp, 1 - mem_valp))
+                self.append_if_nonzero_memval(res, RankedPosting(docp, 1 - mem_valp))
                 ip += 1
                 iu += 1
             elif docu < docp:
-                # das FuzzyPosting des Universums sollte den Zugehörigkeitswert 1 besitzen
+                # das RankedPosting des Universums sollte den Zugehörigkeitswert 1 besitzen
                 res.append(postu)
                 iu += 1
         return res + self.universe[iu:]

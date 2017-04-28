@@ -1,7 +1,7 @@
 import logging
 from src.boolean_query_parser import BooleanQueryParser
 from src.fuzzy.fuzzy_operator_dispatcher import FuzzyOperatorDispatcher
-from src.fuzzy.fuzzy_posting import FuzzyPosting
+from src.ranked_posting import RankedPosting
 
 class FuzzyIRHandler(object):
 
@@ -11,7 +11,7 @@ class FuzzyIRHandler(object):
         logging.info('result of parsing fuzzy query: {}'.format(root_node))
         self._replace_leaf_terms_by_postings(root_node, fuzzy_index)
         logging.info('replaced index terms in boolean query: {}'.format(root_node))
-        universe = [FuzzyPosting(doc_id, 1) for doc_id in doc_ids]     
+        universe = [RankedPosting(doc_id, 1) for doc_id in doc_ids]     
         return FuzzyOperatorDispatcher(universe).dispatch(root_node)
 
     def _replace_leaf_terms_by_postings(self, node, fuzzy_index):

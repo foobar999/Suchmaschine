@@ -1,7 +1,7 @@
 import logging
 from src.processors.and_processor import AndProcessor
 from src.fuzzy.fuzzy_not_processor import FuzzyNotProcessor
-from src.fuzzy.fuzzy_posting import FuzzyPosting
+from src.ranked_posting import RankedPosting
 
 class FuzzyAndProcessor(AndProcessor):
 
@@ -35,7 +35,7 @@ class FuzzyAndProcessor(AndProcessor):
             doc1, doc2 = post1.docID, post2.docID
             mem_val1, mem_val2 = post1.mem_val, post2.mem_val            
             if doc1 == doc2:
-                res.append(FuzzyPosting(doc1, min(mem_val1, mem_val2)))
+                res.append(RankedPosting(doc1, min(mem_val1, mem_val2)))
                 i1 += 1
                 i2 += 1
             elif doc1 < doc2:
@@ -54,7 +54,7 @@ class FuzzyAndProcessor(AndProcessor):
             doc1, doc2 = post1.docID, post2.docID
             mem_val1, mem_val2 = post1.mem_val, post2.mem_val  
             if doc1 == doc2:      
-                FuzzyNotProcessor.append_if_nonzero_memval(res, FuzzyPosting(doc1, min(mem_val1, 1 - mem_val2)))
+                FuzzyNotProcessor.append_if_nonzero_memval(res, RankedPosting(doc1, min(mem_val1, 1 - mem_val2)))
                 i1 += 1
                 i2 += 1
             elif doc1 < doc2:

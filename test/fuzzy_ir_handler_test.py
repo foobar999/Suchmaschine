@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 import unittest
 from src.fuzzy.fuzzy_ir_handler import FuzzyIRHandler
-from src.fuzzy.fuzzy_posting import FuzzyPosting
+from src.ranked_posting import RankedPosting
 
 class FuzzyIRHandlerTest(unittest.TestCase):
 
     def setUp(self):
         self.hdl = FuzzyIRHandler()
-        self.index = {'a': [FuzzyPosting(1, 1), FuzzyPosting(3, 0.6), FuzzyPosting(4, 0.01)],
-                      'b': [FuzzyPosting(2, 0.8), FuzzyPosting(4, 1)],
-                      'c': [FuzzyPosting(1, 0.01), FuzzyPosting(3, 0.75)]}
+        self.index = {'a': [RankedPosting(1, 1), RankedPosting(3, 0.6), RankedPosting(4, 0.01)],
+                      'b': [RankedPosting(2, 0.8), RankedPosting(4, 1)],
+                      'c': [RankedPosting(1, 0.01), RankedPosting(3, 0.75)]}
         self.doc_ids = list(range(0, 6))
         
     def _test_query(self, expected_res, query):

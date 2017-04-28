@@ -1,6 +1,6 @@
 import logging
 from src.processors.query_operator_processor import QueryOperatorProcessor
-from src.fuzzy.fuzzy_posting import FuzzyPosting
+from src.ranked_posting import RankedPosting
 
 class FuzzyOrProcessor(QueryOperatorProcessor):
 
@@ -25,7 +25,7 @@ class FuzzyOrProcessor(QueryOperatorProcessor):
             doc1, doc2 = post1.docID, post2.docID
             mem_val1, mem_val2 = post1.mem_val, post2.mem_val
             if doc1 == doc2:
-                res.append(FuzzyPosting(doc1, max(mem_val1, mem_val2)))
+                res.append(RankedPosting(doc1, max(mem_val1, mem_val2)))
                 i1 += 1
                 i2 += 1
             elif doc1 < doc2:

@@ -1,4 +1,4 @@
-from src.fuzzy.fuzzy_posting import FuzzyPosting
+from src.ranked_posting import RankedPosting
 
 class MembershipCalculator(object):
     
@@ -15,12 +15,12 @@ class MembershipCalculator(object):
     # berechnet den Fuzzy-Index aus dem booleschen Index index
     # benötigt die Korrelationsmatrix corr und eine Schwelle threshold
     # der Fuzzy-Index wird durch ein dict repräsentiert
-    # das dict speichert zu jedem Term t eine FuzzyPosting-list
-    # jedes FuzzyPosting speichert ein Dokument dok und den Fuzzy-Zugehörigkeitsgrad W(D,t)
+    # das dict speichert zu jedem Term t eine RankedPosting-list
+    # jedes RankedPosting speichert ein Dokument dok und den Fuzzy-Zugehörigkeitsgrad W(D,t)
     # nur Postings mit W(D,t) >= threshold werden gespeichert
     # ggf. später TermPostings statt list ????????????????????
     def build_fuzzy_index(self, index, corr, threshold):
-        return {'a': [FuzzyPosting(1, 1), FuzzyPosting(3, 0.6), FuzzyPosting(4, 0.01)],
-                'b': [FuzzyPosting(2, 0.8), FuzzyPosting(4, 1)],
-                'c': [FuzzyPosting(1, 0.01), FuzzyPosting(3, 0.75)]}
+        return {'a': [RankedPosting(1, 1), RankedPosting(3, 0.6), RankedPosting(4, 0.01)],
+                'b': [RankedPosting(2, 0.8), RankedPosting(4, 1)],
+                'c': [RankedPosting(1, 0.01), RankedPosting(3, 0.75)]}
         
