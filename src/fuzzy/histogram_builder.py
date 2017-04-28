@@ -3,7 +3,7 @@ from math import floor
 # TODO vllt. numpy oder sowas?
 class HistogramBuilder(object):
     
-    # geht von Wertebereich
+    # geht von Wertebereich 0...1 aus
     def build(self, values, num_bins):
         hist = num_bins * [0]
         for val in values:

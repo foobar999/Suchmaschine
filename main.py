@@ -29,15 +29,23 @@ if __name__ == '__main__':
     print("built fuzzy index in {0:.5f} seconds".format(elapsed_time))
     
     index_terms = list(fuzzy_index)
+    num_bins = 10
     corr_values = []
     for t1 in range(0, len(index_terms)):
         for t2 in range(t1 + 1, len(index_terms)):
             term1, term2 = index_terms[t1], index_terms[t2]
             corr_value = corr.get(term1).get(term2)
-            corr_values.append(corr_value or 0)
-    corr_hist = HistogramBuilder().build(corr_values, 10)
-    print('correlation histogram:\n{}'.format(corr_hist))
-            
+            corr_values.append(corr_value or 0)     # setzt Wert auf 0, falls corr_value None
+    corr_hist = HistogramBuilder().build(corr_values, num_bins)
+    print('correlation histogram: {}'.format(corr_hist))
+    
+    fuzzy_index_values = []
+    number_of_documents = 6 # TODO auf Länge von docsDict ändern
+    for posting_list in fuzzy_index.values():
+        fuzzy_index_values.extend([0] * (number_of_documents - len(posting_list)))  # zähle fehlende Postings als 0en
+        fuzzy_index_values.extend([posting.mem_val for posting in posting_list])
+    fuzzy_index_hist = HistogramBuilder().build(fuzzy_index_values, num_bins)
+    print('fuzzy index histogram: {}'.format(fuzzy_index_hist))
 
     print("number of dict entries:", len(dictionary))
     pprint.pprint(docsDict)
