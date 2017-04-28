@@ -28,14 +28,15 @@ class ProximityProcessor(QueryOperatorProcessor):
                 while pp1 < len(pos1):
                     while pp2 < len(pos2):
                         if abs(pos1[pp1] - pos2[pp2]) <= k:
-                            l.append(pos1[pp1])
+                            l.append(pos2[pp2])
                         elif pos2[pp2] > pos1[pp1]:
                             break
                         pp2 += 1
                     while len(l) > 0 and abs(l[0] - pos1[pp1]) > k:
                         del l[0]
                     for ps in l:
-                        found_positions.append((pos1[pp1], ps))
+                        minpos, maxpos = min(ps, pos1[pp1]), max(ps, pos1[pp1])
+                        found_positions.append((minpos, maxpos))
                     pp1 += 1
                 if len(found_positions) > 0:
                     answer.append(Posting(docID1, found_positions))
