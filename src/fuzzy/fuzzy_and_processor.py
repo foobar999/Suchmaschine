@@ -33,9 +33,9 @@ class FuzzyAndProcessor(AndProcessor):
         while i1 < len(postings1) and i2 < len(postings2):
             post1, post2 = postings1[i1], postings2[i2]
             doc1, doc2 = post1.docID, post2.docID
-            mem_val1, mem_val2 = post1.mem_val, post2.mem_val            
+            rank1, rank2 = post1.rank, post2.rank            
             if doc1 == doc2:
-                res.append(RankedPosting(doc1, min(mem_val1, mem_val2)))
+                res.append(RankedPosting(doc1, min(rank1, rank2)))
                 i1 += 1
                 i2 += 1
             elif doc1 < doc2:
@@ -52,9 +52,9 @@ class FuzzyAndProcessor(AndProcessor):
         while i1 < len(posting1) and i2 < len(posting2):
             post1, post2 = posting1[i1], posting2[i2]
             doc1, doc2 = post1.docID, post2.docID
-            mem_val1, mem_val2 = post1.mem_val, post2.mem_val  
+            rank1, rank2 = post1.rank, post2.rank  
             if doc1 == doc2:      
-                FuzzyNotProcessor.append_if_nonzero_memval(res, RankedPosting(doc1, min(mem_val1, 1 - mem_val2)))
+                FuzzyNotProcessor.append_if_nonzero_memval(res, RankedPosting(doc1, min(rank1, 1 - rank2)))
                 i1 += 1
                 i2 += 1
             elif doc1 < doc2:

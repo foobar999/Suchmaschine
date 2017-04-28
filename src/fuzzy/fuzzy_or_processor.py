@@ -23,9 +23,9 @@ class FuzzyOrProcessor(QueryOperatorProcessor):
         while i1 < len(postings1) and i2 < len(postings2):
             post1, post2 = postings1[i1], postings2[i2]
             doc1, doc2 = post1.docID, post2.docID
-            mem_val1, mem_val2 = post1.mem_val, post2.mem_val
+            rank1, rank2 = post1.rank, post2.rank
             if doc1 == doc2:
-                res.append(RankedPosting(doc1, max(mem_val1, mem_val2)))
+                res.append(RankedPosting(doc1, max(rank1, rank2)))
                 i1 += 1
                 i2 += 1
             elif doc1 < doc2:

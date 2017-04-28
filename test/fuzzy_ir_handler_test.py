@@ -14,7 +14,7 @@ class FuzzyIRHandlerTest(unittest.TestCase):
         
     def _test_query(self, expected_res, query):
         res = self.hdl.handle_query(query, self.index, self.doc_ids)
-        tuple_res = [(post.docID, round(post.mem_val, 2)) for post in res]
+        tuple_res = [(post.docID, round(post.rank, 2)) for post in res]
         self.assertEqual(expected_res, tuple_res)
         
     def test_a(self):

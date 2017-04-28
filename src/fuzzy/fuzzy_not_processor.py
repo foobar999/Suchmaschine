@@ -6,7 +6,7 @@ class FuzzyNotProcessor(QueryOperatorProcessor):
 
     @staticmethod
     def append_if_nonzero_memval(posting_list, posting):
-        if(posting.mem_val > 0):
+        if(posting.rank > 0):
             posting_list.append(posting)
             
     def __init__(self, dispatcher, universe):
@@ -24,9 +24,9 @@ class FuzzyNotProcessor(QueryOperatorProcessor):
         while ip < len(postings):
             postp, postu = postings[ip], self.universe[iu]
             docp, docu = postp.docID, postu.docID
-            mem_valp = postp.mem_val
+            rankp = postp.rank
             if docu == docp:
-                self.append_if_nonzero_memval(res, RankedPosting(docp, 1 - mem_valp))
+                self.append_if_nonzero_memval(res, RankedPosting(docp, 1 - rankp))
                 ip += 1
                 iu += 1
             elif docu < docp:

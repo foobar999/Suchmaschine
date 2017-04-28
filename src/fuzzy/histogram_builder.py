@@ -18,7 +18,7 @@ class HistogramBuilder(object):
         number_of_documents = 6 # TODO auf Länge von docsDict ändern
         for posting_list in fuzzy_index.values():
             fuzzy_index_values.extend([0] * (number_of_documents - len(posting_list))) # zähle fehlende Postings als 0en
-            fuzzy_index_values.extend([posting.mem_val for posting in posting_list])
+            fuzzy_index_values.extend([posting.rank for posting in posting_list])
         
         return self._build(fuzzy_index_values, num_bins)
     
