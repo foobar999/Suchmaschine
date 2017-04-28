@@ -10,6 +10,19 @@ from src.fuzzy.membership_calculator import MembershipCalculator
 from src.fuzzy.fuzzy_ir_handler import FuzzyIRHandler
 from src.fuzzy.histogram_builder import HistogramBuilder
 
+def generate_displayed_result(query_result, docs_dict):
+    displayed_result = []
+    for posting in query_result:
+        post_dict = {
+            'id': posting.docID,
+            'name': docs_dict[posting.docID]
+        }
+        for opt_attr in ['rank', 'positions']:
+            if hasattr(posting, opt_attr) and getattr(posting, opt_attr) is not None: 
+                post_dict[opt_attr] = getattr(posting, opt_attr)
+        displayed_result.append(post_dict)
+        
+    return displayed_result
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
@@ -65,25 +78,25 @@ if __name__ == '__main__':
                     else:
                         print("Unknown command!", query)
                 else:                           # process QUERY
+                    #query_result, elapsed_time = None, None
                     if mode == "bool":
                         print("Processing query with boolean logic.")
-                        query_handle_start = time.time()
-                        res_postings = BooleanIRHandler().handle_query(query, dictionary, docsDict)
-                        query_handle_elapsed = time.time() - query_handle_start
-                        res_displayed = [(docsDict[p.docID], p.docID, p.positions if p.positions != None else '') for p in res_postings]
-                        logging.info('results with postings {} '.format(res_postings))
-                        print('{} results -  '.format(len(res_displayed)), end='')
-                        print('took {0:.5f} seconds:'.format(query_handle_elapsed))
-                        pprint.pprint(res_displayed, width=2000)
-                                                
+                        start_time = time.time()
+                        query_result = BooleanIRHandler().handle_query(query, dictionary, docsDict)
+                        elapsed_time = time.time() - start_time
+                                              
                     if mode == "fuzzy":
                         print("Processing query with fuzzy logic.")
-                        start_time = time.time()
-                        #res = FuzzyIRHandler().handle_query(query, fuzzy_index, docsDict)
                         dummy_fuzzy_doc_ids = list(range(0, 6))
-                        res = FuzzyIRHandler().handle_query(query, fuzzy_index, dummy_fuzzy_doc_ids)
+                        start_time = time.time()
+                        query_result = FuzzyIRHandler().handle_query(query, fuzzy_index, dummy_fuzzy_doc_ids)
                         elapsed_time = time.time() - start_time
-                        print('fuzzy result: {}'.format(res))
+                    
+                    logging.info('{} results: {}'.format(mode, query_result))
+                    print('{} results -  '.format(len(query_result)), end='')
+                    print('took {0:.5f} seconds:'.format(elapsed_time))
+                    for displayed_posting in generate_displayed_result(query_result, docsDict):
+                        print(displayed_posting)
                     
         except KeyError as err:
             msg = '{} not found'.format(err)
