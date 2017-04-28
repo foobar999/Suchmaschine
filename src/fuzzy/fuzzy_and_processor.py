@@ -46,7 +46,7 @@ class FuzzyAndProcessor(AndProcessor):
     
     # postings1 positiv, postings2 negativ
     def _intersect_complement(self, posting1, posting2):
-        logging.debug("intersect_complement of {}, {}".format(posting1, posting2))
+        logging.debug("fuzzy intersect_complement of {}, {}".format(posting1, posting2))
         res = []
         i1, i2 = 0, 0
         while i1 < len(posting1) and i2 < len(posting2):
