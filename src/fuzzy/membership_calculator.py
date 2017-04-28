@@ -20,7 +20,7 @@ class MembershipCalculator(object):
     # nur Postings mit W(D,t) >= threshold werden gespeichert
     # ggf. später TermPostings statt list ????????????????????
     def build_fuzzy_index(self, index, corr, threshold):
-        return {'a': [FuzzyPosting(1, 0.1), FuzzyPosting(3, 0.6), FuzzyPosting(4, 0.01)],
-                'b': [FuzzyPosting(2, 0.8), FuzzyPosting(4, 0.9)],
+        return {'a': [FuzzyPosting(1, 1), FuzzyPosting(3, 0.6), FuzzyPosting(4, 0.01)],
+                'b': [FuzzyPosting(2, 0.8), FuzzyPosting(4, 1)],
                 'c': [FuzzyPosting(1, 0.01), FuzzyPosting(3, 0.75)]}
         

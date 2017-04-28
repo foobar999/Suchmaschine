@@ -4,6 +4,11 @@ from src.processors.query_operator_processor import QueryOperatorProcessor
 
 class FuzzyNotProcessor(QueryOperatorProcessor):
 
+    @staticmethod
+    def append_if_nonzero_memval(posting_list, posting):
+        if(posting.mem_val > 0):
+            posting_list.append(posting)
+            
     def __init__(self, dispatcher, universe):
         super().__init__(dispatcher)
         self.universe = universe
@@ -21,7 +26,7 @@ class FuzzyNotProcessor(QueryOperatorProcessor):
             docp, docu = postp.docID, postu.docID
             mem_valp = postp.mem_val
             if docu == docp:
-                res.append(FuzzyPosting(docp, 1 - mem_valp))
+                self.append_if_nonzero_memval(res, FuzzyPosting(docp, 1 - mem_valp))
                 ip += 1
                 iu += 1
             elif docu < docp:

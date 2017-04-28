@@ -1,4 +1,4 @@
-from src.query_operator import QueryOp
+from src.query_operator import *
 from src.fuzzy.fuzzy_and_processor import FuzzyAndProcessor
 from src.fuzzy.fuzzy_or_processor import FuzzyOrProcessor
 from src.fuzzy.fuzzy_not_processor import FuzzyNotProcessor
