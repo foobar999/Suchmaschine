@@ -26,3 +26,9 @@ class FuzzyIRHandlerTest(unittest.TestCase):
     def test_not_c(self):
         self._test_query([(0,1), (1,0.99), (2,1), (3,0.25), (4,1), (5,1)], 'NOT C')
         
+    def test_a_or_b_or_c(self):
+        self._test_query([(1,1), (2,0.8), (3,0.75), (4,1)], 'a OR b OR c')
+        
+    def test_not_a_or_b_or_not_c(self):
+        self._test_query([(0,1), (1,0.99), (2,1), (3,0.4), (4,1), (5,1)], 'NOT a OR b OR NOT c')
+        
