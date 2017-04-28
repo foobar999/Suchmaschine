@@ -8,6 +8,7 @@ from src.index_builder import IndexBuilder
 from src.boolean_ir_handler import BooleanIRHandler
 from src.fuzzy.membership_calculator import MembershipCalculator
 from src.fuzzy.fuzzy_ir_handler import FuzzyIRHandler
+from src.fuzzy.histogram_builder import HistogramBuilder
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
@@ -27,6 +28,16 @@ if __name__ == '__main__':
     elapsed_time = time.time() - start_time
     print("built fuzzy index in {0:.5f} seconds".format(elapsed_time))
     
+    index_terms = list(fuzzy_index)
+    corr_values = []
+    for t1 in range(0, len(index_terms)):
+        for t2 in range(t1 + 1, len(index_terms)):
+            term1, term2 = index_terms[t1], index_terms[t2]
+            corr_value = corr.get(term1).get(term2)
+            corr_values.append(corr_value or 0)
+    corr_hist = HistogramBuilder().build(corr_values, 10)
+    print('correlation histogram:\n{}'.format(corr_hist))
+            
 
     print("number of dict entries:", len(dictionary))
     pprint.pprint(docsDict)
