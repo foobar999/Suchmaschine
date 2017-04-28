@@ -20,3 +20,9 @@ class FuzzyIRHandlerTest(unittest.TestCase):
     def test_a(self):
         self._test_query([(1,1), (3,0.6), (4,0.01)], 'a')
         
+    def test_not_a(self):
+        self._test_query([(0,1), (2,1), (3,0.4), (4,0.99), (5,1)], 'NOT a')
+        
+    def test_not_c(self):
+        self._test_query([(0,1), (1,0.99), (2,1), (3,0.25), (4,1), (5,1)], 'NOT C')
+        
