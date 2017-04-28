@@ -71,7 +71,9 @@ if __name__ == '__main__':
                     if mode == "fuzzy":
                         print("Processing query with fuzzy logic.")
                         start_time = time.time()
-                        res = FuzzyIRHandler().handle_query(query, fuzzy_index, docsDict)
+                        #res = FuzzyIRHandler().handle_query(query, fuzzy_index, docsDict)
+                        dummy_fuzzy_doc_ids = list(range(0, 6))
+                        res = FuzzyIRHandler().handle_query(query, fuzzy_index, dummy_fuzzy_doc_ids)
                         elapsed_time = time.time() - start_time
                         print('fuzzy result: {}'.format(res))
                     

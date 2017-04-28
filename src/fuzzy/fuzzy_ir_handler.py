@@ -5,13 +5,13 @@ from src.fuzzy.fuzzy_posting import FuzzyPosting
 
 class FuzzyIRHandler(object):
 
-    def handle_query(self, query, fuzzy_index, docs_dict):
+    def handle_query(self, query, fuzzy_index, doc_ids):
         logging.info('processing fuzzy query')
         root_node = BooleanQueryParser().parse(query)
         logging.info('result of parsing fuzzy query: {}'.format(root_node))
         self._replace_leaf_terms_by_postings(root_node, fuzzy_index)
         logging.info('replaced index terms in boolean query: {}'.format(root_node))
-        universe = [FuzzyPosting(key, 1) for key in docs_dict.keys()]     
+        universe = [FuzzyPosting(doc_id, 1) for doc_id in doc_ids]     
         return FuzzyOperatorDispatcher(universe).dispatch(root_node)
 
     def _replace_leaf_terms_by_postings(self, node, fuzzy_index):
