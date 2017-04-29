@@ -1,7 +1,6 @@
 from src.ranked_posting import RankedPosting
 from src.term import Term
 from src.processors.or_processor import OrProcessor
-from bs4.1631353 import doc
 
 
 def union(posting1, posting2):
