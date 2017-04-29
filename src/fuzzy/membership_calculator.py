@@ -1,6 +1,7 @@
 from src.ranked_posting import RankedPosting
 from src.term import Term
 from src.processors.or_processor import OrProcessor
+from bs4.1631353 import doc
 
 
 def union(posting1, posting2):
@@ -60,6 +61,7 @@ class MembershipCalculator(object):
                     for entry in index[u].postings:
                         u_postings.append(entry.docID)
                     jaccard = len(intersect(t_postings, u_postings)) / len(union(t_postings, u_postings))
+                    
                     if jaccard > threshold:     # '>' || '>=' ???
                         if t not in correlation_mationary:
                             correlation_mationary[t] = {}
@@ -71,10 +73,29 @@ class MembershipCalculator(object):
     # benötigt die Korrelationsmatrix corr und eine Schwelle threshold
     # der Fuzzy-Index wird durch ein dict repräsentiert
     # das dict speichert zu jedem Term t eine RankedPosting-list
-    # jedes RankedPosting speichert ein Dokument dok und den Fuzzy-Zugehörigkeitsgrad W(D,t)
+    # jedes RankedPosting speichert ein Dokument dok und den Fuzzy-Zugehörigkeitsgrad W(D,t)    # also genau anderes als in der vorlesung ;) (W(t,D)) [macht aber auch sinn]
     # nur Postings mit W(D,t) >= threshold werden gespeichert
     # ggf. später TermPostings statt list ????????????????????
     def build_fuzzy_index(self, index, corr, threshold):
+        affiliation_mationary = {}
+        
+        '''
+        for t in index.keys():          # every term
+            for doc in documents:        # every document
+                
+                prod = 0
+                for u in doc
+                    prod *= 1 - (corr[t])[u]    # every term in that document
+                affiliation = 1 - prod
+                
+                if affiliation > threshold:
+                    if t not in affiliation_mationary:
+                        affiliation_mationary[t] = []
+                    affiliation_mationary[t] = RankedPosting(doc, affiliation)
+        
+        return affiliation_mationary
+        '''
+        
         return {'a': [RankedPosting(1, 1), RankedPosting(3, 0.6), RankedPosting(4, 0.01)],
                 'b': [RankedPosting(2, 0.8), RankedPosting(4, 1)],
                 'c': [RankedPosting(1, 0.01), RankedPosting(3, 0.75)]}
