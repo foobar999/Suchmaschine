@@ -1,4 +1,5 @@
 from src.ranked_posting import RankedPosting
+from src.term import Term
 
 class MembershipCalculator(object):
     
@@ -7,9 +8,29 @@ class MembershipCalculator(object):
     # die Matrix wird durch ein dict repräsentiert, welches zu jedem Term t
     # ein dict speichert, welches zu jedem Term u den Wert c(t,u) speichert
     # t ist stets kleiner als u (zur Dublettenvermeidung) ???????????
+    # Ja schein sinnvoll!!!!!!!!!einseinself
     # Einträge c(t,u) werden nur explizit gespeichert, falls das 
     # Jaccard-Maß einen Wert >= threshold ergibt
     def calc_correlation_mat(self, index, threshold):
+        correlation_matrix = {}
+        
+        jaccard = 0
+        
+        print('mymy')
+        print(index[Term('hexe')])
+#        print(len(index[Term('hexe')].postings))
+        
+        '''
+        for t in index.keys():
+            for u in index.keys():
+                if len(t) < len(u):     # Ha! This saves us half a matrix!(?)
+        '''                    
+                    
+                    
+                    
+        
+        
+        
         return {'a': {'b': 0.1, 'c': 0.4}, 'b':{'c': 0.7}}
     
     # berechnet den Fuzzy-Index aus dem booleschen Index index

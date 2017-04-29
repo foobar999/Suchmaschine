@@ -25,7 +25,10 @@ class SingleList(object):
  
     def __iter__(self):
         return SingleListIter(self.head)
- 
+    
+    def __len__(self):
+        return self.len
+    
     def append(self, data):
         node = Node(data, None)
         if self.head is None:   # first element in empty list

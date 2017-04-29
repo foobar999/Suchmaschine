@@ -51,11 +51,10 @@ if __name__ == '__main__':
 
     print("number of dict entries:", len(dictionary))
     pprint.pprint(docsDict)
-    logging.info(dictionary)
+#    logging.info(dictionary)
     print("Done.")
     
-    # currently the classes 'term' and 'posting' only contain a String and an int respectively but as per the task the can now be extended
-    
+
     mode = "bool"
     print("Boolean logic activated.")
     while True: # user input loop
@@ -85,7 +84,7 @@ if __name__ == '__main__':
                         query_result = BooleanIRHandler().handle_query(query, dictionary, docsDict)
                         elapsed_time = time.time() - start_time
                                               
-                    if mode == "fuzzy":
+                    elif mode == "fuzzy":
                         print("Processing query with fuzzy logic.")
                         dummy_fuzzy_doc_ids = list(range(0, 6))
                         start_time = time.time()

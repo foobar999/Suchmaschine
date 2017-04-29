@@ -1,6 +1,4 @@
-# fail fail fail
 class Term(object):
-#    __slots__ = []
     
     literal = None
     
