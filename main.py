@@ -34,7 +34,7 @@ if __name__ == '__main__':
     print("built index in {0:.5f} seconds".format(index_build_elapsed))
 
     start_time = time.time()
-    corr = MembershipCalculator().calc_correlation_mat(dictionary, 123)
+    corr = MembershipCalculator().calc_correlation_mat(dictionary, 0.5) # watch out for: t == u -> 1 || no entry -> 0
     elapsed_time = time.time() - start_time
     print("built correlation matrix in {0:.5f} seconds".format(elapsed_time))
     start_time = time.time()

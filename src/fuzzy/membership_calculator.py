@@ -1,5 +1,40 @@
 from src.ranked_posting import RankedPosting
 from src.term import Term
+from src.processors.or_processor import OrProcessor
+
+
+def union(posting1, posting2):
+    res = []
+    i1, i2 = 0, 0
+    while i1 < len(posting1) and i2 < len(posting2):
+        doc1, doc2 = posting1[i1], posting2[i2]
+        if doc1 == doc2:
+            res.append(doc1)
+            i1 += 1
+            i2 += 1
+        elif doc1 < doc2:
+            res.append(doc1)
+            i1 += 1
+        else:
+            res.append(doc2)
+            i2 += 1
+    return res + posting1[i1:] + posting2[i2:]
+
+def intersect(posting1, posting2):
+    res = []
+    i1, i2 = 0, 0
+    while i1 < len(posting1) and i2 < len(posting2):
+        doc1, doc2 = posting1[i1], posting2[i2]
+        if doc1 == doc2:
+            res.append(doc1)
+            i1 += 1
+            i2 += 1
+        elif doc1 < doc2:
+            i1 += 1
+        else:
+            i2 += 1
+    return res
+
 
 class MembershipCalculator(object):
     
@@ -12,26 +47,25 @@ class MembershipCalculator(object):
     # Einträge c(t,u) werden nur explizit gespeichert, falls das 
     # Jaccard-Maß einen Wert >= threshold ergibt
     def calc_correlation_mat(self, index, threshold):
-        correlation_matrix = {}
+        correlation_mationary = {}
         
-        jaccard = 0
+        for t in index.keys():                  # t can be every term
+            for u in index.keys():                  # u can be every term
+                if len(t.literal) < len(u.literal):     # only if t < u is c(t,u) calculated
+                                                        # Ha! This saves us half a matrix!(?) - and the diagonal (special case t == u)
+                    t_postings = []
+                    u_postings = []
+                    for entry in index[t].postings:
+                        t_postings.append(entry.docID)
+                    for entry in index[u].postings:
+                        u_postings.append(entry.docID)
+                    jaccard = len(intersect(t_postings, u_postings)) / len(union(t_postings, u_postings))
+                    if jaccard > threshold:     # '>' || '>=' ???
+                        if t not in correlation_mationary:
+                            correlation_mationary[t] = {}
+                        (correlation_mationary[t])[u] = jaccard
         
-        print('mymy')
-        print(index[Term('hexe')])
-#        print(len(index[Term('hexe')].postings))
-        
-        '''
-        for t in index.keys():
-            for u in index.keys():
-                if len(t) < len(u):     # Ha! This saves us half a matrix!(?)
-        '''                    
-                    
-                    
-                    
-        
-        
-        
-        return {'a': {'b': 0.1, 'c': 0.4}, 'b':{'c': 0.7}}
+        return correlation_mationary
     
     # berechnet den Fuzzy-Index aus dem booleschen Index index
     # benötigt die Korrelationsmatrix corr und eine Schwelle threshold
