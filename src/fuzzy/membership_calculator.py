@@ -79,33 +79,29 @@ class MembershipCalculator(object):
     def build_fuzzy_index(self, index, corr, threshold):
         affiliation_mationary = {}
         
-        
+        '''
         for t in index.keys():          # every term
             for doc in documents:        # every document
                 
                 prod = 0
-                for u in doc    # every term in that document
-                    u_corr = 0
-                    if t == u:
+                for u in doc    # every term in a document
+                    u_corr = 0  # in case corr_mat has no entry
+                    if t == u:  # corr_mat doesn't have an entry for this case. But u_corr is 1
                         u_corr = 1
-                    elif t not in corr:
-                        u_corr = 0
-                    elif u not in (corr[t]):
-                        u_corr = 0
-                    else:
-                        u_corr = (corr[t])[u]
+                    elif t in corr:
+                        if u in (corr[t]):
+                            u_corr = (corr[t])[u]
                         
                     prod *= 1 - u_corr
                 affiliation = 1 - prod
                 
-                if affiliation > threshold:        # watch out for: t == u -> 1 || no entry -> 0
-                    if t == u
+                if affiliation > threshold:
                     if t not in affiliation_mationary:
                         affiliation_mationary[t] = []
-                    affiliation_mationary[t] = RankedPosting(doc, affiliation)
+                    (affiliation_mationary[t]).appende(RankedPosting(doc, affiliation))
         
         return affiliation_mationary
-        
+        '''
         
         return {'a': [RankedPosting(1, 1), RankedPosting(3, 0.6), RankedPosting(4, 0.01)],
                 'b': [RankedPosting(2, 0.8), RankedPosting(4, 1)],
