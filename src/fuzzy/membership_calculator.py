@@ -75,25 +75,37 @@ class MembershipCalculator(object):
     # jedes RankedPosting speichert ein Dokument dok und den Fuzzy-Zugehörigkeitsgrad W(D,t)    # also genau anderes als in der vorlesung ;) (W(t,D)) [macht aber auch sinn]
     # nur Postings mit W(D,t) >= threshold werden gespeichert
     # ggf. später TermPostings statt list ????????????????????
+    # term listen pro dokument als parameter (aus index_builder.py)!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?
     def build_fuzzy_index(self, index, corr, threshold):
         affiliation_mationary = {}
         
-        '''
+        
         for t in index.keys():          # every term
             for doc in documents:        # every document
                 
                 prod = 0
-                for u in doc
-                    prod *= 1 - (corr[t])[u]    # every term in that document
+                for u in doc    # every term in that document
+                    u_corr = 0
+                    if t == u:
+                        u_corr = 1
+                    elif t not in corr:
+                        u_corr = 0
+                    elif u not in (corr[t]):
+                        u_corr = 0
+                    else:
+                        u_corr = (corr[t])[u]
+                        
+                    prod *= 1 - u_corr
                 affiliation = 1 - prod
                 
-                if affiliation > threshold:
+                if affiliation > threshold:        # watch out for: t == u -> 1 || no entry -> 0
+                    if t == u
                     if t not in affiliation_mationary:
                         affiliation_mationary[t] = []
                     affiliation_mationary[t] = RankedPosting(doc, affiliation)
         
         return affiliation_mationary
-        '''
+        
         
         return {'a': [RankedPosting(1, 1), RankedPosting(3, 0.6), RankedPosting(4, 0.01)],
                 'b': [RankedPosting(2, 0.8), RankedPosting(4, 1)],
