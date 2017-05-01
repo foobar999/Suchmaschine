@@ -23,3 +23,6 @@ class Term(object):
 
     def __hash__(self, *args, **kwargs):
         return hash(self.literal)
+    
+    def __lt__(self, other):
+        return self.literal < other.literal

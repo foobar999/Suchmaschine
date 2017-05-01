@@ -29,16 +29,18 @@ if __name__ == '__main__':
     
     data_folder = os.path.join(os.getcwd(), "data")
     index_build_start = time.time()
-    dictionary, docsDict = IndexBuilder().build_from_folder(data_folder)
+    index, docsDict = IndexBuilder().build_from_folder(data_folder)
+    numdocs = len(docsDict)
     index_build_elapsed = time.time() - index_build_start
     print("built index in {0:.5f} seconds".format(index_build_elapsed))
 
     start_time = time.time()
-    corr = MembershipCalculator().calc_correlation_mat(dictionary, 0.5) # last run: built correlation matrix in 1588.62204 seconds (~26min)
+    corr, docs_ocurr_mat = MembershipCalculator().calc_correlation_mat(index, numdocs, 0.5) # last run: built correlation matrix in 1588.62204 seconds (~26min)
     elapsed_time = time.time() - start_time
     print("built correlation matrix in {0:.5f} seconds".format(elapsed_time))
     start_time = time.time()
-    fuzzy_index = MembershipCalculator().build_fuzzy_index(dictionary, corr, 456)
+    #fuzzy_index = MembershipCalculator().build_fuzzy_index(index, corr, 456)
+    fuzzy_index = MembershipCalculator().build_fuzzy_index(index, corr, docs_ocurr_mat, 0.5)
     elapsed_time = time.time() - start_time
     print("built fuzzy index in {0:.5f} seconds".format(elapsed_time))
     
@@ -49,10 +51,11 @@ if __name__ == '__main__':
     fuzzy_index_hist = HistogramBuilder().build_fuzzy_index_hist(fuzzy_index, num_bins)
     print('fuzzy index histogram: {}'.format(fuzzy_index_hist))
 
-    print("number of dict entries:", len(dictionary))
+    print("number of dict entries:", len(index))
     pprint.pprint(docsDict)
-#    logging.info(dictionary)
-    print("Done.")
+#    logging.info(index)
+    print("number of fuzzy index entries: {}".format(len(fuzzy_index)))
+#    pprint.pprint(fuzzy_index)
     
 
     mode = "bool"
@@ -81,7 +84,7 @@ if __name__ == '__main__':
                     if mode == "bool":
                         print("Processing query with boolean logic.")
                         start_time = time.time()
-                        query_result = BooleanIRHandler().handle_query(query, dictionary, docsDict)
+                        query_result = BooleanIRHandler().handle_query(query, index, docsDict)
                         elapsed_time = time.time() - start_time
                                               
                     elif mode == "fuzzy":
@@ -90,6 +93,7 @@ if __name__ == '__main__':
                         start_time = time.time()
                         query_result = FuzzyIRHandler().handle_query(query, fuzzy_index, dummy_fuzzy_doc_ids)
                         elapsed_time = time.time() - start_time
+                        query_result.sort(key=lambda post: post.rank, reverse=True)
                     
                     logging.info('{} results: {}'.format(mode, query_result))
                     print('{} results -  '.format(len(query_result)), end='')

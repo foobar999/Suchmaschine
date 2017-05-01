@@ -9,9 +9,9 @@ class IndexBuilder(object):
     
     def build_from_folder(self, data_folder):
         
-        dictionary = {} # matches a Term with an occurrence mylist
+        index = {} # matches a Term with an occurrence mylist
         docsDict = {}   # matches DocID and DocName
-        # dictionary = defaultdict(SingleList)    # this does not do what I want!
+        # index = defaultdict(SingleList)    # this does not do what I want!
         docID = 0
         # Reading Files
         # This works even if subfolders are used
@@ -32,12 +32,12 @@ class IndexBuilder(object):
                     
                     for pos in range(0, len(terms)):
                         t = Term(terms[pos])
-                        if t not in dictionary:
-                            dictionary[t] = TermPostings()
-                        dictionary[t].postings.append(Posting(docID, positions_of_term[t]))
-#                        dictionary[Term(t)].postings.at(docID).data.positions.append(pos)
-                        # dictionary[Term(t)].append(docID)    # class Term would need to be immutable
+                        if t not in index:
+                            index[t] = TermPostings()
+                        index[t].postings.append(Posting(docID, positions_of_term[t]))
+#                        dindexTerm(t)].postings.at(docID).data.positions.append(pos)
+                        # dindexTerm(t)].append(docID)    # class Term would need to be immutable
                     docID += 1
                     
-        return (dictionary, docsDict)
+        return (index, docsDict)
         
