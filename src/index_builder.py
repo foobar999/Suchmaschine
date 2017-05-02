@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+from collections import OrderedDict
 from src.tokenizer import Tokenizer
 from src.term_postings import TermPostings
 from src.posting import Posting
@@ -35,9 +36,10 @@ class IndexBuilder(object):
                         if t not in index:
                             index[t] = TermPostings()
                         index[t].postings.append(Posting(docID, positions_of_term[t]))
-#                        dindexTerm(t)].postings.at(docID).data.positions.append(pos)
+                        # dindexTerm(t)].postings.at(docID).data.positions.append(pos)
                         # dindexTerm(t)].append(docID)    # class Term would need to be immutable
                     docID += 1
                     
-        return (index, docsDict)
+        #return (index, docsDict)
+        return (OrderedDict(sorted(index.items())), docsDict)
         

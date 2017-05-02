@@ -17,24 +17,22 @@ class MembershipCalculator(object):
     # Einträge c(t,u) werden nur explizit gespeichert, falls das 
     # Jaccard-Maß einen Wert >= threshold ergibt
     def calc_correlation_mat(self, index, numdocs, threshold):
-        
-        # TODO #docs, sortierte indexterme übergeben
-        keys = [ele for ele in sorted(index)]
+        logging.debug('keys {}'.format(index.keys())) 
         mat = []
-        for key in keys:
-            posting_list_docs = [post.docID for post in index[key].postings]
+        # erzeuge docs_ocurr_mat(t,D)
+        for term, posting_list in index.items():
+            posting_list_docs = [post.docID for post in posting_list.postings]
             docs_of_key = np.zeros(numdocs, dtype=np.dtype(bool))
             docs_of_key[posting_list_docs] = 1
             mat.append(docs_of_key)
-        logging.debug('keys {}'.format(keys)) 
-        mat = np.reshape(mat, (len(index), numdocs))
-        logging.debug('mat shape {}'.format(mat.shape))
+        docs_ocurr_mat = np.reshape(mat, (len(index), numdocs))
+        logging.debug('mat shape {}'.format(docs_ocurr_mat.shape))
     
-        out = 1 - pairwise_distances(mat, metric = "jaccard")
-        logging.debug('calculated jaccard values {}'.format(out))
-        #out = np.triu(out, k=0)
-        out[out < threshold] = 0    # kicke kleine Werte
-        return out, mat
+        c = 1 - pairwise_distances(docs_ocurr_mat, metric = "jaccard")
+        logging.debug('calculated jaccard values {}'.format(c))
+        #c = np.triu(out, k=0)
+        c[c < threshold] = 0    # kicke kleine Werte
+        return c, docs_ocurr_mat
     
     # berechnet den Fuzzy-Index W(D,t) aus dem booleschen Index index
     # benötigt:
