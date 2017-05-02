@@ -49,6 +49,6 @@ class MembershipCalculatorTest(unittest.TestCase):
             'tipp': [1.0, 0.8, 1.0],
             'veranstaltung': [1.0, 1.0, 1.0]
         }
-        self.assertEqual(res, expected)
+        self.assertDictEqual(res, expected)
 
         

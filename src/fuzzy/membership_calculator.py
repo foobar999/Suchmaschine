@@ -1,7 +1,7 @@
 from src.ranked_posting import RankedPosting
 from src.term import Term
 from src.processors.or_processor import OrProcessor
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 import numpy as np
 from scipy.sparse import csr_matrix, find, coo_matrix
 from sklearn.metrics.pairwise import pairwise_distances
@@ -168,23 +168,42 @@ class MembershipCalculator(object):
     # ggf. später TermPostings statt list ????????????????????
     def build_fuzzy_index(self, index, corr, docs_ocurr_mat, threshold):
     #def build_fuzzy_index(self, docmat, corr, index, threshold):
-        affiliation_mationary = {}
-        
-        docs_ocurr_mat = docs_ocurr_mat.T
-        logging.debug('docs_ocurr_mat shape {}'.format(docs_ocurr_mat.shape))  
-        logging.debug('corr shape {}'.format(corr.shape))         
         
         # TODO sortiertes übergeben 
         terms = sorted(list(index.keys()))
-        for tindex, tcorrelations in enumerate(corr):
-            t = terms[tindex].literal
-            affiliation_mationary[t] = []
-            for docid, doc_occuring_terms in enumerate(docs_ocurr_mat):
+        
+        #=======================================================================
+        # docs_ocurr_mat = docs_ocurr_mat.T
+        # logging.debug('docs_ocurr_mat shape {}'.format(docs_ocurr_mat.shape))  
+        # logging.debug('corr shape {}'.format(corr.shape))         
+        # 
+        # for tindex, tcorrelations in enumerate(corr):
+        #     t = terms[tindex].literal
+        #     affiliation_mationary[t] = []
+        #     for docid, doc_occuring_terms in enumerate(docs_ocurr_mat):
+        #         
+        #         doc_occuring_terms_corrs = np.multiply(tcorrelations, doc_occuring_terms)
+        #         res = 1 - np.prod(1 - doc_occuring_terms_corrs)
+        #         if res >= threshold:
+        #             affiliation_mationary[t].append(RankedPosting(docid, res))
+        #=======================================================================
+        
+        logging.debug('docs_ocurr_mat shape {}'.format(docs_ocurr_mat.shape))  
+        logging.debug('corr shape {}'.format(corr.shape))         
                 
-                doc_occuring_terms_corrs = np.multiply(tcorrelations, doc_occuring_terms)
-                res = 1 - np.prod(1 - doc_occuring_terms_corrs)
-                if res >= threshold:
-                    affiliation_mationary[t].append(RankedPosting(docid, res))
+        one_minus_log = np.log(1 - corr)
+        one_minus_log = np.nan_to_num(one_minus_log)
+        logging.debug('one_minus_log {}'.format(one_minus_log))
+        sums = one_minus_log.dot(docs_ocurr_mat)
+        logging.debug('sums {}'.format(sums))
+        res_mat = 1 - np.exp(sums)
+        res_mat[res_mat < threshold] = 0
+        logging.debug('res_mat {}'.format(res_mat))
+        #logging.debug(np.all(np.isfinite(res_mat)))
+        sparse_res = coo_matrix(res_mat)
+        affiliation_mationary = OrderedDict([(term.literal,[]) for term in terms])
+        for term_index, docID, term_doc_value in zip(sparse_res.row, sparse_res.col, sparse_res.data):
+            affiliation_mationary[terms[term_index].literal].append(RankedPosting(docID, term_doc_value)) 
                 
         return affiliation_mationary
         
