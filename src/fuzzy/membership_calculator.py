@@ -170,7 +170,7 @@ class MembershipCalculator(object):
     #def build_fuzzy_index(self, docmat, corr, index, threshold):
         
         # TODO sortiertes übergeben 
-        terms = sorted(list(index.keys()))
+        terms = sorted([term.literal for term in index.keys()])
         
         #=======================================================================
         # docs_ocurr_mat = docs_ocurr_mat.T
@@ -191,19 +191,25 @@ class MembershipCalculator(object):
         logging.debug('docs_ocurr_mat shape {}'.format(docs_ocurr_mat.shape))  
         logging.debug('corr shape {}'.format(corr.shape))         
                 
-        one_minus_log = np.log(1 - corr)
-        one_minus_log = np.nan_to_num(one_minus_log)
+        with np.errstate(divide='ignore'):  # log(0) = -inf -> ignoriere Warnung
+            one_minus_log = np.log(1 - corr)
+        one_minus_log = np.nan_to_num(one_minus_log)    # ersetze -inf durch kleinstmöglichen zulässigen Wert
         logging.debug('one_minus_log {}'.format(one_minus_log))
-        sums = one_minus_log.dot(docs_ocurr_mat)
+        # Matrizenmultiplikation
+        # one_minus_log speichert log(1-c(u,t)) als Matrix zwischen allen u, t
+        # docs_ocurr_mat speichert als Matrix zu jedem Term t zu jedem Dokument d, ob
+        # t in d vorkommt oder nicht
+        # eine Zeilen-Spalten-Summe nach der elementweisen Multiplikation entspricht
+        # einer Anwendung der Summenformel der log. Terme (Folie 16)
+        sums = one_minus_log.dot(docs_ocurr_mat)    
         logging.debug('sums {}'.format(sums))
         res_mat = 1 - np.exp(sums)
         res_mat[res_mat < threshold] = 0
         logging.debug('res_mat {}'.format(res_mat))
-        #logging.debug(np.all(np.isfinite(res_mat)))
         sparse_res = coo_matrix(res_mat)
-        affiliation_mationary = OrderedDict([(term.literal,[]) for term in terms])
+        affiliation_mationary = OrderedDict([(term,[]) for term in terms])
         for term_index, docID, term_doc_value in zip(sparse_res.row, sparse_res.col, sparse_res.data):
-            affiliation_mationary[terms[term_index].literal].append(RankedPosting(docID, term_doc_value)) 
+            affiliation_mationary[terms[term_index]].append(RankedPosting(docID, term_doc_value)) 
                 
         return affiliation_mationary
         
