@@ -42,13 +42,10 @@ class MembershipCalculator(object):
     # der Fuzzy-Index wird durch ein dict repräsentiert
     # das dict speichert zu jedem Term t eine RankedPosting-list
     # jedes RankedPosting speichert ein Dokument dok und den Fuzzy-Zugehörigkeitsgrad W(D,t)
-    def build_fuzzy_index(self, index, corr, docs_ocurr_mat, threshold):
-        
-        # TODO sortiertes übergeben 
-        terms = sorted([term.literal for term in index.keys()])        
+    def build_fuzzy_index(self, terms, corr, docs_ocurr_mat, threshold):
+        logging.debug('terms {}'.format(terms))     
         logging.debug('docs_ocurr_mat shape {}'.format(docs_ocurr_mat.shape))  
         logging.debug('corr shape {}'.format(corr.shape))         
-                
         with np.errstate(divide='ignore'):  # log(0) = -inf -> ignoriere Warnung, da gewünscht
             one_minus_log = np.log(1 - corr)
         one_minus_log = np.nan_to_num(one_minus_log)    # ersetze -inf durch kleinstmöglichen zulässigen Wert

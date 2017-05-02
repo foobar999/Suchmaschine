@@ -39,7 +39,8 @@ if __name__ == '__main__':
     elapsed_time = time.time() - start_time
     print("built correlation matrix in {0:.5f} seconds".format(elapsed_time))
     start_time = time.time()
-    fuzzy_index = MembershipCalculator().build_fuzzy_index(index, corr, docs_ocurr_mat, 0.5)
+    index_terms = [term.literal for term in index.keys()]
+    fuzzy_index = MembershipCalculator().build_fuzzy_index(index_terms, corr, docs_ocurr_mat, 0.5)
     elapsed_time = time.time() - start_time
     print("built fuzzy index in {0:.5f} seconds".format(elapsed_time))
     
