@@ -1,11 +1,9 @@
-from src.ranked_posting import RankedPosting
-from src.term import Term
-from src.processors.or_processor import OrProcessor
-from collections import OrderedDict
-import numpy as np
-from scipy.sparse import csr_matrix, find, coo_matrix
-from sklearn.metrics.pairwise import pairwise_distances
 import logging
+import numpy as np
+from scipy.sparse import coo_matrix
+from sklearn.metrics.pairwise import pairwise_distances
+from src.ranked_posting import RankedPosting
+from collections import OrderedDict
 
 
 class MembershipCalculator(object):
@@ -27,7 +25,6 @@ class MembershipCalculator(object):
             posting_list_docs = [post.docID for post in index[key].postings]
             docs_of_key = np.zeros(numdocs, dtype=np.dtype(bool))
             docs_of_key[posting_list_docs] = 1
-            #print(docs_of_key)
             mat.append(docs_of_key)
         logging.debug('keys {}'.format(keys)) 
         mat = np.reshape(mat, (len(index), numdocs))
@@ -47,7 +44,6 @@ class MembershipCalculator(object):
     # nur Postings mit W(D,t) >= threshold werden gespeichert
     # ggf. später TermPostings statt list ????????????????????
     def build_fuzzy_index(self, index, corr, docs_ocurr_mat, threshold):
-    #def build_fuzzy_index(self, docmat, corr, index, threshold):
         
         # TODO sortiertes übergeben 
         terms = sorted([term.literal for term in index.keys()])        
