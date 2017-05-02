@@ -10,10 +10,10 @@ class MembershipCalculator(object):
     
     # berechnet die Korrelationsmatrix c(t,u) für Terme aus index
     # mithilfe des Jaccard-Maßes
-    # die Matrix wird durch ein dict repräsentiert, welches zu jedem Term t
-    # ein dict speichert, welches zu jedem Term u den Wert c(t,u) speichert
-    # t ist stets kleiner als u (zur Dublettenvermeidung) ???????????
-    # Ja schein sinnvoll!!!!!!!!!einseinself
+    # liefert 
+    #   1. c(t,u) als numpy-Matrix 
+    #   2. eine Matrix docs_ocurr_mat(t,D), die zu jedem Term t zu jedem Dokument D
+    #      speichert, ob er darin vorkommt (nötig für build_fuzzy_index())
     # Einträge c(t,u) werden nur explizit gespeichert, falls das 
     # Jaccard-Maß einen Wert >= threshold ergibt
     def calc_correlation_mat(self, index, numdocs, threshold):
@@ -31,18 +31,19 @@ class MembershipCalculator(object):
         logging.debug('mat shape {}'.format(mat.shape))
     
         out = 1 - pairwise_distances(mat, metric = "jaccard")
-        logging.debug('calculated jaccard values')
-        #out = np.triu(out, k=0)  # setze Elemente in oberer Dreicksmatrix (außerhalb Diagonale) 0
+        logging.debug('calculated jaccard values {}'.format(out))
+        #out = np.triu(out, k=0)
         out[out < threshold] = 0    # kicke kleine Werte
         return out, mat
     
-    # berechnet den Fuzzy-Index aus dem booleschen Index index
-    # benötigt die Korrelationsmatrix corr und eine Schwelle threshold
+    # berechnet den Fuzzy-Index W(D,t) aus dem booleschen Index index
+    # benötigt:
+    #   Term-Term-Korrelationsmatrix corr 
+    #   Schwelle threshold (nur Postings mit W(D,t) >= threshold werden gespeichert)
+    #   die Matrix docs_ocurr_mat(t,D) aus calc_correlation_mat()
     # der Fuzzy-Index wird durch ein dict repräsentiert
     # das dict speichert zu jedem Term t eine RankedPosting-list
-    # jedes RankedPosting speichert ein Dokument dok und den Fuzzy-Zugehörigkeitsgrad W(D,t)    # also genau anderes als in der vorlesung ;) (W(t,D)) [macht aber auch sinn]
-    # nur Postings mit W(D,t) >= threshold werden gespeichert
-    # ggf. später TermPostings statt list ????????????????????
+    # jedes RankedPosting speichert ein Dokument dok und den Fuzzy-Zugehörigkeitsgrad W(D,t)
     def build_fuzzy_index(self, index, corr, docs_ocurr_mat, threshold):
         
         # TODO sortiertes übergeben 
@@ -50,14 +51,14 @@ class MembershipCalculator(object):
         logging.debug('docs_ocurr_mat shape {}'.format(docs_ocurr_mat.shape))  
         logging.debug('corr shape {}'.format(corr.shape))         
                 
-        with np.errstate(divide='ignore'):  # log(0) = -inf -> ignoriere Warnung
+        with np.errstate(divide='ignore'):  # log(0) = -inf -> ignoriere Warnung, da gewünscht
             one_minus_log = np.log(1 - corr)
         one_minus_log = np.nan_to_num(one_minus_log)    # ersetze -inf durch kleinstmöglichen zulässigen Wert
         logging.debug('one_minus_log {}'.format(one_minus_log))
         # Matrizenmultiplikation
         # one_minus_log speichert log(1-c(u,t)) als Matrix zwischen allen u, t
-        # docs_ocurr_mat speichert als Matrix zu jedem Term t zu jedem Dokument d, ob
-        # t in d vorkommt oder nicht
+        # docs_ocurr_mat speichert zu jedem Term t zu jedem Dokument d, 
+        # ob t in d vorkommt oder nicht
         # eine Zeilen-Spalten-Summe nach der elementweisen Multiplikation entspricht
         # einer Anwendung der Summenformel der log. Terme (Folie 16)
         sums = one_minus_log.dot(docs_ocurr_mat)    
