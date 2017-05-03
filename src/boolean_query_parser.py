@@ -11,7 +11,7 @@ class BooleanQueryParser(object):
     LBRACKET = '('
     RBRACKET = ')'
     QUOTES = '"'
-    PROXIMITY = '^/[2-9]$'
+    PROXIMITY = '^/[1-9]$'
 
     def _is_proximity(self, tok):
         return re.match(self.PROXIMITY, tok) != None
