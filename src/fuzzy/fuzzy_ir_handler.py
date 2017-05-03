@@ -6,7 +6,7 @@ from src.ranked_posting import RankedPosting
 class FuzzyIRHandler(object):
 
     def handle_query(self, query, fuzzy_index, doc_ids):
-        logging.info('processing fuzzy query')
+        logging.info('processing fuzzy query, doc ids {}'.format(doc_ids))
         root_node = BooleanQueryParser().parse(query)
         logging.info('result of parsing fuzzy query: {}'.format(root_node))
         self._replace_leaf_terms_by_postings(root_node, fuzzy_index)

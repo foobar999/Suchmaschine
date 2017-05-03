@@ -66,7 +66,7 @@ class MembershipCalculator(object):
         sparse_res = coo_matrix(res_mat)
         affiliation_mationary = OrderedDict([(term,[]) for term in terms])
         for term_index, docID, term_doc_value in zip(sparse_res.row, sparse_res.col, sparse_res.data):
-            affiliation_mationary[terms[term_index]].append(RankedPosting(docID, term_doc_value)) 
+            affiliation_mationary[terms[term_index]].append(RankedPosting(docID, term_doc_value))
         for term in affiliation_mationary:
             affiliation_mationary[term].sort(key=lambda x: x.docID)
                 
