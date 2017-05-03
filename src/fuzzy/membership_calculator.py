@@ -4,7 +4,6 @@ from scipy.sparse import coo_matrix
 from sklearn.metrics.pairwise import pairwise_distances
 from src.ranked_posting import RankedPosting
 from collections import OrderedDict
-from src.fuzzy.histogram_builder import HistogramBuilder
 
 
 class MembershipCalculator(object):
@@ -72,4 +71,3 @@ class MembershipCalculator(object):
             affiliation_mationary[term].sort(key=lambda x: x.docID)
                 
         return affiliation_mationary, res_mat
-        
