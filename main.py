@@ -93,11 +93,10 @@ if __name__ == '__main__':
                                               
                     elif mode == "fuzzy":
                         print("Processing query with fuzzy logic.")
-                        dummy_fuzzy_doc_ids = list(range(0, 6))
                         start_time = time.time()
-                        query_result = FuzzyIRHandler().handle_query(query, fuzzy_index, dummy_fuzzy_doc_ids)
+                        query_result = FuzzyIRHandler().handle_query(query, fuzzy_index, sorted(docsDict.keys()))
                         elapsed_time = time.time() - start_time
-                        query_result.sort(key=lambda post: post.rank, reverse=True)
+                        query_result = sorted(query_result, key=lambda post: post.rank, reverse=True)
                     
                     logging.info('{} results: {}'.format(mode, query_result))
                     print('{} results -  '.format(len(query_result)), end='')
