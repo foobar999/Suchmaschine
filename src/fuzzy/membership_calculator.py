@@ -64,11 +64,12 @@ class MembershipCalculator(object):
         res_mat = 1 - np.exp(sums)
         res_mat[res_mat < threshold] = 0
         logging.debug('res_mat {}'.format(res_mat))
-        #HistogramBuilder().show_symm_mat_hist(res_mat, 1000)
         sparse_res = coo_matrix(res_mat)
         affiliation_mationary = OrderedDict([(term,[]) for term in terms])
         for term_index, docID, term_doc_value in zip(sparse_res.row, sparse_res.col, sparse_res.data):
             affiliation_mationary[terms[term_index]].append(RankedPosting(docID, term_doc_value)) 
+        for term in affiliation_mationary:
+            affiliation_mationary[term].sort(key=lambda x: x.docID)
                 
         return affiliation_mationary, res_mat
         

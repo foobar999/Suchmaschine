@@ -26,7 +26,7 @@ def generate_displayed_result(query_result, docs_dict):
     return displayed_result
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.WARN)
+    logging.basicConfig(level=logging.DEBUG)
     
     data_folder = os.path.join(os.getcwd(), "data")
     index_build_start = time.time()
