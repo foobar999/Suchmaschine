@@ -4,6 +4,7 @@ from scipy.sparse import coo_matrix
 from sklearn.metrics.pairwise import pairwise_distances
 from src.ranked_posting import RankedPosting
 from collections import OrderedDict
+from src.fuzzy.histogram_builder import HistogramBuilder
 
 
 class MembershipCalculator(object):
@@ -32,6 +33,8 @@ class MembershipCalculator(object):
         logging.debug('calculated jaccard values {}'.format(c))
         #c = np.triu(out, k=0)
         c[c < threshold] = 0    # kicke kleine Werte
+        HistogramBuilder().show_symm_mat_hist(c, 10)
+        
         return c, docs_ocurr_mat
     
     # berechnet den Fuzzy-Index W(D,t) aus dem booleschen Index index
@@ -61,6 +64,7 @@ class MembershipCalculator(object):
         res_mat = 1 - np.exp(sums)
         res_mat[res_mat < threshold] = 0
         logging.debug('res_mat {}'.format(res_mat))
+        HistogramBuilder().show_symm_mat_hist(res_mat, 1000)
         sparse_res = coo_matrix(res_mat)
         affiliation_mationary = OrderedDict([(term,[]) for term in terms])
         for term_index, docID, term_doc_value in zip(sparse_res.row, sparse_res.col, sparse_res.data):

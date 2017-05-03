@@ -25,7 +25,7 @@ def generate_displayed_result(query_result, docs_dict):
     return displayed_result
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.WARN)
     
     data_folder = os.path.join(os.getcwd(), "data")
     index_build_start = time.time()
@@ -40,16 +40,9 @@ if __name__ == '__main__':
     print("built correlation matrix in {0:.5f} seconds".format(elapsed_time))
     start_time = time.time()
     index_terms = [term.literal for term in index.keys()]
-    fuzzy_index = MembershipCalculator().build_fuzzy_index(index_terms, corr, docs_ocurr_mat, 0.5)
+    fuzzy_index = MembershipCalculator().build_fuzzy_index(index_terms, corr, docs_ocurr_mat, 0)
     elapsed_time = time.time() - start_time
     print("built fuzzy index in {0:.5f} seconds".format(elapsed_time))
-    
-    index_terms = list(fuzzy_index)
-    num_bins = 10
-    corr_hist = HistogramBuilder().build_corr_hist(corr, index_terms, num_bins)
-    print('correlation histogram: {}'.format(corr_hist))
-    fuzzy_index_hist = HistogramBuilder().build_fuzzy_index_hist(fuzzy_index, num_bins)
-    print('fuzzy index histogram: {}'.format(fuzzy_index_hist))
 
     print("number of dict entries:", len(index))
     pprint.pprint(docsDict)
