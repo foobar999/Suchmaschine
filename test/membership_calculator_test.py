@@ -41,7 +41,7 @@ class MembershipCalculatorTest(unittest.TestCase):
     def test_build_fuzzy_index(self):
         corr, docs_ocurr_mat = self.calc.calc_correlation_mat(self.index, self.numdocs, 0)
         terms = [term.literal for term in self.index.keys()]
-        res = self.calc.build_fuzzy_index(terms, corr, docs_ocurr_mat, 0)
+        res, mat = self.calc.build_fuzzy_index(terms, corr, docs_ocurr_mat, 0)
         res = self._ranked_to_list_dict(res)
         expected = {
             'krefeld': [0.7, 1.0, 0.3], 
