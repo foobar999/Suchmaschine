@@ -4,6 +4,7 @@ import os
 import sys
 import time
 import pprint
+import numpy as np
 from src.index_builder import IndexBuilder
 from src.boolean_ir_handler import BooleanIRHandler
 from src.fuzzy.membership_calculator import MembershipCalculator
@@ -38,11 +39,21 @@ if __name__ == '__main__':
     corr, docs_ocurr_mat = MembershipCalculator().calc_correlation_mat(index, numdocs, 0.5) # last run: built correlation matrix in 1588.62204 seconds (~26min)
     elapsed_time = time.time() - start_time
     print("built correlation matrix in {0:.5f} seconds".format(elapsed_time))
+    
+    corr_hist, corr_bins = HistogramBuilder().calc_symm_mat_hist(corr, 10)        
+    np.set_printoptions(formatter={'int_kind': lambda x:' {0:d}'.format(x)})
+    print('correlation histogram {}'.format(corr_hist))
+    print('histogram bins{}'.format(corr_bins))
+    
     start_time = time.time()
     index_terms = [term.literal for term in index.keys()]
-    fuzzy_index = MembershipCalculator().build_fuzzy_index(index_terms, corr, docs_ocurr_mat, 0)
+    fuzzy_index, fuzzy_mat = MembershipCalculator().build_fuzzy_index(index_terms, corr, docs_ocurr_mat, 0)
     elapsed_time = time.time() - start_time
     print("built fuzzy index in {0:.5f} seconds".format(elapsed_time))
+    
+    fuzzy_hist, fuzzy_bins = HistogramBuilder().calc_symm_mat_hist(fuzzy_mat, 10)
+    print('fuzzy index histogram: {}'.format(fuzzy_hist))
+    print('histogram bins{}'.format(fuzzy_bins))
 
     print("number of dict entries:", len(index))
     pprint.pprint(docsDict)
