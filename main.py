@@ -100,9 +100,10 @@ if __name__ == '__main__':
                         query_result.sort(key=lambda post: post.rank, reverse=True)
                     
                     logging.info('{} results: {}'.format(mode, query_result))
-                    query_result = query_result[:10]
                     print('{} results -  '.format(len(query_result)), end='')
                     print('took {0:.5f} seconds:'.format(elapsed_time))
+                    query_result = query_result[:10]
+                    print('showing results 1 - {}'.format(len(query_result)))
                     for displayed_posting in generate_displayed_result(query_result, docsDict):
                         print(displayed_posting)
                     
