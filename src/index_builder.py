@@ -16,7 +16,7 @@ class IndexBuilder(object):
         
         index = {} # matches a Term with an occurrence mylist
         docsDict = {}   # matches DocID and DocName
-        # index = defaultdict(SingleList)    # this does not do what I want!
+        docs_numterms = []
         docID = 0
         # Reading Files
         # This works even if subfolders are used
@@ -27,6 +27,7 @@ class IndexBuilder(object):
                     if docID not in docsDict:
                         docsDict[docID] = file
                     terms = Tokenizer().tok_lowercase(os.path.join(root, file), '\s|\.|,|;|:|!|\?|"|-|´|`')
+                    docs_numterms.append(len(terms))
                     
                     positions_of_term = {}
                     for pos in range(0, len(terms)):
@@ -45,19 +46,20 @@ class IndexBuilder(object):
                         # dindexTerm(t)].append(docID)    # class Term would need to be immutable
                     docID += 1
                                     
-        return (OrderedDict(sorted(index.items())), docsDict)
+        return (OrderedDict(sorted(index.items())), docsDict, docs_numterms)
     
     
-    def calc_tf_idf(self, index, numdocs):
-        logging.info('calculating tf-idf weights')
-        N = numdocs
+    def calc_normalized_tf_idf(self, index, docs_numterms):
+        N = len(docs_numterms)
+        logging.info('calculating tf-idf weights ({} docs)'.format(N))
+        logging.info('number of terms per doc {}'.format(docs_numterms))
         for term in index:
             df = index[term].postings.len
             newlist = SingleList()
             for posting in index[term].postings:
                 tf = len(posting.positions)
-                logging.debug('term {} doc {} df {} tf {}'.format(term,posting.docID,df,tf))
-                rank = (1 + log(tf, 10)) * log(N / df, 10)
+                #logging.debug('term {} doc {} df {} tf {}'.format(term,posting.docID,df,tf))
+                rank = (1 + log(tf, 10)) * log(N / df, 10) / docs_numterms[posting.docID]
                 newlist.append(RankedPosting(posting.docID, rank, posting.positions))
             index[term].postings = newlist
         
