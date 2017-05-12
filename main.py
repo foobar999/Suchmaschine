@@ -33,6 +33,7 @@ if __name__ == '__main__':
     index_build_start = time.time()
     index, docsDict = IndexBuilder().build_from_folder(data_folder)
     numdocs = len(docsDict)
+    IndexBuilder().calc_tf_idf(index, numdocs)
     index_build_elapsed = time.time() - index_build_start
     print("built index in {0:.5f} seconds".format(index_build_elapsed))
 

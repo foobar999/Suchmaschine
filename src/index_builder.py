@@ -9,7 +9,7 @@ from src.term import Term
 from ranked_posting import RankedPosting
 
 class IndexBuilder(object):
-    
+
     def build_from_folder(self, data_folder):
         
         index = {} # matches a Term with an occurrence mylist
@@ -43,14 +43,18 @@ class IndexBuilder(object):
                         # dindexTerm(t)].postings.at(docID).data.positions.append(pos)
                         # dindexTerm(t)].append(docID)    # class Term would need to be immutable
                     docID += 1
-                    
+                                    
+        return (OrderedDict(sorted(index.items())), docsDict)
+    
+    
+    def calc_tf_idf(self, index, numdocs):
         logging.info('calculating tf-idf weights')
-        N = len(docsDict)
+        N = numdocs
         for term in index:
             df = index[term].postings.len
             for posting in index[term].postings:
                 tf = len(posting.positions)
                 posting.rank = (1 + log(tf, 10)) * log(N / df)
-                                    
-        return (OrderedDict(sorted(index.items())), docsDict)
+        
+
         
