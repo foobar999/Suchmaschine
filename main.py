@@ -64,6 +64,14 @@ if __name__ == '__main__':
     print("number of fuzzy index entries: {}".format(len(fuzzy_index)))
 #    pprint.pprint(fuzzy_index)
     
+    
+    start_time = time.time()
+    doc_term_index = IndexBuilder().build_doc_term_index(index, numdocs)
+    elapsed_time = time.time() - start_time
+    print("built doc_term_index index in {0:.5f} seconds".format(elapsed_time))
+    print('doc_term_index')
+    pprint.pprint(doc_term_index)
+    
     modes = ('bool', 'fuzzy', 'vector')
     mode = "bool"
     print("Boolean logic activated.")

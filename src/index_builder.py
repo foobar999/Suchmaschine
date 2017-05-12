@@ -65,4 +65,12 @@ class IndexBuilder(object):
             index[term].postings = newlist
         
 
+    # TODO nicht als tupel speichern??
+    def build_doc_term_index(self, index, numdocs):
+        doc_term_index = [list() for _i in range(numdocs)]
+        for term in index:
+            for posting in index[term].postings:
+                doc_term_index[posting.docID].append((term, posting.rank))
+        
+        return doc_term_index
         
