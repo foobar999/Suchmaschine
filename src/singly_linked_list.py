@@ -9,10 +9,13 @@ class Node(object):
  
 class SingleList(object):
  
-    def __init__(self):
+    def __init__(self, values = None):
         self.head = None
         self.tail = None
         self.len = 0
+        if values != None:
+            for val in values:
+                self.append(val)
  
     def __str__(self):
         current_node = self.head

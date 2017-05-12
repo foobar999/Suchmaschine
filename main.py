@@ -36,6 +36,7 @@ if __name__ == '__main__':
     IndexBuilder().calc_tf_idf(index, numdocs)
     index_build_elapsed = time.time() - index_build_start
     print("built index in {0:.5f} seconds".format(index_build_elapsed))
+    pprint.pprint(index)
 
     start_time = time.time()
     corr, docs_ocurr_mat = MembershipCalculator().calc_correlation_mat(index, numdocs, 0.5) # last run: built correlation matrix in 1588.62204 seconds (~26min)

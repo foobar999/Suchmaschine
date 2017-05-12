@@ -7,6 +7,8 @@ from src.tokenizer import Tokenizer
 from src.term_postings import TermPostings
 from src.term import Term
 from ranked_posting import RankedPosting
+from src.posting import Posting
+from singly_linked_list import SingleList
 
 class IndexBuilder(object):
 
@@ -37,8 +39,7 @@ class IndexBuilder(object):
                         t = Term(terms[pos])
                         if t not in index:
                             index[t] = TermPostings()
-                        #index[t].postings.append(Posting(docID, positions_of_term[t]))
-                        index[t].postings.append(RankedPosting(docID, None, positions_of_term[t]))
+                        index[t].postings.append(Posting(docID, positions_of_term[t]))
                         
                         # dindexTerm(t)].postings.at(docID).data.positions.append(pos)
                         # dindexTerm(t)].append(docID)    # class Term would need to be immutable
@@ -52,9 +53,13 @@ class IndexBuilder(object):
         N = numdocs
         for term in index:
             df = index[term].postings.len
+            newlist = SingleList()
             for posting in index[term].postings:
                 tf = len(posting.positions)
-                posting.rank = (1 + log(tf, 10)) * log(N / df)
+                logging.debug('term {} doc {} df {} tf {}'.format(term,posting.docID,df,tf))
+                rank = (1 + log(tf, 10)) * log(N / df, 10)
+                newlist.append(RankedPosting(posting.docID, rank, posting.positions))
+            index[term].postings = newlist
         
 
         
