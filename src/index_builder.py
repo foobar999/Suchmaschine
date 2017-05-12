@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
+import logging
 from collections import OrderedDict
+from math import log
 from src.tokenizer import Tokenizer
 from src.term_postings import TermPostings
-from src.posting import Posting
 from src.term import Term
+from ranked_posting import RankedPosting
 
 class IndexBuilder(object):
     
@@ -16,7 +18,7 @@ class IndexBuilder(object):
         docID = 0
         # Reading Files
         # This works even if subfolders are used
-        print("Start:")
+        logging.info('building index')
         for root, dirs, files in os.walk(data_folder):
             for file in sorted(files, key=lambda s: s.lower()):
                 if file.endswith(".txt"):    # Is there anything else?
@@ -35,11 +37,20 @@ class IndexBuilder(object):
                         t = Term(terms[pos])
                         if t not in index:
                             index[t] = TermPostings()
-                        index[t].postings.append(Posting(docID, positions_of_term[t]))
+                        #index[t].postings.append(Posting(docID, positions_of_term[t]))
+                        index[t].postings.append(RankedPosting(docID, None, positions_of_term[t]))
+                        
                         # dindexTerm(t)].postings.at(docID).data.positions.append(pos)
                         # dindexTerm(t)].append(docID)    # class Term would need to be immutable
                     docID += 1
                     
-        #return (index, docsDict)
+        logging.info('calculating tf-idf weights')
+        N = len(docsDict)
+        for term in index:
+            df = index[term].postings.len
+            for posting in index[term].postings:
+                tf = len(posting.positions)
+                posting.rank = (1 + log(tf, 10)) * log(N / df)
+                                    
         return (OrderedDict(sorted(index.items())), docsDict)
         
