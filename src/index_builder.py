@@ -58,8 +58,11 @@ class IndexBuilder(object):
             newlist = SingleList()
             for posting in index[term].postings:
                 tf = len(posting.positions)
-                #logging.debug('term {} doc {} df {} tf {}'.format(term,posting.docID,df,tf))
-                rank = (1 + log(tf, 10)) * log(N / df, 10) / docs_numterms[posting.docID]
+                if tf == 0:
+                    rank = 0
+                else:
+                    rank = (1 + log(tf, 10)) * log(N / df, 10) / docs_numterms[posting.docID]
+                logging.debug('term {} doc {} df {} tf {}'.format(term,posting.docID,df,tf))
                 newlist.append(RankedPosting(posting.docID, rank, posting.positions))
             index[term].postings = newlist
         

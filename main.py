@@ -99,8 +99,9 @@ if __name__ == '__main__':
                         
                     elif mode == 'vector':
                         start_time = time.time()
-                        query_result = VectorIRHandler().handle_query(query, index)
+                        query_result = VectorIRHandler().handle_query(query, index, numdocs)
                         elapsed_time = time.time() - start_time
+                        query_result = sorted(query_result, key=lambda post: post.rank, reverse=True)
                         
                     
                     logging.info('{} results: {}'.format(mode, query_result))
