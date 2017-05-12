@@ -10,6 +10,7 @@ from src.boolean_ir_handler import BooleanIRHandler
 from src.fuzzy.membership_calculator import MembershipCalculator
 from src.fuzzy.fuzzy_ir_handler import FuzzyIRHandler
 from src.fuzzy.histogram_builder import HistogramBuilder
+from src.vector.vector_ir_handler import VectorIRHandler
 
 def generate_displayed_result(query_result, docs_dict):
     displayed_result = []
@@ -80,7 +81,8 @@ if __name__ == '__main__':
                         break     
                     else:
                         print("Unknown command!", query)
-                else:                           # process QUERY
+                else:
+                    # TODO refactore query handling
                     print("Processing query with {} logic.".format(mode))
                     if mode == "bool":
                         start_time = time.time()
@@ -94,7 +96,10 @@ if __name__ == '__main__':
                         query_result = sorted(query_result, key=lambda post: post.rank, reverse=True)
                         
                     elif mode == 'vector':
-                        print("x")
+                        start_time = time.time()
+                        query_result = VectorIRHandler().handle_query(query, index)
+                        elapsed_time = time.time() - start_time
+                        
                     
                     logging.info('{} results: {}'.format(mode, query_result))
                     print('{} results -  '.format(len(query_result)), end='')
