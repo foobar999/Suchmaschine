@@ -61,7 +61,7 @@ if __name__ == '__main__':
     print("number of fuzzy index entries: {}".format(len(fuzzy_index)))
 #    pprint.pprint(fuzzy_index)
     
-
+    modes = ('bool', 'fuzzy', 'vector')
     mode = "bool"
     print("Boolean logic activated.")
     while True: # user input loop
@@ -72,31 +72,29 @@ if __name__ == '__main__':
                 continue    # ask for input again
             else:
                 if query.startswith("/"):    # execute COMMAND
-                    if query == "/bool":
-                        print("Boolean logic activated.")   # fake :D
-                        mode = "bool"
-                    elif query == "/fuzzy":
-                        print("Fuzzy logic activated.")
-                        mode = "fuzzy"
+                    query_mode = query[1:]
+                    if query_mode in modes:
+                        print("{} logic activated.".format(query_mode))
+                        mode = query_mode
                     elif query == "/q":
-                        break
-                    
+                        break     
                     else:
                         print("Unknown command!", query)
                 else:                           # process QUERY
-                    #query_result, elapsed_time = None, None
+                    print("Processing query with {} logic.".format(mode))
                     if mode == "bool":
-                        print("Processing query with boolean logic.")
                         start_time = time.time()
                         query_result = BooleanIRHandler().handle_query(query, index, docsDict)
                         elapsed_time = time.time() - start_time
                                               
                     elif mode == "fuzzy":
-                        print("Processing query with fuzzy logic.")
                         start_time = time.time()
                         query_result = FuzzyIRHandler().handle_query(query, fuzzy_index, sorted(docsDict.keys()))
                         elapsed_time = time.time() - start_time
                         query_result = sorted(query_result, key=lambda post: post.rank, reverse=True)
+                        
+                    elif mode == 'vector':
+                        print("x")
                     
                     logging.info('{} results: {}'.format(mode, query_result))
                     print('{} results -  '.format(len(query_result)), end='')
