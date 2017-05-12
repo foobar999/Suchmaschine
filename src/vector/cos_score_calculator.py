@@ -1,9 +1,7 @@
 import posting
 from math import sqrt
-
 from src.term import Term
 from ranked_posting import RankedPosting
-from main import doc_term_index
 
 class CosScoreCalculator(object):
     
@@ -15,10 +13,12 @@ class CosScoreCalculator(object):
             if term1 == term2:
                 w1, w2 = doc_terms1[i1][1], doc_terms2[i2][1]
                 score += w1 * w2
+                i1 += 1
+                i2 += 1
             elif term1 < term2:
                 i1 += 1
             else:
-                i2 += 2
+                i2 += 1
         
         return score
     

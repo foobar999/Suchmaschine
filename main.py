@@ -11,6 +11,7 @@ from src.fuzzy.membership_calculator import MembershipCalculator
 from src.fuzzy.fuzzy_ir_handler import FuzzyIRHandler
 from src.fuzzy.histogram_builder import HistogramBuilder
 from src.vector.vector_ir_handler import VectorIRHandler
+from src.vector.cos_score_calculator import CosScoreCalculator
 
 def generate_displayed_result(query_result, docs_dict):
     displayed_result = []
@@ -65,12 +66,17 @@ if __name__ == '__main__':
 #    pprint.pprint(fuzzy_index)
     
     
-    start_time = time.time()
     doc_term_index = IndexBuilder().build_doc_term_index(index, numdocs)
-    elapsed_time = time.time() - start_time
     print("built doc_term_index index in {0:.5f} seconds".format(elapsed_time))
     print('doc_term_index')
-    pprint.pprint(doc_term_index)
+    similarity_score = np.zeros([numdocs, numdocs])
+    for i in range(0, numdocs):
+        for j in range(i, numdocs):
+            logging.debug('comparing docs {}, {}'.format(i,j))
+            doc_terms1, doc_terms2 = doc_term_index[i], doc_term_index[j]
+            similarity_score[i][j] = similarity_score[j][i] = CosScoreCalculator().cosine_score(doc_terms1, doc_terms2)
+    print('doc similarities')
+    print(similarity_score)
     
     modes = ('bool', 'fuzzy', 'vector')
     mode = "bool"
