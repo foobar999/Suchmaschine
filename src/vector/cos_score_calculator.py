@@ -23,7 +23,6 @@ class CosScoreCalculator(object):
             posting_list = index[Term(term)].postings
             for posting in posting_list:
                 wf_t_d = posting.rank
-                
                 scores[posting.docID] += wf_t_d
         return [RankedPosting(i,score) for i,score in enumerate(scores)]
                 

@@ -9,6 +9,7 @@ from src.term import Term
 from ranked_posting import RankedPosting
 from src.posting import Posting
 from singly_linked_list import SingleList
+from src.vector.weight_calculator import WeightCalculator
 
 class IndexBuilder(object):
 
@@ -58,10 +59,7 @@ class IndexBuilder(object):
             newlist = SingleList()
             for posting in index[term].postings:
                 tf = len(posting.positions)
-                if tf == 0:
-                    rank = 0
-                else:
-                    rank = (1 + log(tf, 10)) * log(N / df, 10) / docs_numterms[posting.docID]
+                rank = WeightCalculator().calc_wt_f_d(tf, df, N) / docs_numterms[posting.docID]
                 logging.debug('term {} doc {} df {} tf {}'.format(term,posting.docID,df,tf))
                 newlist.append(RankedPosting(posting.docID, rank, posting.positions))
             index[term].postings = newlist
