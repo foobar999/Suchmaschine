@@ -6,6 +6,7 @@ import time
 import pprint
 import numpy as np
 import heapq
+from enum import Enum, auto
 from src.index_builder import IndexBuilder
 from src.boolean_ir_handler import BooleanIRHandler
 from src.fuzzy.membership_calculator import MembershipCalculator
@@ -14,6 +15,13 @@ from src.fuzzy.histogram_builder import HistogramBuilder
 from src.vector.vector_ir_handler import VectorIRHandler
 from src.vector.cos_score_calculator import CosScoreCalculator
 from src.vector.weight_calculator import WeightCalculator
+
+
+class IRMode(Enum):
+    bool = auto()
+    fuzzy = auto()
+    vector = auto()
+    
 
 def generate_displayed_result(query_result, docs_dict):
     displayed_result = []
@@ -81,39 +89,38 @@ if __name__ == '__main__':
     print('doc similarities')
     print(similarity_score)
     
-    modes = ('bool', 'fuzzy', 'vector')
-    mode = "bool"
+    mode = IRMode.bool
     num_displayed_highest_elements = 10
-    print("{} logic activated.".format(mode))
+    print("{} logic activated.".format(mode.name))
     while True: # user input loop
         try:
             print("Please enter a query or command:")
             query = input().strip()
             if len(query) < 1:
-                continue    # ask for input again
+                continue
             else:
                 if query.startswith("/"):    # execute COMMAND
-                    query_mode = query[1:]
-                    if query_mode in modes:
-                        mode = query_mode
-                        print("{} logic activated.".format(mode))
-                    elif query == "/q":
-                        break     
-                    else:
+                    if query == "/q":
+                        print('quit ir system')
+                        break
+                    try:
+                        mode = IRMode[query[1:]]
+                        print("{} logic activated.".format(mode.name))
+                    except:
                         print("Unknown command!", query)
                 else:
-                    print("processing query with {} logic.".format(mode))
+                    print("processing query with {} logic.".format(mode.name))
                     start_time = time.time()    
                     
-                    if mode == "bool":
+                    if mode == IRMode.bool:
                         query_result = BooleanIRHandler().handle_query(query, index, docsDict)                                              
-                    elif mode == "fuzzy":
+                    elif mode == IRMode.fuzzy:
                         query_result = FuzzyIRHandler().handle_query(query, fuzzy_index, sorted(docsDict.keys()))                        
-                    elif mode == 'vector':
+                    elif mode == IRMode.vector:
                         query_result = VectorIRHandler().handle_query(query, index, numdocs)
                     
                     elapsed_time = time.time() - start_time
-                    if mode != 'bool':
+                    if mode != IRMode.bool:
                         query_result = heapq.nlargest(num_displayed_highest_elements, query_result, key=lambda post: post.rank)
                         logging.debug('k best results: {}'.format(query_result))
                         query_result = [res for res in query_result if res.rank > 0]
@@ -129,3 +136,4 @@ if __name__ == '__main__':
             msg = '{} not found'.format(err)
             logging.error(msg)
             sys.stderr.write('{}\n'.format(msg))
+            
