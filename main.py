@@ -102,23 +102,17 @@ if __name__ == '__main__':
                     else:
                         print("Unknown command!", query)
                 else:
-                    # TODO refactore query handling
                     print("Processing query with {} logic.".format(mode))
-                    if mode == "bool":
-                        start_time = time.time()
-                        query_result = BooleanIRHandler().handle_query(query, index, docsDict)
-                        elapsed_time = time.time() - start_time
-                                              
-                    elif mode == "fuzzy":
-                        start_time = time.time()
-                        query_result = FuzzyIRHandler().handle_query(query, fuzzy_index, sorted(docsDict.keys()))
-                        elapsed_time = time.time() - start_time
-                        
-                    elif mode == 'vector':
-                        start_time = time.time()
-                        query_result = VectorIRHandler().handle_query(query, index, numdocs)
-                        elapsed_time = time.time() - start_time
+                    start_time = time.time()    
                     
+                    if mode == "bool":
+                        query_result = BooleanIRHandler().handle_query(query, index, docsDict)                                              
+                    elif mode == "fuzzy":
+                        query_result = FuzzyIRHandler().handle_query(query, fuzzy_index, sorted(docsDict.keys()))                        
+                    elif mode == 'vector':
+                        query_result = VectorIRHandler().handle_query(query, index, numdocs)
+                    
+                    elapsed_time = time.time() - start_time
                     if mode != 'bool':
                         query_result = heapq.nlargest(num_displayed_highest_elements, query_result, key=lambda post: post.rank)
                         logging.debug('k best results: {}'.format(query_result))
