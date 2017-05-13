@@ -121,7 +121,8 @@ if __name__ == '__main__':
                     
                     if mode != 'bool':
                         query_result = heapq.nlargest(num_displayed_highest_elements, query_result, key=lambda post: post.rank)
-                        
+                        logging.debug('k best results: {}'.format(query_result))
+                        query_result = [res for res in query_result if res.rank > 0]
                     
                     logging.info('{} results: {}'.format(mode, query_result))
                     print('{} results -  '.format(len(query_result)), end='')
