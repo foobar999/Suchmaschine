@@ -12,6 +12,7 @@ from src.fuzzy.fuzzy_ir_handler import FuzzyIRHandler
 from src.fuzzy.histogram_builder import HistogramBuilder
 from src.vector.vector_ir_handler import VectorIRHandler
 from src.vector.cos_score_calculator import CosScoreCalculator
+from src.vector.weight_calculator import WeightCalculator
 
 def generate_displayed_result(query_result, docs_dict):
     displayed_result = []
@@ -34,8 +35,8 @@ if __name__ == '__main__':
     index_build_start = time.time()
     index, docsDict = IndexBuilder().build_from_folder(data_folder)
     numdocs = len(docsDict)
-    IndexBuilder().calc_tf_idf(index, numdocs)
-    IndexBuilder().normalize_weights(index, numdocs)
+    WeightCalculator().calc_tf_idf(index, numdocs)
+    WeightCalculator().normalize_weights(index, numdocs)
     index_build_elapsed = time.time() - index_build_start
     print("built index in {0:.5f} seconds".format(index_build_elapsed))
     #print('number of terms in docs: {}'.format(docs_numterms))
