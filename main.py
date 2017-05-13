@@ -84,7 +84,7 @@ if __name__ == '__main__':
     modes = ('bool', 'fuzzy', 'vector')
     mode = "bool"
     num_displayed_highest_elements = 10
-    print("Boolean logic activated.")
+    print("{} logic activated.".format(mode))
     while True: # user input loop
         try:
             print("Please enter a query or command:")
@@ -95,14 +95,14 @@ if __name__ == '__main__':
                 if query.startswith("/"):    # execute COMMAND
                     query_mode = query[1:]
                     if query_mode in modes:
-                        print("{} logic activated.".format(query_mode))
                         mode = query_mode
+                        print("{} logic activated.".format(mode))
                     elif query == "/q":
                         break     
                     else:
                         print("Unknown command!", query)
                 else:
-                    print("Processing query with {} logic.".format(mode))
+                    print("processing query with {} logic.".format(mode))
                     start_time = time.time()    
                     
                     if mode == "bool":
