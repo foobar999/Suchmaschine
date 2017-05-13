@@ -32,12 +32,13 @@ if __name__ == '__main__':
     
     data_folder = os.path.join(os.getcwd(), "data")
     index_build_start = time.time()
-    index, docsDict, docs_numterms = IndexBuilder().build_from_folder(data_folder)
+    index, docsDict = IndexBuilder().build_from_folder(data_folder)
     numdocs = len(docsDict)
-    IndexBuilder().calc_normalized_tf_idf(index, docs_numterms)
+    IndexBuilder().calc_tf_idf(index, numdocs)
+    IndexBuilder().normalize_weights(index, numdocs)
     index_build_elapsed = time.time() - index_build_start
     print("built index in {0:.5f} seconds".format(index_build_elapsed))
-    print('number of terms in docs: {}'.format(docs_numterms))
+    #print('number of terms in docs: {}'.format(docs_numterms))
 
     start_time = time.time()
     corr, docs_ocurr_mat = MembershipCalculator().calc_correlation_mat(index, numdocs, 0.5) # last run: built correlation matrix in 1588.62204 seconds (~26min)
@@ -61,9 +62,9 @@ if __name__ == '__main__':
 
     print("number of dict entries:", len(index))
     pprint.pprint(docsDict)
-#    logging.info(index)
+    #logging.info(index)
     print("number of fuzzy index entries: {}".format(len(fuzzy_index)))
-#    pprint.pprint(fuzzy_index)
+    #pprint.pprint(fuzzy_index)
     
     
     doc_term_index = IndexBuilder().build_doc_term_index(index, numdocs)
