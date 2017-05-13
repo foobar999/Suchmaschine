@@ -91,9 +91,9 @@ if __name__ == '__main__':
     
     mode = IRMode.bool
     num_displayed_highest_elements = 10
-    print("{} logic activated.".format(mode.name))
     while True: # user input loop
         try:
+            print("current logic: {}".format(mode.name))
             print("Please enter a query or command:")
             query = input().strip()
             if len(query) < 1:
@@ -105,7 +105,7 @@ if __name__ == '__main__':
                         break
                     try:
                         mode = IRMode[query[1:]]
-                        print("{} logic activated.".format(mode.name))
+                        #print("{} logic activated.".format(mode.name))
                     except:
                         print("Unknown command!", query)
                 else:
