@@ -5,6 +5,7 @@ import sys
 import time
 import pprint
 import numpy as np
+import heapq
 from src.index_builder import IndexBuilder
 from src.boolean_ir_handler import BooleanIRHandler
 from src.fuzzy.membership_calculator import MembershipCalculator
@@ -82,6 +83,7 @@ if __name__ == '__main__':
     
     modes = ('bool', 'fuzzy', 'vector')
     mode = "bool"
+    num_displayed_highest_elements = 10
     print("Boolean logic activated.")
     while True: # user input loop
         try:
@@ -111,19 +113,21 @@ if __name__ == '__main__':
                         start_time = time.time()
                         query_result = FuzzyIRHandler().handle_query(query, fuzzy_index, sorted(docsDict.keys()))
                         elapsed_time = time.time() - start_time
-                        query_result = sorted(query_result, key=lambda post: post.rank, reverse=True)
+                        #query_result = sorted(query_result, key=lambda post: post.rank, reverse=True)
+                        query_result = heapq.nlargest(num_displayed_highest_elements, query_result, key=lambda post: post.rank)
                         
                     elif mode == 'vector':
                         start_time = time.time()
                         query_result = VectorIRHandler().handle_query(query, index, numdocs)
                         elapsed_time = time.time() - start_time
-                        query_result = sorted(query_result, key=lambda post: post.rank, reverse=True)
+                        #query_result = sorted(query_result, key=lambda post: post.rank, reverse=True)
+                        query_result = heapq.nlargest(num_displayed_highest_elements, query_result, key=lambda post: post.rank)
                         
                     
                     logging.info('{} results: {}'.format(mode, query_result))
                     print('{} results -  '.format(len(query_result)), end='')
                     print('took {0:.5f} seconds:'.format(elapsed_time))
-                    query_result = query_result[:10]
+                    #query_result = query_result[:num_displayed_highest_elements]
                     print('showing results 1 - {}'.format(len(query_result)))
                     for displayed_posting in generate_displayed_result(query_result, docsDict):
                         print(displayed_posting)
