@@ -35,8 +35,8 @@ if __name__ == '__main__':
     index_build_start = time.time()
     index, docsDict = IndexBuilder().build_from_folder(data_folder)
     numdocs = len(docsDict)
-    WeightCalculator().calc_tf_idf(index, numdocs)
-    WeightCalculator().normalize_weights(index, numdocs)
+    WeightCalculator().set_posting_weights(index, numdocs)
+    WeightCalculator().normalize_posting_weights(index, numdocs)
     index_build_elapsed = time.time() - index_build_start
     print("built index in {0:.5f} seconds".format(index_build_elapsed))
     #print('number of terms in docs: {}'.format(docs_numterms))

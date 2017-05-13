@@ -5,7 +5,7 @@ from src.singly_linked_list import SingleList
 
 class WeightCalculator(object):    
     
-    def calc_tf_idf(self, index, numdocs):
+    def set_posting_weights(self, index, numdocs):
         N = numdocs
         logging.info('calculating tf-idf weights ({} docs)'.format(N))
         for term in index:
@@ -19,7 +19,7 @@ class WeightCalculator(object):
             index[term].postings = newlist
         
         
-    def normalize_weights(self, index, numdocs):
+    def normalize_posting_weights(self, index, numdocs):
         logging.info('normalizing tf-idf weights ({} docs)'.format(numdocs))
         doc_norm_factors = [0] * numdocs
         for term_postings in index.values():
