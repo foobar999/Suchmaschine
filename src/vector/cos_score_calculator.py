@@ -1,5 +1,4 @@
 import logging
-from math import sqrt
 from src.term import Term
 from src.ranked_posting import RankedPosting
 
@@ -27,7 +26,6 @@ class CosScoreCalculator(object):
     def cosine_score(self, queryDoc, index, numdocs):
         logging.info('calculating cosine(DxD), query {}, numdocs {}'.format(queryDoc, numdocs))
         scores = [0] * numdocs
-#        w_t_q = 1 / sqrt(len(query));
         
         for termAndW in queryDoc:
             posting_list = index[termAndW[0]].postings
@@ -35,13 +33,8 @@ class CosScoreCalculator(object):
                 wf_t_d = posting.rank
                 scores[posting.docID] += wf_t_d * termAndW[1]
                 
-        #scores = [scores[d] / docs_numterms[d] for d, _sc in enumerate(scores)]
         return [RankedPosting(docID,score) for docID,score in enumerate(scores)]
         
-    
-    
-    
-    
     
     def fast_cosine_score(self, query, index, numdocs):
         logging.info('calculating fast cosine, query {}, numdocs {}'.format(query, numdocs))
@@ -51,7 +44,6 @@ class CosScoreCalculator(object):
             for posting in posting_list:
                 wf_t_d = posting.rank
                 scores[posting.docID] += wf_t_d
-        #scores = [scores[d] / docs_numterms[d] for d, _sc in enumerate(scores)]
         return [RankedPosting(docID,score) for docID,score in enumerate(scores)]
                 
         
