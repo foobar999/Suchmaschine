@@ -40,7 +40,7 @@ def generate_displayed_result(query_result, docs_dict):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     
-    data_folder = os.path.join(os.getcwd(), "data")
+    data_folder = os.path.join(os.path.join(os.getcwd(), "data"), "Märchen")
     index_build_start = time.time()
     index, docsDict = IndexBuilder().build_from_folder(data_folder)
     numdocs = len(docsDict)
@@ -80,14 +80,25 @@ if __name__ == '__main__':
     doc_term_index = IndexBuilder().build_doc_term_index(index, numdocs)
     print("built doc_term_index index in {0:.5f} seconds".format(elapsed_time))
     print('doc_term_index')
-    similarity_score = np.zeros([numdocs, numdocs])
+    
+    similarity_score = {}
+    
     for i in range(0, numdocs):
-        for j in range(i, numdocs):
-            logging.debug('comparing docs {}, {}'.format(i,j))
-            doc_terms1, doc_terms2 = doc_term_index[i], doc_term_index[j]
-            similarity_score[i][j] = similarity_score[j][i] = CosScoreCalculator().cosine_score(doc_terms1, doc_terms2)
+        doc_terms1 = doc_term_index[i]
+        similarity_score[i] = CosScoreCalculator().cosine_score(doc_terms1, index, numdocs)
+        
+    #===========================================================================
+    # similarity_score = np.zeros([numdocs, numdocs])
+    #
+    # for i in range(0, numdocs):
+    #     for j in range(i, numdocs):
+    #         logging.debug('comparing docs {}, {}'.format(i,j))
+    #         doc_terms1, doc_terms2 = doc_term_index[i], doc_term_index[j]
+    #         similarity_score[i][j] = similarity_score[j][i] = CosScoreCalculator().cosine_score(doc_terms1, doc_terms2)
+    #===========================================================================
+    
     print('doc similarities')
-    print(similarity_score)
+    pprint.pprint(similarity_score)
     
     mode = IRMode.bool
     num_displayed_highest_elements = 10
@@ -122,7 +133,7 @@ if __name__ == '__main__':
                     elapsed_time = time.time() - start_time
                     if mode != IRMode.bool:
                         query_result = heapq.nlargest(num_displayed_highest_elements, query_result, key=lambda post: post.rank)
-                        logging.debug('k best results: {}'.format(query_result))
+                        logging.debug('{} best results: {}'.format(num_displayed_highest_elements, query_result))
                         query_result = [res for res in query_result if res.rank > 0]
                     
                     logging.info('{} results: {}'.format(mode, query_result))
