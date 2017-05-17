@@ -6,6 +6,8 @@ import time
 import pprint
 import numpy as np
 import heapq
+from random import sample
+from math import sqrt, floor
 from enum import Enum, auto
 from src.index_builder import IndexBuilder
 from src.boolean_ir_handler import BooleanIRHandler
@@ -81,24 +83,36 @@ if __name__ == '__main__':
     print("built doc_term_index index in {0:.5f} seconds".format(elapsed_time))
     print('doc_term_index')
     
-    similarity_score = {}
+    similarity_score = []
     
     for i in range(0, numdocs):
-        doc_terms1 = doc_term_index[i]
-        similarity_score[i] = CosScoreCalculator().cosine_score(doc_terms1, index, numdocs)
-        
-    #===========================================================================
-    # similarity_score = np.zeros([numdocs, numdocs])
-    #
-    # for i in range(0, numdocs):
-    #     for j in range(i, numdocs):
-    #         logging.debug('comparing docs {}, {}'.format(i,j))
-    #         doc_terms1, doc_terms2 = doc_term_index[i], doc_term_index[j]
-    #         similarity_score[i][j] = similarity_score[j][i] = CosScoreCalculator().cosine_score(doc_terms1, doc_terms2)
-    #===========================================================================
-    
+        doc_terms = doc_term_index[i]
+        similarity_score.append(CosScoreCalculator().cosine_score(doc_terms, index, numdocs))
+
     print('doc similarities')
-    pprint.pprint(similarity_score)
+    #pprint.pprint(similarity_score)
+    
+    
+    
+    leaders = sorted(sample(docsDict.keys(), floor(sqrt(numdocs))))
+    followers = list(set(docsDict.keys()) - set(leaders))
+    leader_similarities = {i: [similarity_score[i][j] for j in leaders] for i in followers}  
+    #pprint.pprint(leader_similarities)
+    logging.debug('not leaders {}'.format(followers))
+    logging.debug('leaders {}'.format(leaders))
+    
+    b1 = 6  # number of leaders per follower
+    cluster = {leader: list() for leader in leaders}
+    for doc in followers:
+        doc_leaders = heapq.nlargest(b1, leader_similarities[doc], key=lambda post: post.rank)
+        for leader in doc_leaders:
+            cluster[leader].append(doc)
+        print('doc_leaders {}:'.format(doc_leaders))
+    
+    
+    
+    
+    
     
     mode = IRMode.bool
     num_displayed_highest_elements = 10
