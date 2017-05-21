@@ -107,10 +107,17 @@ if __name__ == '__main__':
     cluster = {leader: list() for leader in leaders}    # Dictionary of lists containing all followers for every leader
 #    pprint.pprint(cluster)
 
+    follower_assignment_counts = {} # used to track to how many leaders each follower has already been assigned
+    # TODO add each follower to the list
     for doc in followers:   # finding b1 followers for each Leader
         doc_leaders = heapq.nlargest(b1, leader_similarities[doc], key=lambda post: post.rank)  # getting (n^0.5) most similar followers 
         
-        pprint.pprint(doc_leaders)
+        for fol in doc_leaders: # TODO increment the count for each found follower
+            follower_assignment_counts[fol]++
+            if follower_assignment_counts[fol] > b1:    # follower was assigned to more than b1 Leaders
+                del leader_similarities[fol]            # delete that follower from the list
+        
+#        pprint.pprint(doc_leaders)
         for leader in doc_leaders:
             cluster[leader].append(doc)
         print('doc_leaders {}:'.format(doc_leaders))
