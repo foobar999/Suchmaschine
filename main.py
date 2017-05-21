@@ -42,6 +42,7 @@ def generate_displayed_result(query_result, docs_dict):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     
+#    data_folder = os.path.join(os.path.join(os.getcwd(), "data"), "mantxt_smini")
     data_folder = os.path.join(os.path.join(os.getcwd(), "data"), "Märchen")
     index_build_start = time.time()
     index, docsDict = IndexBuilder().build_from_folder(data_folder)
@@ -104,27 +105,16 @@ if __name__ == '__main__':
     logging.debug('leaders {}'.format(leaders))
     
     b1 = 5  # number of leaders per follower
-#    cluster = {leader: list() for leader in leaders}    # Dictionary of lists containing all followers for every leader
-    cluster = {}
+    b2 = 3  # number of Leaders considered for each query
+    cluster = {leader: list() for leader in leaders}    # Dictionary of lists containing all followers for every leader
 #    pprint.pprint(cluster)
 
     for fol in followers:   # finding b1 followers for each Leader
         leaders_for_fol = heapq.nlargest(b1, leader_similarities[fol], key=lambda post: post.rank)  # getting (b1) leader for the current follower # something strange for b1 >= 6, only returns 5 elements!?
-#        pprint.pprint(leaders_for_fol)
         for leader in leaders_for_fol:
-            if leader not in cluster:
-                cluster[leader] = [fol]
-            else:
-                cluster[leader].append(fol)
-                
-        
-        print('leaders_for_fol {}:'.format(leaders_for_fol))
-    
-    pprint.pprint(cluster)
-    
-    
-    
-    b2 = 3  # number of Leaders considered for each query
+            cluster[leader.docID].append(fol)
+            
+#    pprint.pprint(cluster)
     
     
     
