@@ -53,7 +53,7 @@ if __name__ == '__main__':
     #print('number of terms in docs: {}'.format(docs_numterms))
 
     start_time = time.time()
-    corr, docs_ocurr_mat = MembershipCalculator().calc_correlation_mat(index, numdocs, 0.5) # last run: built correlation matrix in 1588.62204 seconds (~26min)
+    corr, docs_ocurr_mat = MembershipCalculator().calc_correlation_mat(index, numdocs, 0.5)
     elapsed_time = time.time() - start_time
     print("built correlation matrix in {0:.5f} seconds".format(elapsed_time))
     
@@ -94,21 +94,30 @@ if __name__ == '__main__':
     
     
     
-    leaders = sorted(sample(docsDict.keys(), floor(sqrt(numdocs))))
-    followers = list(set(docsDict.keys()) - set(leaders))
-    leader_similarities = {i: [similarity_score[i][j] for j in leaders] for i in followers}  
-    #pprint.pprint(leader_similarities)
+    
+    
+    leaders = sorted(sample(docsDict.keys(), floor(sqrt(numdocs)))) # Auswahl von (n^0.5) Leadern
+    followers = list(set(docsDict.keys()) - set(leaders))   # Follower sind alle nicht Leader
+    leader_similarities = {i: [similarity_score[i][j] for j in leaders] for i in followers} # Ähnlichkeit Follower <=> Leader
+#    pprint.pprint(leader_similarities)
     logging.debug('not leaders {}'.format(followers))
     logging.debug('leaders {}'.format(leaders))
     
     b1 = 6  # number of leaders per follower
-    cluster = {leader: list() for leader in leaders}
-    for doc in followers:
-        doc_leaders = heapq.nlargest(b1, leader_similarities[doc], key=lambda post: post.rank)
+    cluster = {leader: list() for leader in leaders}    # Dictionary of lists containing all followers for every leader
+#    pprint.pprint(cluster)
+
+    for doc in followers:   # finding b1 followers for each Leader
+        doc_leaders = heapq.nlargest(b1, leader_similarities[doc], key=lambda post: post.rank)  # getting (n^0.5) most similar followers 
+        
+        pprint.pprint(doc_leaders)
         for leader in doc_leaders:
             cluster[leader].append(doc)
         print('doc_leaders {}:'.format(doc_leaders))
     
+    
+    
+    b2 = 3  # number of Leaders considered for each query
     
     
     
