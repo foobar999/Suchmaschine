@@ -89,7 +89,7 @@ if __name__ == '__main__':
         doc_terms = doc_term_index[i]
         similarity_score.append(CosScoreCalculator().cosine_score(doc_terms, index, numdocs))
 
-    print('doc similarities')
+    print('fol similarities')
     #pprint.pprint(similarity_score)
     
     
@@ -103,24 +103,24 @@ if __name__ == '__main__':
     logging.debug('not leaders {}'.format(followers))
     logging.debug('leaders {}'.format(leaders))
     
-    b1 = 6  # number of leaders per follower
-    cluster = {leader: list() for leader in leaders}    # Dictionary of lists containing all followers for every leader
+    b1 = 5  # number of leaders per follower
+#    cluster = {leader: list() for leader in leaders}    # Dictionary of lists containing all followers for every leader
+    cluster = {}
 #    pprint.pprint(cluster)
 
-    follower_assignment_counts = {} # used to track to how many leaders each follower has already been assigned
-    # TODO add each follower to the list
-    for doc in followers:   # finding b1 followers for each Leader
-        doc_leaders = heapq.nlargest(b1, leader_similarities[doc], key=lambda post: post.rank)  # getting (n^0.5) most similar followers 
+    for fol in followers:   # finding b1 followers for each Leader
+        leaders_for_fol = heapq.nlargest(b1, leader_similarities[fol], key=lambda post: post.rank)  # getting (b1) leader for the current follower # something strange for b1 >= 6, only returns 5 elements!?
+#        pprint.pprint(leaders_for_fol)
+        for leader in leaders_for_fol:
+            if leader not in cluster:
+                cluster[leader] = [fol]
+            else:
+                cluster[leader].append(fol)
+                
         
-        for fol in doc_leaders: # TODO increment the count for each found follower
-            follower_assignment_counts[fol]++
-            if follower_assignment_counts[fol] > b1:    # follower was assigned to more than b1 Leaders
-                del leader_similarities[fol]            # delete that follower from the list
-        
-#        pprint.pprint(doc_leaders)
-        for leader in doc_leaders:
-            cluster[leader].append(doc)
-        print('doc_leaders {}:'.format(doc_leaders))
+        print('leaders_for_fol {}:'.format(leaders_for_fol))
+    
+    pprint.pprint(cluster)
     
     
     
