@@ -17,12 +17,14 @@ from src.fuzzy.histogram_builder import HistogramBuilder
 from src.vector.vector_ir_handler import VectorIRHandler
 from src.vector.cos_score_calculator import CosScoreCalculator
 from src.vector.weight_calculator import WeightCalculator
-
+from src.vectorK.vectorK_ir_handler import VectorKIRHandler
+from src.vectorK.cluster_builder import ClusterBuilder
 
 class IRMode(Enum):
     bool = auto()
     fuzzy = auto()
     vector = auto()
+    vectorTopK = auto()
     
 
 def generate_displayed_result(query_result, docs_dict):
@@ -80,41 +82,17 @@ if __name__ == '__main__':
     #pprint.pprint(fuzzy_index)
     
     
-    doc_term_index = IndexBuilder().build_doc_term_index(index, numdocs)
-    print("built doc_term_index index in {0:.5f} seconds".format(elapsed_time))
-    print('doc_term_index')
-    
-    similarity_score = []
-    
-    for i in range(0, numdocs):
-        doc_terms = doc_term_index[i]
-        similarity_score.append(CosScoreCalculator().cosine_score(doc_terms, index, numdocs))
-
-    print('fol similarities')
-    #pprint.pprint(similarity_score)
     
     
     
     
-    
-    leaders = sorted(sample(docsDict.keys(), floor(sqrt(numdocs)))) # Auswahl von (n^0.5) Leadern
-    followers = list(set(docsDict.keys()) - set(leaders))   # Follower sind alle nicht Leader
-    leader_similarities = {i: [similarity_score[i][j] for j in leaders] for i in followers} # Ähnlichkeit Follower <=> Leader
-#    pprint.pprint(leader_similarities)
-    logging.debug('not leaders {}'.format(followers))
-    logging.debug('leaders {}'.format(leaders))
-    
+    start_time = time.time()
     b1 = 5  # number of leaders per follower
     b2 = 3  # number of Leaders considered for each query
-    cluster = {leader: list() for leader in leaders}    # Dictionary of lists containing all followers for every leader
-#    pprint.pprint(cluster)
-
-    for fol in followers:   # finding b1 followers for each Leader
-        leaders_for_fol = heapq.nlargest(b1, leader_similarities[fol], key=lambda post: post.rank)  # getting (b1) leader for the current follower # something strange for b1 >= 6, only returns 5 elements!?
-        for leader in leaders_for_fol:
-            cluster[leader.docID].append(fol)
-            
-#    pprint.pprint(cluster)
+    cluster = ClusterBuilder().build_cluster(b1, b2, index, numdocs, docsDict)
+    elapsed_time = time.time() - start_time
+    print("built Leader/Follower cluster in {0:.5f} seconds".format(elapsed_time))
+    
     
     
     
@@ -149,6 +127,8 @@ if __name__ == '__main__':
                         query_result = FuzzyIRHandler().handle_query(query, fuzzy_index, sorted(docsDict.keys()))                        
                     elif mode == IRMode.vector:
                         query_result = VectorIRHandler().handle_query(query, index, numdocs)
+                    elif mode == IRMode.vectorTopK:
+                        query_result = VectorKIRHandler().handle_query(query, index, numdocs)
                     
                     elapsed_time = time.time() - start_time
                     if mode != IRMode.bool:
