@@ -1,12 +1,7 @@
 import logging
-import numpy as np
 import heapq
 from math import sqrt, floor
 from random import sample
-from collections import OrderedDict
-from scipy.sparse import coo_matrix
-from sklearn.metrics.pairwise import pairwise_distances
-from src.ranked_posting import RankedPosting
 from src.index_builder import IndexBuilder
 from src.vector.cos_score_calculator import CosScoreCalculator
 

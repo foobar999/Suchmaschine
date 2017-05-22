@@ -6,8 +6,6 @@ import time
 import pprint
 import numpy as np
 import heapq
-from random import sample
-from math import sqrt, floor
 from enum import Enum, auto
 from src.index_builder import IndexBuilder
 from src.boolean_ir_handler import BooleanIRHandler
@@ -15,7 +13,6 @@ from src.fuzzy.membership_calculator import MembershipCalculator
 from src.fuzzy.fuzzy_ir_handler import FuzzyIRHandler
 from src.fuzzy.histogram_builder import HistogramBuilder
 from src.vector.vector_ir_handler import VectorIRHandler
-from src.vector.cos_score_calculator import CosScoreCalculator
 from src.vector.weight_calculator import WeightCalculator
 from src.vectorK.vectorK_ir_handler import VectorKIRHandler
 from src.vectorK.cluster_builder import ClusterBuilder
