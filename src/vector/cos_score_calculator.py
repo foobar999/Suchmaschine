@@ -40,6 +40,7 @@ class CosScoreCalculator(object):
         logging.info('calculating fast cosine, query {}, numdocs {}'.format(query, numdocs))
         scores = [0] * numdocs
         for term in query:
+            logging.debug('fast cos: proc term {}'.format(term))
             posting_list = index[Term(term)].postings
             for posting in posting_list:
                 wf_t_d = posting.rank

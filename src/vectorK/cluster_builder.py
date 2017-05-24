@@ -34,6 +34,11 @@ class ClusterBuilder(object):
             leaders_for_fol = heapq.nlargest(b1, leader_similarities[fol], key=lambda post: post.rank)  # getting (b1) leader for the current follower
             for leader in leaders_for_fol:
                 cluster[leader.docID].append(fol)
+        
+        for leader in leaders:
+            cluster[leader].append(leader)   # Adding leader as its own follower
+            cluster[leader].sort()
+    
                 
         # pprint.pprint(cluster)
         

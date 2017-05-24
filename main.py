@@ -16,12 +16,13 @@ from src.vector.vector_ir_handler import VectorIRHandler
 from src.vector.weight_calculator import WeightCalculator
 from src.vectorK.vectorK_ir_handler import VectorKIRHandler
 from src.vectorK.cluster_builder import ClusterBuilder
+from src.term_postings import TermPostings
 
 class IRMode(Enum):
     bool = auto()
     fuzzy = auto()
     vector = auto()
-    vectorTopK = auto()
+    vectork = auto()
     
 
 def generate_displayed_result(query_result, docs_dict):
@@ -84,14 +85,28 @@ if __name__ == '__main__':
     
     
     start_time = time.time()
-    b1 = 5  # number of leaders per follower
+    b1 = 2  # number of leaders per follower
     b2 = 3  # number of Leaders considered for each query
     cluster = ClusterBuilder().build_cluster(b1, b2, index, numdocs, docsDict)
     elapsed_time = time.time() - start_time
     print("built Leader/Follower cluster in {0:.5f} seconds".format(elapsed_time))
+    leader_index = {}
+    for key in index:
+        leader_index[key] = TermPostings([post for post in index[key].postings if post.docID in cluster.keys()])
     
+    follower_index = {}
+    for leader in cluster.keys():
+        follower_index[leader] = {}
+        for key in index:
+            follower_index[leader][key] = TermPostings([post for post in index[key].postings if post.docID in cluster[leader]])
+        
+        
     
-    
+    # TODO remove keys without Docs
+    pprint.pprint(follower_index[list(cluster.keys())[0]])
+    pprint.pprint(cluster[list(cluster.keys())[0]])
+    print('leaders {}'.format(cluster.keys()))
+    pprint.pprint(cluster)
     
     
     
@@ -124,8 +139,8 @@ if __name__ == '__main__':
                         query_result = FuzzyIRHandler().handle_query(query, fuzzy_index, sorted(docsDict.keys()))                        
                     elif mode == IRMode.vector:
                         query_result = VectorIRHandler().handle_query(query, index, numdocs)
-                    elif mode == IRMode.vectorTopK:
-                        query_result = VectorKIRHandler().handle_query(query, cluster, index, numdocs)
+                    elif mode == IRMode.vectork:
+                        query_result = VectorKIRHandler().handle_query(query, b2, leader_index, follower_index, numdocs)
                     
                     elapsed_time = time.time() - start_time
                     if mode != IRMode.bool:
