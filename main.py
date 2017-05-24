@@ -42,8 +42,8 @@ def generate_displayed_result(query_result, docs_dict):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     
-#    data_folder = os.path.join(os.path.join(os.getcwd(), "data"), "mantxt_smini")
-    data_folder = os.path.join(os.path.join(os.getcwd(), "data"), "Märchen")
+    data_folder = os.path.join(os.path.join(os.getcwd(), "data"), "mantxt")
+#    data_folder = os.path.join(os.path.join(os.getcwd(), "data"), "Märchen")
     index_build_start = time.time()
     index, docsDict = IndexBuilder().build_from_folder(data_folder)
     numdocs = len(docsDict)
