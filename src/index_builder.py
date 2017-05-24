@@ -46,8 +46,7 @@ class IndexBuilder(object):
                         if entry is None:
                             entry = index[term] = TermPostings()
                             # beachte: sortiertes Einfügen nicht nötig, da docID ja stets inkrementiert
-                            # Ersetzen von SingleList durch [] hat bei mir 7sec rausgeholt
-                            # entry.postings = []
+                            # TODO als .postings normale list() nehmen (beachte u.A. newlist in weight_calculator.set_posting_weights()) ?
                         entry.postings.append(Posting(docID, term_positions)) 
                     t3 += time.time() - t3s
                         
