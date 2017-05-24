@@ -40,10 +40,11 @@ def generate_displayed_result(query_result, docs_dict):
     return displayed_result
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
     
+    data_folder = os.path.join(os.getcwd(), "data", "mini_mantxt")
     #data_folder = os.path.join(os.path.join(os.getcwd(), "data"), "mantxt")
-    data_folder = os.path.join(os.path.join(os.getcwd(), "data"), "Märchen")
+    #data_folder = os.path.join(os.path.join(os.getcwd(), "data"), "Märchen")
     index_build_start = time.time()
     index, docsDict = IndexBuilder().build_from_folder(data_folder)
     index_build_elapsed = time.time() - index_build_start

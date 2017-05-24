@@ -18,6 +18,7 @@ class IndexBuilder(object):
         # Reading Files
         # This works even if subfolders are used
         logging.info('building index')
+        # TODO zeit raus
         t1,t2,t3 = 0,0,0
         for root, _dirs, files in os.walk(data_folder):
             for file in sorted(files, key=lambda s: s.lower()):
@@ -39,14 +40,20 @@ class IndexBuilder(object):
                     
                     t3s = time.time()
                     for term, term_positions in positions_of_terms.items():
-                        if term not in index:
-                            index[term] = TermPostings()
-                        index[term].postings.append(Posting(docID, term_positions))                    
+                        #=======================================================
+                        # if term not in index:
+                        #     index[term] = TermPostings()
+                        # index[term].postings.append(Posting(docID, term_positions))                    
+                        #=======================================================
+                        entry = index.get(term)
+                        if entry is None:
+                            entry = index[term] = TermPostings()
+                        entry.postings.append(Posting(docID, term_positions)) 
                     t3 += time.time() - t3s
                         
                     docID += 1
                                
-                    #print('times: {}, {}, {}'.format(t1,t2,t3))
+        print('times: {}, {}, {}'.format(t1,t2,t3))
                                     
         return (OrderedDict(sorted(index.items())), docsDict)
     
