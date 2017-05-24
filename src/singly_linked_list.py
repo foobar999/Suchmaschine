@@ -33,43 +33,56 @@ class SingleList(object):
         return self.len
     
     def append(self, data):
+        
         node = Node(data, None)
-        if self.head is None:   # first element in empty list
+        if self.head is None:
             self.head = self.tail = node
-            self.len += 1
-        else:   # add element to existing list
-            currentNode = self.head
-            lastNode = None
-#            while currentNode != None:
-            while True:
-                
-                if currentNode is None  :           # insert as last element
-                    lastNode.next = node
-                    self.tail = node
-                    self.len += 1
-                    break
-                    
-                elif currentNode.data < node.data:  # continue the loop
-                    lastNode = currentNode
-                    currentNode = currentNode.next
-                    continue
-                    
-                elif currentNode.data == node.data: # value is already in the list
-                    break
-                
-                elif currentNode.data > node.data:
-                    if lastNode == None:            # insert as first element
-                        self.head = node
-                        node.next = currentNode
-                    else:                           # insert inside the list
-                        lastNode.next = node
-                        node.next = currentNode
-                    self.len += 1
-                    break
-                    
-                lastNode = currentNode
-                currentNode = currentNode.next
-            '''
+        else:
+            self.tail.next = node
+            self.tail = node
+        self.len += 1
+        
+        
+#===============================================================================
+#         node = Node(data, None)
+#         if self.head is None:   # first element in empty list
+#             self.head = self.tail = node
+#             self.len += 1
+#         else:   # add element to existing list
+#             currentNode = self.head
+#             lastNode = None
+# #            while currentNode != None:
+#             while True:
+#                 
+#                 if currentNode is None  :           # insert as last element
+#                     lastNode.next = node
+#                     self.tail = node
+#                     self.len += 1
+#                     break
+#                     
+#                 elif currentNode.data < node.data:  # continue the loop
+#                     lastNode = currentNode
+#                     currentNode = currentNode.next
+#                     continue
+#                     
+#                 elif currentNode.data == node.data: # value is already in the list
+#                     break
+#                 
+#                 elif currentNode.data > node.data:
+#                     if lastNode == None:            # insert as first element
+#                         self.head = node
+#                         node.next = currentNode
+#                     else:                           # insert inside the list
+#                         lastNode.next = node
+#                         node.next = currentNode
+#                     self.len += 1
+#                     break
+#                     
+#                 lastNode = currentNode
+#                 currentNode = currentNode.next
+#===============================================================================
+
+        '''
             while currentNode.data < node.data: # until currentNode is equal or greater than the new node
                 currentNode = currentNode.next
             if currentNode.data == node.data:
@@ -80,7 +93,9 @@ class SingleList(object):
             self.tail.next = node
         self.tail = node
         '''
-
+    
+        
+    
 
     def remove(self, node_value):
         current_node = self.head

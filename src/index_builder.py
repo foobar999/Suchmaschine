@@ -7,6 +7,7 @@ from src.tokenizer import Tokenizer
 from src.term_postings import TermPostings
 from src.term import Term
 from src.posting import Posting
+import singly_linked_list
 
 class IndexBuilder(object):
 
@@ -33,11 +34,6 @@ class IndexBuilder(object):
                     positions_of_terms = {}
                     for pos, term in enumerate(terms):
                         t = Term(term)
-                        #=======================================================
-                        # if t not in positions_of_terms:
-                        #     positions_of_terms[t] = []
-                        # positions_of_terms[t].append(pos)
-                        #=======================================================
                         entry = positions_of_terms.get(t)
                         if entry is None:
                             entry = positions_of_terms[t] = []
@@ -49,8 +45,9 @@ class IndexBuilder(object):
                         entry = index.get(term)
                         if entry is None:
                             entry = index[term] = TermPostings()
-                            # TODO weniger 'hacky' ?
-                            entry.postings = []
+                            # beachte: sortiertes Einfügen nicht nötig, da docID ja stets inkrementiert
+                            # Ersetzen von SingleList durch [] hat bei mir 7sec rausgeholt
+                            # entry.postings = []
                         entry.postings.append(Posting(docID, term_positions)) 
                     t3 += time.time() - t3s
                         
