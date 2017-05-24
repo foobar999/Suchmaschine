@@ -42,15 +42,18 @@ def generate_displayed_result(query_result, docs_dict):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     
-    data_folder = os.path.join(os.path.join(os.getcwd(), "data"), "mantxt")
-#    data_folder = os.path.join(os.path.join(os.getcwd(), "data"), "Märchen")
+    #data_folder = os.path.join(os.path.join(os.getcwd(), "data"), "mantxt")
+    data_folder = os.path.join(os.path.join(os.getcwd(), "data"), "Märchen")
     index_build_start = time.time()
     index, docsDict = IndexBuilder().build_from_folder(data_folder)
-    numdocs = len(docsDict)
-    WeightCalculator().set_posting_weights(index, numdocs)
-    WeightCalculator().normalize_posting_weights(index, numdocs)
     index_build_elapsed = time.time() - index_build_start
     print("built index in {0:.5f} seconds".format(index_build_elapsed))
+    numdocs = len(docsDict)
+    weight_calc_start = time.time()
+    WeightCalculator().set_posting_weights(index, numdocs)
+    WeightCalculator().normalize_posting_weights(index, numdocs)
+    weight_calc_elapsed = time.time() - weight_calc_start
+    print("calculated weights in {0:.5f} seconds".format(weight_calc_elapsed))
     #print('number of terms in docs: {}'.format(docs_numterms))
 
     start_time = time.time()
