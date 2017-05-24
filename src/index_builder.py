@@ -29,27 +29,24 @@ class IndexBuilder(object):
                     t1 += time.time() - t1s
                     
                     t2s = time.time()
-                    positions_of_term = {}
-                    for pos in range(0, len(terms)):
-                        t = Term(terms[pos])
-                        if t not in positions_of_term:
-                            positions_of_term[t] = []
-                        positions_of_term[t].append(pos)
+                    positions_of_terms = {}
+                    for pos, term in enumerate(terms):
+                        t = Term(term)
+                        if t not in positions_of_terms:
+                            positions_of_terms[t] = []
+                        positions_of_terms[t].append(pos)
                     t2 += time.time() - t2s
                     
                     t3s = time.time()
-                    for pos in range(0, len(terms)):
-                        t = Term(terms[pos])
-                        if t not in index:
-                            index[t] = TermPostings()
-                        index[t].postings.append(Posting(docID, positions_of_term[t]))
+                    for term, term_positions in positions_of_terms.items():
+                        if term not in index:
+                            index[term] = TermPostings()
+                        index[term].postings.append(Posting(docID, term_positions))                    
                     t3 += time.time() - t3s
                         
-                        # dindexTerm(t)].postings.at(docID).data.positions.append(pos)
-                        # dindexTerm(t)].append(docID)    # class Term would need to be immutable
                     docID += 1
                                
-        print('times: {}, {}, {}'.format(t1,t2,t3))
+                    #print('times: {}, {}, {}'.format(t1,t2,t3))
                                     
         return (OrderedDict(sorted(index.items())), docsDict)
     

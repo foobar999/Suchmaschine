@@ -8,7 +8,7 @@ class BooleanIRHandlerTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        data_folder = path.join(path.join(getcwd(), pardir), "data")
+        data_folder = path.join(getcwd(), pardir, "data", "Märchen")
         cls.index, cls.docs_dict = IndexBuilder().build_from_folder(data_folder)
         cls.handler = BooleanIRHandler()
         
