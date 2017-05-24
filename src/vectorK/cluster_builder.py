@@ -31,12 +31,12 @@ class ClusterBuilder(object):
         # pprint.pprint(cluster)
     
         for fol in followers:   # finding b1 followers for each Leader
-            leaders_for_fol = heapq.nlargest(b1, leader_similarities[fol], key=lambda post: post.rank)  # getting (b1) leader for the current follower # something strange for b1 >= 6, only returns 5 elements!?
+            leaders_for_fol = heapq.nlargest(b1, leader_similarities[fol], key=lambda post: post.rank)  # getting (b1) leader for the current follower
             for leader in leaders_for_fol:
                 cluster[leader.docID].append(fol)
                 
         # pprint.pprint(cluster)
         
             
-        return b1
+        return cluster
 

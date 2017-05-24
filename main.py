@@ -125,7 +125,7 @@ if __name__ == '__main__':
                     elif mode == IRMode.vector:
                         query_result = VectorIRHandler().handle_query(query, index, numdocs)
                     elif mode == IRMode.vectorTopK:
-                        query_result = VectorKIRHandler().handle_query(query, index, numdocs)
+                        query_result = VectorKIRHandler().handle_query(query, cluster, index, numdocs)
                     
                     elapsed_time = time.time() - start_time
                     if mode != IRMode.bool:
