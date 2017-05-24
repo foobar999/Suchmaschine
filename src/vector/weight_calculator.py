@@ -9,7 +9,7 @@ class WeightCalculator(object):
         N = numdocs
         logging.info('calculating tf-idf weights ({} docs)'.format(N))
         for term in index:
-            df = index[term].postings.len
+            df = len(index[term].postings)
             newlist = SingleList()
             for posting in index[term].postings:
                 tf = len(posting.positions)

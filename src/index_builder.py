@@ -40,14 +40,11 @@ class IndexBuilder(object):
                     
                     t3s = time.time()
                     for term, term_positions in positions_of_terms.items():
-                        #=======================================================
-                        # if term not in index:
-                        #     index[term] = TermPostings()
-                        # index[term].postings.append(Posting(docID, term_positions))                    
-                        #=======================================================
                         entry = index.get(term)
                         if entry is None:
                             entry = index[term] = TermPostings()
+                            # TODO weniger 'hacky' ?
+                            entry.postings = []
                         entry.postings.append(Posting(docID, term_positions)) 
                     t3 += time.time() - t3s
                         
