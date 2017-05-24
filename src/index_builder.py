@@ -33,9 +33,15 @@ class IndexBuilder(object):
                     positions_of_terms = {}
                     for pos, term in enumerate(terms):
                         t = Term(term)
-                        if t not in positions_of_terms:
-                            positions_of_terms[t] = []
-                        positions_of_terms[t].append(pos)
+                        #=======================================================
+                        # if t not in positions_of_terms:
+                        #     positions_of_terms[t] = []
+                        # positions_of_terms[t].append(pos)
+                        #=======================================================
+                        entry = positions_of_terms.get(t)
+                        if entry is None:
+                            entry = positions_of_terms[t] = []
+                        entry.append(pos)
                     t2 += time.time() - t2s
                     
                     t3s = time.time()
