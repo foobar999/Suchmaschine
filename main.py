@@ -40,11 +40,11 @@ def generate_displayed_result(query_result, docs_dict):
     return displayed_result
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
     
     #data_folder = os.path.join(os.getcwd(), "data", "mini_mantxt")
-    data_folder = os.path.join(os.getcwd(), "data", "mantxt")
-    #data_folder = os.path.join(os.getcwd(), "data", "Märchen")
+    #data_folder = os.path.join(os.getcwd(), "data", "mantxt")
+    data_folder = os.path.join(os.getcwd(), "data", "Märchen")
     index_build_start = time.time()
     index, docsDict = IndexBuilder().build_from_folder(data_folder)
     index_build_elapsed = time.time() - index_build_start
@@ -58,30 +58,32 @@ if __name__ == '__main__':
     print("calculated weights in {0:.5f} seconds".format(weight_calc_elapsed))
     #print('number of terms in docs: {}'.format(docs_numterms))
 
-    start_time = time.time()
-    corr, docs_ocurr_mat = MembershipCalculator().calc_correlation_mat(index, numdocs, 0.5)
-    elapsed_time = time.time() - start_time
-    print("built correlation matrix in {0:.5f} seconds".format(elapsed_time))
-    
-    corr_hist, corr_bins = HistogramBuilder().calc_symm_mat_hist(corr, 10)        
-    np.set_printoptions(formatter={'int_kind': lambda x:' {0:d}'.format(x)})
-    print('correlation histogram {}'.format(corr_hist))
-    print('histogram bins{}'.format(corr_bins))
-    
-    start_time = time.time()
-    index_terms = [term.literal for term in index.keys()]
-    fuzzy_index, fuzzy_mat = MembershipCalculator().build_fuzzy_index(index_terms, corr, docs_ocurr_mat, 0)
-    elapsed_time = time.time() - start_time
-    print("built fuzzy index in {0:.5f} seconds".format(elapsed_time))
-    
-    fuzzy_hist, fuzzy_bins = HistogramBuilder().calc_symm_mat_hist(fuzzy_mat, 10)
-    print('fuzzy index histogram: {}'.format(fuzzy_hist))
-    print('histogram bins{}'.format(fuzzy_bins))
+    #===========================================================================
+    # start_time = time.time()
+    # corr, docs_ocurr_mat = MembershipCalculator().calc_correlation_mat(index, numdocs, 0.5)
+    # elapsed_time = time.time() - start_time
+    # print("built correlation matrix in {0:.5f} seconds".format(elapsed_time))
+    #  
+    # corr_hist, corr_bins = HistogramBuilder().calc_symm_mat_hist(corr, 10)        
+    # np.set_printoptions(formatter={'int_kind': lambda x:' {0:d}'.format(x)})
+    # print('correlation histogram {}'.format(corr_hist))
+    # print('histogram bins{}'.format(corr_bins))
+    #  
+    # start_time = time.time()
+    # index_terms = [term.literal for term in index.keys()]
+    # fuzzy_index, fuzzy_mat = MembershipCalculator().build_fuzzy_index(index_terms, corr, docs_ocurr_mat, 0)
+    # elapsed_time = time.time() - start_time
+    # print("built fuzzy index in {0:.5f} seconds".format(elapsed_time))
+    # print("number of fuzzy index entries: {}".format(len(fuzzy_index)))
+    #  
+    # fuzzy_hist, fuzzy_bins = HistogramBuilder().calc_symm_mat_hist(fuzzy_mat, 10)
+    # print('fuzzy index histogram: {}'.format(fuzzy_hist))
+    # print('histogram bins{}'.format(fuzzy_bins))
+    #===========================================================================
 
     print("number of dict entries:", len(index))
     pprint.pprint(docsDict)
     #logging.info(index)
-    print("number of fuzzy index entries: {}".format(len(fuzzy_index)))
     #pprint.pprint(fuzzy_index)
     
     
@@ -94,17 +96,20 @@ if __name__ == '__main__':
     b2 = 3  # number of Leaders considered for each query
     cluster = ClusterBuilder().build_cluster(b1, b2, index, numdocs, docsDict)
     elapsed_time = time.time() - start_time
-    print("built Leader/Follower cluster in {0:.5f} seconds".format(elapsed_time))
+    print('{} leaders'.format(len(cluster)))
+    print("built leader/follower cluster in {0:.5f} seconds".format(elapsed_time))
+    
+    leader_follower_start_time = time.time()
     leader_index = {}
     for key in index:
-        leader_index[key] = TermPostings([post for post in index[key].postings if post.docID in cluster.keys()])
-    
+        leader_index[key] = TermPostings([post for post in index[key].postings if post.docID in cluster.keys()])    
     follower_index = {}
     for leader in cluster.keys():
         follower_index[leader] = {}
         for key in index:
             follower_index[leader][key] = TermPostings([post for post in index[key].postings if post.docID in cluster[leader]])
-        
+    leader_follower_elapsed_time = time.time() - leader_follower_start_time
+    print("built leader/follower indices in {0:.5f} seconds".format(leader_follower_elapsed_time))
         
     
     # TODO remove keys without Docs

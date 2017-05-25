@@ -10,11 +10,12 @@ class WeightCalculator(object):
         logging.info('calculating tf-idf weights ({} docs)'.format(N))
         for term in index:
             df = len(index[term].postings)
-            newlist = SingleList()
+            #newlist = SingleList()
+            newlist = []
             for posting in index[term].postings:
                 tf = len(posting.positions)
                 rank = self._calc_wt_f_d(tf, df, N)
-                logging.debug('term {} doc {} df {} tf {} rank {}'.format(term,posting.docID,df,tf,rank))
+                #logging.debug('term {} doc {} df {} tf {} rank {}'.format(term,posting.docID,df,tf,rank))
                 newlist.append(RankedPosting(posting.docID, rank, posting.positions))
             index[term].postings = newlist
         

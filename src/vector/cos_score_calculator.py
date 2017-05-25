@@ -1,30 +1,21 @@
 import logging
+import numpy as np
 from src.term import Term
 from src.ranked_posting import RankedPosting
 
 class CosScoreCalculator(object):
     
-    #===========================================================================
-    # def cosine_score(self, doc_terms1, doc_terms2):
-    #     score = 0
-    #     i1, i2 = 0, 0
-    #     while i1 < len(doc_terms1) and i2 < len(doc_terms2):
-    #         term1, term2 = doc_terms1[i1][0], doc_terms2[i2][0]
-    #         if term1 == term2:
-    #             w1, w2 = doc_terms1[i1][1], doc_terms2[i2][1]
-    #             score += w1 * w2
-    #             i1 += 1
-    #             i2 += 1
-    #         elif term1 < term2:
-    #             i1 += 1
-    #         else:
-    #             i2 += 1
-    #     
-    #     return score
-    #===========================================================================
+    def fast_document_cosinus_scores(self, index, numdocs):
+        logging.info('creating matrix from index, {} terms, {} docs'.format(len(index), numdocs))
+        index_mat = self._index_to_mat(index, numdocs)
+        logging.info('calculated document similarity scores')
+        res = index_mat.T.dot(index_mat)
+        return res.tolist()
+        #pprint.pprint(res)
+        
     
     def cosine_score(self, queryDoc, index, numdocs):
-        logging.info('calculating cosine(DxD), query {}, numdocs {}'.format(queryDoc, numdocs))
+        #logging.debug('calculating cosine(DxD), query {}, numdocs {}'.format(queryDoc, numdocs))
         scores = [0] * numdocs
         
         for termAndW in queryDoc:
@@ -47,4 +38,13 @@ class CosScoreCalculator(object):
                 scores[posting.docID] += wf_t_d
         return [RankedPosting(docID,score) for docID,score in enumerate(scores)]
                 
-        
+      
+    def _index_to_mat(self, index, numdocs):
+        mat = []
+        for posting_list in index.values():
+            weights_of_term = [0] * numdocs
+            for posting in posting_list.postings:
+                weights_of_term[posting.docID] = posting.rank
+            mat.append(weights_of_term)
+        return np.matrix(mat)
+    

@@ -7,7 +7,7 @@ from src.tokenizer import Tokenizer
 from src.term_postings import TermPostings
 from src.term import Term
 from src.posting import Posting
-import singly_linked_list
+from ranked_posting import RankedPosting
 
 class IndexBuilder(object):
 
@@ -57,12 +57,11 @@ class IndexBuilder(object):
         return (OrderedDict(sorted(index.items())), docsDict)
     
 
-    # TODO nicht als tupel speichern??
     def build_doc_term_index(self, index, numdocs):
         doc_term_index = [list() for _i in range(numdocs)]
         for term in index:
             for posting in index[term].postings:
                 doc_term_index[posting.docID].append((term, posting.rank))
-        
+                        
         return doc_term_index
         

@@ -9,15 +9,13 @@ class VectorKIRHandler(object):
     def handle_query(self, query, b2, leader_index, follower_index, numdocs):
         logging.debug('handling query {}'.format(query))
         query_terms = [tok.lower() for tok in query.split()]
-        logging.debug('split query to {}'.format(query_terms))
-        
-        
+        logging.debug('split query to {}'.format(query_terms))        
         
         leader_scores = CosScoreCalculator().fast_cosine_score(query_terms, leader_index, numdocs)
         logging.debug('leader_scores: {}'.format(leader_scores))
               
         selected_leaders = heapq.nlargest(b2, leader_scores, key=lambda post: post.rank)       
-        pprint.pprint(selected_leaders)
+        logging.info('selected_leaders: {}'.format(selected_leaders))
         
         res = []
         for leader in selected_leaders:
