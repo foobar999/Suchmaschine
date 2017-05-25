@@ -14,21 +14,19 @@ class ClusterBuilder(object):
         leaders = sorted(sample(docsDict.keys(), floor(sqrt(numdocs)))) # Selection of (n^0.5) Leaders
         followers = list(set(docsDict.keys()) - set(leaders))   # Follower sind alle nicht Leader
         logging.debug('{} followers: {}'.format(len(followers), followers))
-        logging.debug('{} leaders: {}'.format(len(leaders), leaders))
+        logging.debug('{} leaders: {}'.format(len(leaders), leaders))         
         
-        cluster = {leader: list() for leader in leaders}    # Dictionary of lists containing all followers for every leader
-        
-        for fol in followers:
+        logging.debug('building clusters')
+        leaders_of_docs = {}        
+        for follower in followers:
             # getting (b1) leaders for the current follower
-            leaders_of_fol = heapq.nlargest(b1, leaders, key=lambda lead: similarity_scores[lead][fol])  
-            for leader in leaders_of_fol:
-                cluster[leader].append(fol)
+            leaders_of_follower = heapq.nlargest(b1, leaders, key=lambda leader: similarity_scores[leader][follower])
+            leaders_of_docs[follower] = leaders_of_follower
         
+        # set every leader as its own leader
         for leader in leaders:
-            cluster[leader].append(leader)   # Adding leader as its own follower
-            cluster[leader].sort()
+            leaders_of_docs[leader] = [leader]
         
-        logging.debug('built cluster')
             
-        return cluster
+        return (set(leaders), followers, leaders_of_docs)
 

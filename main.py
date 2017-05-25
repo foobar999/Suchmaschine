@@ -43,8 +43,8 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.WARNING)
     
     #data_folder = os.path.join(os.getcwd(), "data", "mini_mantxt")
-    data_folder = os.path.join(os.getcwd(), "data", "mantxt")
-    #data_folder = os.path.join(os.getcwd(), "data", "Märchen")
+    #data_folder = os.path.join(os.getcwd(), "data", "mantxt")
+    data_folder = os.path.join(os.getcwd(), "data", "Märchen")
     print('building index from "{}" ...'.format(data_folder))
     index_build_start = time.time()
     index, docsDict = IndexBuilder().build_from_folder(data_folder)
@@ -89,28 +89,27 @@ if __name__ == '__main__':
 
     
     print('building clusters...')
-    start_time = time.time()
     b1 = 2  # number of leaders per follower
     b2 = 3  # number of Leaders considered for each query
-    cluster = ClusterBuilder().build_cluster(b1, b2, index, numdocs, docsDict)
+    start_time = time.time()
+    leaders, followers, leaders_of_docs = ClusterBuilder().build_cluster(b1, b2, index, numdocs, docsDict)
     elapsed_time = time.time() - start_time
     print("built leader/follower cluster in {0:.5f} seconds:".format(elapsed_time))
-    logging.info('cluster ({} leaders):\n{}'.format(len(cluster), pprint.pformat(cluster)))
+    logging.info('cluster ({} leaders):\n{}'.format(len(leaders), pprint.pformat(leaders_of_docs)))
+     
     
     leader_follower_start_time = time.time()
-    print('building leader index...')
     leader_index = {}
-    for key in index:
-        leader_index[key] = TermPostings([post for post in index[key].postings if post.docID in cluster.keys()])   
-    print('building follower indices...') 
-    follower_index = {}
-    for leader in cluster.keys():
-        follower_index[leader] = {}
-        for key in index:
-            follower_index[leader][key] = TermPostings([post for post in index[key].postings if post.docID in cluster[leader]])
+    for term, term_postings in index.items():
+        leader_index[term] = TermPostings([post for post in term_postings.postings if post.docID in leaders])
+    follower_index = {leader: {term: TermPostings() for term in index.keys()} for leader in leaders}
+    for term, term_postings in index.items():
+        for posting in term_postings.postings:
+            for leader in leaders_of_docs[posting.docID]:
+                follower_index[leader][term].postings.append(posting)
     leader_follower_elapsed_time = time.time() - leader_follower_start_time
     print("built leader/follower indices in {0:.5f} seconds".format(leader_follower_elapsed_time))
-        
+    
     
     # TODO remove keys without Docs
     #===========================================================================

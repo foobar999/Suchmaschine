@@ -8,11 +8,13 @@ class RankedPosting(Posting):
         self.rank = rank
         
     def __eq__(self, other):
-        print("111")
         if isinstance(other, self.__class__):
             return self.__dict__ == other.__dict__ # Dictionary of class members
         else:
             return False
+        
+    def __neq__(self, other):
+        return not self.__eq__(other)
 
     def __repr__(self):
         return '{}({},{})' .format(type(self).__name__, str(self.docID), self.rank)
