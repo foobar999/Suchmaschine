@@ -8,16 +8,10 @@ class CosScoreCalculator(object):
     
     def fast_document_cosinus_scores(self, index, numdocs):
         logging.debug('creating matrix from index, {} terms, {} docs'.format(len(index), numdocs))
-        #index_mat = self._index_to_mat(index, numdocs)
-        print('foo')
-        index_mat = self._index_to_mat(index, numdocs)
-        print('bar')
+        index_mat = self._index_to_sparse_mat(index, numdocs)
         logging.debug('calculated document similarity scores')
         res = index_mat.T.dot(index_mat)
-        #return res.tolist()
-        return res.todense().tolist()
-        #pprint.pprint(res)
-        
+        return res.todense().tolist()        
     
     def cosine_score(self, queryDoc, index, numdocs):
         #logging.debug('calculating cosine(DxD), query {}, numdocs {}'.format(queryDoc, numdocs))
@@ -44,7 +38,7 @@ class CosScoreCalculator(object):
         return [RankedPosting(docID,score) for docID,score in enumerate(scores)]
                 
       
-    def _index_to_mat(self, index, numdocs):
+    def _index_to_sparse_mat(self, index, numdocs):
         logging.debug('converting index to sparse matrix')
         rows, cols, values = [], [], []
         for i, posting_list in enumerate(index.values()):

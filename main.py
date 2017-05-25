@@ -42,8 +42,8 @@ def generate_displayed_result(query_result, docs_dict):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.WARNING)
     
-    data_folder = os.path.join(os.getcwd(), "data", "mini_mantxt")
-    #data_folder = os.path.join(os.getcwd(), "data", "mantxt")
+    #data_folder = os.path.join(os.getcwd(), "data", "mini_mantxt")
+    data_folder = os.path.join(os.getcwd(), "data", "mantxt")
     #data_folder = os.path.join(os.getcwd(), "data", "Märchen")
     print('building index from "{}" ...'.format(data_folder))
     index_build_start = time.time()
