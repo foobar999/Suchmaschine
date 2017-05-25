@@ -96,8 +96,8 @@ if __name__ == '__main__':
     b2 = 3  # number of Leaders considered for each query
     cluster = ClusterBuilder().build_cluster(b1, b2, index, numdocs, docsDict)
     elapsed_time = time.time() - start_time
-    print('{} leaders'.format(len(cluster)))
-    print("built leader/follower cluster in {0:.5f} seconds".format(elapsed_time))
+    print("built leader/follower cluster in {0:.5f} seconds:".format(elapsed_time))
+    logging.info('cluster ({} leaders):\n{}'.format(len(cluster), pprint.pformat(cluster)))
     
     leader_follower_start_time = time.time()
     leader_index = {}
@@ -113,10 +113,12 @@ if __name__ == '__main__':
         
     
     # TODO remove keys without Docs
-    pprint.pprint(follower_index[list(cluster.keys())[0]])
-    pprint.pprint(cluster[list(cluster.keys())[0]])
-    print('leaders {}'.format(cluster.keys()))
-    pprint.pprint(cluster)
+    #===========================================================================
+    # pprint.pprint(follower_index[list(cluster.keys())[0]])
+    # pprint.pprint(cluster[list(cluster.keys())[0]])
+    # print('leaders {}'.format(cluster.keys()))
+    # pprint.pprint(cluster)
+    #===========================================================================
     
     
     

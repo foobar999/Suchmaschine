@@ -21,7 +21,7 @@ class VectorKIRHandler(object):
         for leader in selected_leaders:
             logging.debug('process leader {}'.format(leader))
             res.extend(CosScoreCalculator().fast_cosine_score(query_terms, follower_index[leader.docID], numdocs))
-        pprint.pprint(res)
+        #pprint.pprint(res)
         
         # TODO
             # dist Query <=> Followers (of selected leaders)

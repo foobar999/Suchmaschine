@@ -6,9 +6,9 @@ from src.ranked_posting import RankedPosting
 class CosScoreCalculator(object):
     
     def fast_document_cosinus_scores(self, index, numdocs):
-        logging.info('creating matrix from index, {} terms, {} docs'.format(len(index), numdocs))
+        logging.debug('creating matrix from index, {} terms, {} docs'.format(len(index), numdocs))
         index_mat = self._index_to_mat(index, numdocs)
-        logging.info('calculated document similarity scores')
+        logging.debug('calculated document similarity scores')
         res = index_mat.T.dot(index_mat)
         return res.tolist()
         #pprint.pprint(res)
