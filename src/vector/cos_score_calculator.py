@@ -1,5 +1,6 @@
 import logging
 import numpy as np
+from scipy.sparse import csr_matrix, coo_matrix
 from src.term import Term
 from src.ranked_posting import RankedPosting
 
@@ -7,10 +8,14 @@ class CosScoreCalculator(object):
     
     def fast_document_cosinus_scores(self, index, numdocs):
         logging.debug('creating matrix from index, {} terms, {} docs'.format(len(index), numdocs))
+        #index_mat = self._index_to_mat(index, numdocs)
+        print('foo')
         index_mat = self._index_to_mat(index, numdocs)
+        print('bar')
         logging.debug('calculated document similarity scores')
         res = index_mat.T.dot(index_mat)
-        return res.tolist()
+        #return res.tolist()
+        return res.todense().tolist()
         #pprint.pprint(res)
         
     
@@ -40,11 +45,13 @@ class CosScoreCalculator(object):
                 
       
     def _index_to_mat(self, index, numdocs):
-        mat = []
-        for posting_list in index.values():
-            weights_of_term = [0] * numdocs
+        logging.debug('converting index to sparse matrix')
+        rows, cols, values = [], [], []
+        for i, posting_list in enumerate(index.values()):
             for posting in posting_list.postings:
-                weights_of_term[posting.docID] = posting.rank
-            mat.append(weights_of_term)
-        return np.matrix(mat)
+                rows.append(i)
+                cols.append(posting.docID)
+                values.append(posting.rank)
+        return coo_matrix((values, (rows, cols))).tocsr()
+              
     

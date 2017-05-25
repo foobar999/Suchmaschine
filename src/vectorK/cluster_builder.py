@@ -1,6 +1,5 @@
 import logging
 import heapq
-import pprint
 from math import sqrt, floor
 from random import sample
 from src.vector.cos_score_calculator import CosScoreCalculator
