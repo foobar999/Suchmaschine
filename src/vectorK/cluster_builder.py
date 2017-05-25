@@ -27,6 +27,9 @@ class ClusterBuilder(object):
         for leader in leaders:
             leaders_of_docs[leader] = [leader]
         
+        # for each documents: sort its leaders by docID 
+        for leaders_of_follower in leaders_of_docs.values():
+            leaders_of_follower.sort()
             
-        return (set(leaders), followers, leaders_of_docs)
+        return (leaders, leaders_of_docs)
 

@@ -13,6 +13,8 @@ class VectorKIRHandler(object):
         
         leader_scores = CosScoreCalculator().fast_cosine_score(query_terms, leader_index, numdocs)
         logging.debug('leader_scores: {}'.format(leader_scores))
+        leader_scores = [leader for leader in leader_scores if leader.rank > 0]
+        logging.debug('filtered leader_scores: {}'.format(leader_scores))
               
         selected_leaders = heapq.nlargest(b2, leader_scores, key=lambda post: post.rank)       
         logging.info('selected_leaders: {}'.format(selected_leaders))
