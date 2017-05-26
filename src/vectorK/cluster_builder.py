@@ -10,6 +10,8 @@ class ClusterBuilder(object):
     def build_cluster(self, b1, b2, index, numdocs, docsDict):   
         similarity_scores = CosScoreCalculator().fast_document_cosinus_scores(index, numdocs)        
         logging.info('calculated similarity scores, size {}^2'.format(len(similarity_scores)))
+        for row in similarity_scores:
+            logging.debug(row)
         
         leaders = sorted(sample(docsDict.keys(), floor(sqrt(numdocs)))) # Selection of (n^0.5) Leaders
         followers = list(set(docsDict.keys()) - set(leaders))   # Follower sind alle nicht Leader
@@ -21,6 +23,7 @@ class ClusterBuilder(object):
         for follower in followers:
             # getting (b1) leaders for the current follower
             leaders_of_follower = heapq.nlargest(b1, leaders, key=lambda leader: similarity_scores[leader][follower])
+            logging.debug('leaders_of_follower of {}: {}'.format(follower, leaders_of_follower))
             leaders_of_docs[follower] = leaders_of_follower
         
         # set every leader as its own leader

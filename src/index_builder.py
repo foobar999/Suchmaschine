@@ -7,7 +7,6 @@ from src.tokenizer import Tokenizer
 from src.term_postings import TermPostings
 from src.term import Term
 from src.posting import Posting
-from ranked_posting import RankedPosting
 
 class IndexBuilder(object):
 

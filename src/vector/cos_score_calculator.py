@@ -9,7 +9,7 @@ class CosScoreCalculator(object):
     def fast_document_cosinus_scores(self, index, numdocs):
         logging.debug('creating matrix from index, {} terms, {} docs'.format(len(index), numdocs))
         index_mat = self._index_to_sparse_mat(index, numdocs)
-        logging.debug('calculated document similarity scores')
+        logging.debug('calculating document similarity scores')
         res = index_mat.T.dot(index_mat)
         return res.todense().tolist()        
     

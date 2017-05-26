@@ -42,9 +42,9 @@ def generate_displayed_result(query_result, docs_dict):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     
-    #data_folder = os.path.join(os.getcwd(), "data", "mini_mantxt")
+    data_folder = os.path.join(os.getcwd(), "data", "mini_mantxt")
     #data_folder = os.path.join(os.getcwd(), "data", "mantxt")
-    data_folder = os.path.join(os.getcwd(), "data", "Märchen")
+    #data_folder = os.path.join(os.getcwd(), "data", "Märchen")
     print('building index from "{}" ...'.format(data_folder))
     index_build_start = time.time()
     index, docsDict = IndexBuilder().build_from_folder(data_folder)
@@ -87,9 +87,10 @@ if __name__ == '__main__':
     #logging.info(index)
     #pprint.pprint(fuzzy_index)
 
+    print('index:\n{}'.format(pprint.pformat(dict(index))))
     
     print('building clusters...')
-    b1 = 3  # number of leaders per follower
+    b1 = 2  # number of leaders per follower
     b2 = 5  # number of Leaders considered for each query
     start_time = time.time()
     leaders, leaders_of_docs = ClusterBuilder().build_cluster(b1, b2, index, numdocs, docsDict)
@@ -160,7 +161,8 @@ if __name__ == '__main__':
                     if mode != IRMode.bool:
                         query_result = heapq.nlargest(num_displayed_highest_elements, query_result, key=lambda post: post.rank)
                         logging.debug('{} best results: {}'.format(num_displayed_highest_elements, query_result))
-                        query_result = [res for res in query_result if res.rank > 0]
+                        # TODO kicken von ergebnissen mit rank = 0 sinnvoll?
+                        #query_result = [res for res in query_result if res.rank > 0]
                     
                     logging.info('{} results: {}'.format(mode, query_result))
                     print('{} results -  '.format(len(query_result)), end='')
