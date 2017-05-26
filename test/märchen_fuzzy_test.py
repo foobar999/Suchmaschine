@@ -7,63 +7,6 @@ from src.index_builder import IndexBuilder
 from src.fuzzy.membership_calculator import MembershipCalculator
 from src.fuzzy.fuzzy_ir_handler import FuzzyIRHandler
 
-# hexe:
-#===============================================================================
-# {'id': 6, 'name': 'Der Froschkönig.txt', 'rank': 1.0}
-# {'id': 10, 'name': 'Die Loreley.txt', 'rank': 1.0}
-# {'id': 12, 'name': 'Haensel und Gretel.txt', 'rank': 1.0}
-# {'id': 0, 'name': 'Aladin und die Wunderlampe.txt', 'rank': 0.984375}
-# {'id': 1, 'name': 'Ali Baba und die 40 R�uber.txt', 'rank': 0.75}
-# {'id': 2, 'name': 'Aschenputtel.txt', 'rank': 0.5}
-# {'id': 5, 'name': 'Der fliegende Holl�nder.txt', 'rank': 0.5}
-# {'id': 9, 'name': 'Die goldene Gans.txt', 'rank': 0.5}
-# {'id': 13, 'name': 'Hans im Gl�ck.txt', 'rank': 0.5}
-# {'id': 14, 'name': 'Hase und Igel.txt', 'rank': 0.5}
-#===============================================================================
-
-# prinz OR prinzessin:
-#===============================================================================
-# {'id': 0, 'name': 'Aladin und die Wunderlampe.txt', 'rank': 1.0}
-# {'id': 2, 'name': 'Aschenputtel.txt', 'rank': 1.0}
-# {'id': 4, 'name': 'Der Drachent�ter.txt', 'rank': 1.0}
-# {'id': 7, 'name': 'Der gestiefelte Kater.txt', 'rank': 1.0}
-# {'id': 8, 'name': 'Die drei Musikanten.txt', 'rank': 1.0}
-# {'id': 18, 'name': 'Prinzessin auf der Erbse.txt', 'rank': 1.0}
-# {'id': 25, 'name': 'Zwerg Nase.txt', 'rank': 1.0}
-# {'id': 1, 'name': 'Ali Baba und die 40 R�uber.txt', 'rank': 0.99999984985885393}
-# {'id': 3, 'name': 'Das tapfere Schneiderlein.txt', 'rank': 0.9991629464285714}
-# {'id': 23, 'name': 'Tischlein deck dich.txt', 'rank': 0.98469387755102045}
-#===============================================================================
-
-# h�nsel AND gretel:
-#===============================================================================
-# {'id': 12, 'name': 'Haensel und Gretel.txt', 'rank': 1.0}
-# {'id': 0, 'name': 'Aladin und die Wunderlampe.txt', 'rank': 0.9999847412109375}
-# {'id': 25, 'name': 'Zwerg Nase.txt', 'rank': 0.9990234375}
-# {'id': 3, 'name': 'Das tapfere Schneiderlein.txt', 'rank': 0.99609375}
-# {'id': 1, 'name': 'Ali Baba und die 40 R�uber.txt', 'rank': 0.9921875}
-# {'id': 13, 'name': 'Hans im Gl�ck.txt', 'rank': 0.984375}
-# {'id': 2, 'name': 'Aschenputtel.txt', 'rank': 0.96875}
-# {'id': 8, 'name': 'Die drei Musikanten.txt', 'rank': 0.9375}
-# {'id': 9, 'name': 'Die goldene Gans.txt', 'rank': 0.9375}
-# {'id': 22, 'name': 'Schneewittchen.txt', 'rank': 0.9375}
-#===============================================================================
-
-# (haus AND hexe AND wald) OR rumpelstilzchen)
-#===============================================================================
-# {'id': 6, 'name': 'Der Froschkönig.txt', 'rank': 1.0}
-# {'id': 10, 'name': 'Die Loreley.txt', 'rank': 1.0}
-# {'id': 12, 'name': 'Haensel und Gretel.txt', 'rank': 1.0}
-# {'id': 21, 'name': 'Rumpelstilzchen.txt', 'rank': 1.0}
-# {'id': 0, 'name': 'Aladin und die Wunderlampe.txt', 'rank': 0.984375}
-# {'id': 25, 'name': 'Zwerg Nase.txt', 'rank': 0.96875}
-# {'id': 1, 'name': 'Ali Baba und die 40 R�uber.txt', 'rank': 0.9375}
-# {'id': 4, 'name': 'Der Drachent�ter.txt', 'rank': 0.75}
-# {'id': 11, 'name': 'Frau Holle.txt', 'rank': 0.75}
-# {'id': 15, 'name': 'Koenig Drosselbart.txt', 'rank': 0.75}
-#===============================================================================
-
-
 # dauert ein paar Sekunden
 class MärchenFuzzyTest(unittest.TestCase):
 
@@ -91,5 +34,19 @@ class MärchenFuzzyTest(unittest.TestCase):
     def test_0_operators(self):
         expected_res = [(6,1.0),(10,1.0),(12,1.0),(0,0.98),(1,0.75),(2,0.5),(5,0.5),(9,0.5),(13,0.5),(14,0.5)]
         self._test_query(expected_res, 'hexe')
+
+    def test_1_or(self):
+        expected_res = [(0,1.0),(2,1.0),(4,1.0),(7,1.0),(8,1.0),(18,1.0),(25,1.0),(1,0.99),(3,0.99),(23,0.98)]
+        self._test_query(expected_res, 'prinz OR prinzessin')
+    
+    def test_1_and(self):
+        expected_res = [(12,1.0),(0,0.99),(25,0.99),(3,0.99),(1,0.99),(13,0.98),(2,0.96),(8,0.93),(9,0.93),(22,0.93)]
+        self._test_query(expected_res, 'hänsel AND gretel')
+         
+    
+    def test_2_and_1_or(self):
+        expected_res = [(6,1.0),(10,1.0),(12,1.0),(21,1.0),(0,0.98),(25,0.96),(1,0.93),(4,0.75),(11,0.75),(15,0.75)]
+        self._test_query(expected_res, '(haus AND hexe AND wald) OR rumpelstilzchen)')
+        
 
         
