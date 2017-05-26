@@ -11,18 +11,23 @@ class VectorKIRHandler(object):
         query_terms = [tok.lower() for tok in query.split()]
         logging.debug('split query to {}'.format(query_terms))        
         
-        leader_scores = CosScoreCalculator().fast_cosine_score(query_terms, leader_index, numdocs)
-        logging.debug('leader_scores: {}'.format(leader_scores))
-        #leader_scores = [leader for leader in leader_scores if leader.rank > 0]
-        #logging.debug('filtered leader_scores: {}'.format(leader_scores))
+        scores = CosScoreCalculator().fast_cosine_score(query_terms, leader_index, numdocs)
+        logging.debug('scores:\n{}'.format(pprint.pformat(scores)))
+        # leader_scores = [leader for leader in leader_scores if leader.rank > 0]
+        # keep only keaders of leaders scores (they're allowed to be ranked 0)
+        leader_scores = [scores[leader] for leader in follower_index.keys()]
+        logging.debug('filtered leader_scores:\n{}'.format(pprint.pformat(leader_scores)))
               
         selected_leaders = heapq.nlargest(b2, leader_scores, key=lambda post: post.rank)       
         logging.info('selected_leaders:\n{}'.format(pprint.pformat(selected_leaders)))
         
-        res = []
+        all_leaders_results = []
         for leader in selected_leaders:
             logging.debug('processing leader {}'.format(leader))
-            res.extend(CosScoreCalculator().fast_cosine_score(query_terms, follower_index[leader.docID], numdocs))          
+            leader_results = CosScoreCalculator().fast_cosine_score(query_terms, follower_index[leader.docID], numdocs)
+            logging.debug('leader results {}'.format(leader_results))
+            all_leaders_results.extend(leader_results)
+                    
             
-        return list(set(res))
+        return list(set(all_leaders_results))
     

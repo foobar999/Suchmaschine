@@ -84,14 +84,13 @@ if __name__ == '__main__':
 
     print("number of dict entries:", len(index))
     pprint.pprint(docsDict)
-    #logging.info(index)
     #pprint.pprint(fuzzy_index)
 
-    print('index:\n{}'.format(pprint.pformat(dict(index))))
+    #print('index:\n{}'.format(pprint.pformat(dict(index))))
     
     print('building clusters...')
-    b1 = 2  # number of leaders per follower
-    b2 = 5  # number of Leaders considered for each query
+    b1 = 3  # number of leaders per follower
+    b2 = 3  # number of Leaders considered for each query
     start_time = time.time()
     leaders, leaders_of_docs = ClusterBuilder().build_cluster(b1, b2, index, numdocs, docsDict)
     elapsed_time = time.time() - start_time
@@ -114,6 +113,7 @@ if __name__ == '__main__':
     leader_follower_elapsed_time = time.time() - leader_follower_start_time
     print("built follower indices, total duration {0:.5f} seconds".format(leader_follower_elapsed_time))
     
+    #print('follower index:\n{}'.format(pprint.pformat(follower_index)))
     
     # TODO remove keys without Docs
     #===========================================================================
@@ -159,10 +159,10 @@ if __name__ == '__main__':
                     
                     elapsed_time = time.time() - start_time
                     if mode != IRMode.bool:
+                        # TODO kicken von ergebnissen mit rank = 0 sinnvoll?
+                        query_result = [res for res in query_result if res.rank > 0]
                         query_result = heapq.nlargest(num_displayed_highest_elements, query_result, key=lambda post: post.rank)
                         logging.debug('{} best results: {}'.format(num_displayed_highest_elements, query_result))
-                        # TODO kicken von ergebnissen mit rank = 0 sinnvoll?
-                        #query_result = [res for res in query_result if res.rank > 0]
                     
                     logging.info('{} results: {}'.format(mode, query_result))
                     print('{} results -  '.format(len(query_result)), end='')
