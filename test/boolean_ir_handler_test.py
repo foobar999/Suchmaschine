@@ -4,6 +4,7 @@ from os import path, getcwd, pardir
 from src.index_builder import IndexBuilder
 from src.boolean_ir_handler import BooleanIRHandler
 
+# TODO umbennen
 class BooleanIRHandlerTest(unittest.TestCase):
 
     @classmethod
