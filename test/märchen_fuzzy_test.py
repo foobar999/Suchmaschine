@@ -69,20 +69,24 @@ class MärchenFuzzyTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        cls.thresh1, cls.thresh2 = 0.5, 0.5
+        cls.num_results_tested = 10
+        cls.num_decimal_places_tested = 2
         data_folder = path.join(getcwd(), pardir, "data", "Märchen")
-        index, cls.docs_dict = IndexBuilder().build_from_folder(data_folder)
-        corr, docs_ocurr_mat = MembershipCalculator().calc_correlation_mat(index, len(cls.docs_dict), 0.5)
+        index, docs_dict = IndexBuilder().build_from_folder(data_folder)
+        cls.docs = docs_dict.keys()
+        corr, docs_ocurr_mat = MembershipCalculator().calc_correlation_mat(index, len(docs_dict), cls.thresh1)
         index_terms = [term.literal for term in index.keys()]
-        cls.fuzzy_index, _fuzzy_mat = MembershipCalculator().build_fuzzy_index(index_terms, corr, docs_ocurr_mat, 0.5)
+        cls.fuzzy_index, _fuzzy_mat = MembershipCalculator().build_fuzzy_index(index_terms, corr, docs_ocurr_mat, cls.thresh2)
         cls.handler = FuzzyIRHandler()
         print('{} ready'.format(cls.__name__))
            
            
     def _test_query(self, expected_res, q):
-        res = [(entry.docID, entry.rank) for entry in self.handler.handle_query(q, self.fuzzy_index, sorted(self.docs_dict.keys()))]
-        res = heapq.nlargest(10, res, key=lambda entry: entry[1])
+        res = [(entry.docID, entry.rank) for entry in self.handler.handle_query(q, self.fuzzy_index, self.docs)]
+        res = heapq.nlargest(self.num_results_tested, res, key=lambda entry: entry[1])
         for res_entry, expected_res_entry in zip(res, expected_res):
-            np.testing.assert_almost_equal(res_entry, expected_res_entry, decimal=2)
+            np.testing.assert_almost_equal(res_entry, expected_res_entry, decimal=self.num_decimal_places_tested)
         
     def test_0_operators(self):
         expected_res = [(6,1.0),(10,1.0),(12,1.0),(0,0.98),(1,0.75),(2,0.5),(5,0.5),(9,0.5),(13,0.5),(14,0.5)]
