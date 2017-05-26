@@ -56,6 +56,7 @@ class IndexBuilder(object):
         return (OrderedDict(sorted(index.items())), docsDict)
     
 
+    # TODO kann raus
     def build_doc_term_index(self, index, numdocs):
         doc_term_index = [list() for _i in range(numdocs)]
         for term in index:

@@ -6,6 +6,7 @@ import time
 import pprint
 import numpy as np
 import heapq
+from collections import defaultdict
 from enum import Enum, auto
 from src.index_builder import IndexBuilder
 from src.boolean_ir_handler import BooleanIRHandler
@@ -17,6 +18,7 @@ from src.vector.weight_calculator import WeightCalculator
 from src.vectorK.vectorK_ir_handler import VectorKIRHandler
 from src.vectorK.cluster_builder import ClusterBuilder
 from src.term_postings import TermPostings
+from term_postings import TermPostings
 
 class IRMode(Enum):
     bool = auto()
@@ -42,9 +44,10 @@ def generate_displayed_result(query_result, docs_dict):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     
-    data_folder = os.path.join(os.getcwd(), "data", "mini_mantxt")
+    total_start_time = time.time()
+    #data_folder = os.path.join(os.getcwd(), "data", "mini_mantxt")
     #data_folder = os.path.join(os.getcwd(), "data", "mantxt")
-    #data_folder = os.path.join(os.getcwd(), "data", "Märchen")
+    data_folder = os.path.join(os.getcwd(), "data", "Märchen")
     print('building index from "{}" ...'.format(data_folder))
     index_build_start = time.time()
     index, docsDict = IndexBuilder().build_from_folder(data_folder)
@@ -105,11 +108,17 @@ if __name__ == '__main__':
     for term, term_postings in index.items():
         leader_index[term] = TermPostings([post for post in term_postings.postings if post.docID in leaders_set])
     print('built leader index')
-    follower_index = {leader: {term: TermPostings() for term in index.keys()} for leader in leaders}
+    
+    follower_index = {leader: defaultdict(TermPostings) for leader in leaders}
     for term, term_postings in index.items():
         for posting in term_postings.postings:
             for leader in leaders_of_docs[posting.docID]:
                 follower_index[leader][term].postings.append(posting)
+                
+    # cast inner defaultdicts to dicts (to prevent later accessing of non-exiting terms)
+    for leader, inner_index in follower_index.items():
+        follower_index[leader] = dict(inner_index)
+        
     leader_follower_elapsed_time = time.time() - leader_follower_start_time
     print("built follower indices, total duration {0:.5f} seconds".format(leader_follower_elapsed_time))
     
@@ -124,6 +133,8 @@ if __name__ == '__main__':
     #===========================================================================
     
     
+    total_elapsed_time = time.time() - total_start_time
+    print("total offline duration {0:.5f} seconds".format(total_elapsed_time))
     
     mode = IRMode.bool
     num_displayed_highest_elements = 10

@@ -3,10 +3,12 @@ import logging
 import pprint
 import heapq
 from src.vector.cos_score_calculator import CosScoreCalculator
+import time
 
 class VectorKIRHandler(object):
     
     def handle_query(self, query, b2, leader_index, follower_index, numdocs):
+        
         logging.debug('handling query {}'.format(query))
         query_terms = [tok.lower() for tok in query.split()]
         logging.debug('split query to {}'.format(query_terms))        
@@ -20,7 +22,7 @@ class VectorKIRHandler(object):
         
         # find b2 best leaders (rank 0 still allowed)      
         selected_leaders = heapq.nlargest(b2, leader_scores, key=lambda post: post.rank)       
-        logging.debug('selected_leaders:\n{}'.format(pprint.pformat(selected_leaders)))
+        logging.info('selected_leaders:\n{}'.format(pprint.pformat(selected_leaders)))
         
         all_leaders_results = []
         for leader in selected_leaders:
@@ -29,6 +31,5 @@ class VectorKIRHandler(object):
             logging.debug('leader results {}'.format(leader_results))
             all_leaders_results.extend(leader_results)
                     
-            
         return list(set(all_leaders_results))
     

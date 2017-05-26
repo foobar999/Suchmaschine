@@ -13,6 +13,7 @@ class CosScoreCalculator(object):
         res = index_mat.T.dot(index_mat)
         return res.todense().tolist()        
     
+    # TODO irgendwann raus
     def cosine_score(self, queryDoc, index, numdocs):
         #logging.debug('calculating cosine(DxD), query {}, numdocs {}'.format(queryDoc, numdocs))
         scores = [0] * numdocs
@@ -27,14 +28,17 @@ class CosScoreCalculator(object):
         
     
     def fast_cosine_score(self, query, index, numdocs):
-        logging.info('calculating fast cosine, query {}, numdocs {}'.format(query, numdocs))
+        logging.debug('calculating fast cosine, query {}, numdocs {}'.format(query, numdocs))
         scores = [0] * numdocs
         for term in query:
-            logging.debug('fast cos: proc term {}'.format(term))
-            posting_list = index[Term(term)].postings
-            for posting in posting_list:
-                wf_t_d = posting.rank
-                scores[posting.docID] += wf_t_d
+            logging.debug('fast cos: proc term {} (type {})'.format(term, type(term)))
+            term_postings = index.get(Term(term))
+            if term_postings is not None:
+                for posting in term_postings.postings:
+                    wf_t_d = posting.rank
+                    scores[posting.docID] += wf_t_d
+            else:
+                logging.debug('term {} not present in this index'.format(term))
         return [RankedPosting(docID,score) for docID,score in enumerate(scores)]
                 
       
