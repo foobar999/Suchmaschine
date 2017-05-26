@@ -1,7 +1,6 @@
 import logging
 from math import log, sqrt
 from src.ranked_posting import RankedPosting
-from src.singly_linked_list import SingleList
 
 class WeightCalculator(object):    
     

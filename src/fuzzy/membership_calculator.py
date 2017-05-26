@@ -20,7 +20,7 @@ class MembershipCalculator(object):
         logging.debug('keys {}'.format(index.keys())) 
         mat = []
         # erzeuge docs_ocurr_mat(t,D)
-        for term, posting_list in index.items():
+        for posting_list in index.values():
             posting_list_docs = [post.docID for post in posting_list.postings]
             docs_of_key = np.zeros(numdocs, dtype=np.dtype(bool))
             docs_of_key[posting_list_docs] = 1

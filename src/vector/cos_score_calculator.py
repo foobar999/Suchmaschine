@@ -1,6 +1,5 @@
 import logging
-import numpy as np
-from scipy.sparse import csr_matrix, coo_matrix
+from scipy.sparse import coo_matrix
 from src.term import Term
 from src.ranked_posting import RankedPosting
 

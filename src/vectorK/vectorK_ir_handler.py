@@ -3,7 +3,6 @@ import logging
 import pprint
 import heapq
 from src.vector.cos_score_calculator import CosScoreCalculator
-import time
 
 class VectorKIRHandler(object):
     
