@@ -61,28 +61,26 @@ if __name__ == '__main__':
     print("calculated weights in {0:.5f} seconds".format(weight_calc_elapsed))
     #print('number of terms in docs: {}'.format(docs_numterms))
 
-    #===========================================================================
-    # start_time = time.time()
-    # corr, docs_ocurr_mat = MembershipCalculator().calc_correlation_mat(index, numdocs, 0.5)
-    # elapsed_time = time.time() - start_time
-    # print("built correlation matrix in {0:.5f} seconds".format(elapsed_time))
-    #   
-    # corr_hist, corr_bins = HistogramBuilder().calc_symm_mat_hist(corr, 10)        
-    # np.set_printoptions(formatter={'int_kind': lambda x:' {0:d}'.format(x)})
-    # print('correlation histogram {}'.format(corr_hist))
-    # print('histogram bins{}'.format(corr_bins))
-    #   
-    # start_time = time.time()
-    # index_terms = [term.literal for term in index.keys()]
-    # fuzzy_index, fuzzy_mat = MembershipCalculator().build_fuzzy_index(index_terms, corr, docs_ocurr_mat, 0.5)
-    # elapsed_time = time.time() - start_time
-    # print("built fuzzy index in {0:.5f} seconds".format(elapsed_time))
-    # print("number of fuzzy index entries: {}".format(len(fuzzy_index)))
-    #   
-    # fuzzy_hist, fuzzy_bins = HistogramBuilder().calc_symm_mat_hist(fuzzy_mat, 10)
-    # print('fuzzy index histogram: {}'.format(fuzzy_hist))
-    # print('histogram bins{}'.format(fuzzy_bins))
-    #===========================================================================
+    start_time = time.time()
+    corr, docs_ocurr_mat = MembershipCalculator().calc_correlation_mat(index, numdocs, 0.5)
+    elapsed_time = time.time() - start_time
+    print("built correlation matrix in {0:.5f} seconds".format(elapsed_time))
+       
+    corr_hist, corr_bins = HistogramBuilder().calc_symm_mat_hist(corr, 10)        
+    np.set_printoptions(formatter={'int_kind': lambda x:' {0:d}'.format(x)})
+    print('correlation histogram {}'.format(corr_hist))
+    print('histogram bins{}'.format(corr_bins))
+       
+    start_time = time.time()
+    index_terms = [term.literal for term in index.keys()]
+    fuzzy_index, fuzzy_mat = MembershipCalculator().build_fuzzy_index(index_terms, corr, docs_ocurr_mat, 0.5)
+    elapsed_time = time.time() - start_time
+    print("built fuzzy index in {0:.5f} seconds".format(elapsed_time))
+    print("number of fuzzy index entries: {}".format(len(fuzzy_index)))
+       
+    fuzzy_hist, fuzzy_bins = HistogramBuilder().calc_symm_mat_hist(fuzzy_mat, 10)
+    print('fuzzy index histogram: {}'.format(fuzzy_hist))
+    print('histogram bins{}'.format(fuzzy_bins))
 
     print("number of dict entries:", len(index))
     pprint.pprint(docsDict)
@@ -121,16 +119,7 @@ if __name__ == '__main__':
     leader_follower_elapsed_time = time.time() - leader_follower_start_time
     print("built follower indices, total duration {0:.5f} seconds".format(leader_follower_elapsed_time))
     
-    #print('follower index:\n{}'.format(pprint.pformat(follower_index)))
-    
-    # TODO remove keys without Docs
-    #===========================================================================
-    # pprint.pprint(follower_index[list(cluster.keys())[0]])
-    # pprint.pprint(cluster[list(cluster.keys())[0]])
-    # print('leaders {}'.format(cluster.keys()))
-    # pprint.pprint(cluster)
-    #===========================================================================
-    
+    #print('follower index:\n{}'.format(pprint.pformat(follower_index)))    
     
     total_elapsed_time = time.time() - total_start_time
     print("total offline duration {0:.5f} seconds".format(total_elapsed_time))
