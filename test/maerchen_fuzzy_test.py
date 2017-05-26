@@ -7,6 +7,7 @@ from src.index_builder import IndexBuilder
 from src.fuzzy.membership_calculator import MembershipCalculator
 from src.fuzzy.fuzzy_ir_handler import FuzzyIRHandler
 
+
 # dauert ein paar Sekunden
 class MärchenFuzzyTest(unittest.TestCase):
 
