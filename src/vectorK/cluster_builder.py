@@ -2,6 +2,7 @@ import logging
 import heapq
 from math import sqrt, floor
 from random import sample
+from collections import defaultdict
 from src.term_postings import TermPostings
 from src.vector.cos_score_calculator import CosScoreCalculator
 
@@ -44,3 +45,17 @@ class ClusterBuilder(object):
             leader_index[term] = TermPostings([post for post in term_postings.postings if post.docID in leaders])
         
         return leader_index
+
+    
+    def build_follower_index(self, index, leaders, leaders_of_docs):
+        follower_index = {leader: defaultdict(TermPostings) for leader in leaders}
+        for term, term_postings in index.items():
+            for posting in term_postings.postings:
+                for leader in leaders_of_docs[posting.docID]:
+                    follower_index[leader][term].postings.append(posting)
+                    
+        # cast inner defaultdicts to dicts (to prevent later accessing of non-exiting terms)
+        for leader, inner_index in follower_index.items():
+            follower_index[leader] = dict(inner_index)
+
+        return follower_index

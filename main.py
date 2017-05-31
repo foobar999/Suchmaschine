@@ -6,7 +6,6 @@ import time
 import pprint
 import numpy as np
 import heapq
-from collections import defaultdict
 from enum import Enum, auto
 from src.index_builder import IndexBuilder
 from src.boolean_ir_handler import BooleanIRHandler
@@ -17,7 +16,7 @@ from src.vector.vector_ir_handler import VectorIRHandler
 from src.vector.weight_calculator import WeightCalculator
 from src.vectorK.vectorK_ir_handler import VectorKIRHandler
 from src.vectorK.cluster_builder import ClusterBuilder
-from src.term_postings import TermPostings
+
 
 class IRMode(Enum):
     bool = auto()
@@ -110,15 +109,18 @@ if __name__ == '__main__':
     #===========================================================================
     print('built leader index')
     
-    follower_index = {leader: defaultdict(TermPostings) for leader in leaders}
-    for term, term_postings in index.items():
-        for posting in term_postings.postings:
-            for leader in leaders_of_docs[posting.docID]:
-                follower_index[leader][term].postings.append(posting)
-                
-    # cast inner defaultdicts to dicts (to prevent later accessing of non-exiting terms)
-    for leader, inner_index in follower_index.items():
-        follower_index[leader] = dict(inner_index)
+    follower_index = ClusterBuilder().build_follower_index(index, leaders, leaders_of_docs)
+    #===========================================================================
+    # follower_index = {leader: defaultdict(TermPostings) for leader in leaders}
+    # for term, term_postings in index.items():
+    #     for posting in term_postings.postings:
+    #         for leader in leaders_of_docs[posting.docID]:
+    #             follower_index[leader][term].postings.append(posting)
+    #             
+    # # cast inner defaultdicts to dicts (to prevent later accessing of non-exiting terms)
+    # for leader, inner_index in follower_index.items():
+    #     follower_index[leader] = dict(inner_index)
+    #===========================================================================
         
     leader_follower_elapsed_time = time.time() - leader_follower_start_time
     print("built follower indices, total duration {0:.5f} seconds".format(leader_follower_elapsed_time))
