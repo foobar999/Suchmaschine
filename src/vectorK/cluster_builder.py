@@ -2,6 +2,7 @@ import logging
 import heapq
 from math import sqrt, floor
 from random import sample
+from src.term_postings import TermPostings
 from src.vector.cos_score_calculator import CosScoreCalculator
 
 
@@ -35,4 +36,11 @@ class ClusterBuilder(object):
             leaders_of_follower.sort()
             
         return (leaders, leaders_of_docs)
-
+    
+    
+    def build_leader_index(self, index, leaders):
+        leader_index = {}
+        for term, term_postings in index.items():
+            leader_index[term] = TermPostings([post for post in term_postings.postings if post.docID in leaders])
+        
+        return leader_index

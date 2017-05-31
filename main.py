@@ -101,10 +101,13 @@ if __name__ == '__main__':
     
     print('building leader, follower indices...')
     leader_follower_start_time = time.time()
-    leader_index = {}
-    leaders_set = set(leaders)
-    for term, term_postings in index.items():
-        leader_index[term] = TermPostings([post for post in term_postings.postings if post.docID in leaders_set])
+    leader_index = ClusterBuilder().build_leader_index(index, set(leaders))
+    #===========================================================================
+    # leader_index = {}
+    # leaders_set = set(leaders)
+    # for term, term_postings in index.items():
+    #     leader_index[term] = TermPostings([post for post in term_postings.postings if post.docID in leaders_set])
+    #===========================================================================
     print('built leader index')
     
     follower_index = {leader: defaultdict(TermPostings) for leader in leaders}
