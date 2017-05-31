@@ -99,32 +99,15 @@ if __name__ == '__main__':
     logging.info('leaders of documents:\n{}'.format(pprint.pformat(leaders_of_docs)))     
     
     print('building leader, follower indices...')
-    leader_follower_start_time = time.time()
+    leader_start_time = time.time()
     leader_index = ClusterBuilder().build_leader_index(index, set(leaders))
-    #===========================================================================
-    # leader_index = {}
-    # leaders_set = set(leaders)
-    # for term, term_postings in index.items():
-    #     leader_index[term] = TermPostings([post for post in term_postings.postings if post.docID in leaders_set])
-    #===========================================================================
-    print('built leader index')
+    leader_elapsed_time = time.time() - leader_start_time
+    print("built leader index in {0:.5f} seconds:".format(leader_elapsed_time))
     
-    follower_index = ClusterBuilder().build_follower_index(index, leaders, leaders_of_docs)
-    #===========================================================================
-    # follower_index = {leader: defaultdict(TermPostings) for leader in leaders}
-    # for term, term_postings in index.items():
-    #     for posting in term_postings.postings:
-    #         for leader in leaders_of_docs[posting.docID]:
-    #             follower_index[leader][term].postings.append(posting)
-    #             
-    # # cast inner defaultdicts to dicts (to prevent later accessing of non-exiting terms)
-    # for leader, inner_index in follower_index.items():
-    #     follower_index[leader] = dict(inner_index)
-    #===========================================================================
-        
-    leader_follower_elapsed_time = time.time() - leader_follower_start_time
-    print("built follower indices, total duration {0:.5f} seconds".format(leader_follower_elapsed_time))
-    
+    follower_start_time = time.time()
+    follower_index = ClusterBuilder().build_follower_index(index, leaders, leaders_of_docs)        
+    follower_elapsed_time = time.time() - follower_start_time
+    print("built follower indices in {0:.5f} seconds".format(follower_elapsed_time))
     #print('follower index:\n{}'.format(pprint.pformat(follower_index)))    
     
     total_elapsed_time = time.time() - total_start_time
