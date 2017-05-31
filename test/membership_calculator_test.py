@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import unittest
 from src.fuzzy.membership_calculator import MembershipCalculator
-from term_postings import TermPostings
-from term import Term
-from posting import Posting
+from src.term_postings import TermPostings
+from src.term import Term
+from src.posting import Posting
 import numpy as np
 
 

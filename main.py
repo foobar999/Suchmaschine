@@ -45,8 +45,8 @@ if __name__ == '__main__':
     
     total_start_time = time.time()
     #data_folder = os.path.join(os.getcwd(), "data", "mini_mantxt")
-    #data_folder = os.path.join(os.getcwd(), "data", "mantxt")
-    data_folder = os.path.join(os.getcwd(), "data", "Märchen")
+    data_folder = os.path.join(os.getcwd(), "data", "mantxt")
+    #data_folder = os.path.join(os.getcwd(), "data", "Märchen")
     print('building index from "{}" ...'.format(data_folder))
     index_build_start = time.time()
     index, docsDict = IndexBuilder().build_from_folder(data_folder)
@@ -61,26 +61,28 @@ if __name__ == '__main__':
     print("calculated weights in {0:.5f} seconds".format(weight_calc_elapsed))
     #print('number of terms in docs: {}'.format(docs_numterms))
 
-    start_time = time.time()
-    corr, docs_ocurr_mat = MembershipCalculator().calc_correlation_mat(index, numdocs, 0.5)
-    elapsed_time = time.time() - start_time
-    print("built correlation matrix in {0:.5f} seconds".format(elapsed_time))
-       
-    corr_hist, corr_bins = HistogramBuilder().calc_symm_mat_hist(corr, 10)        
-    np.set_printoptions(formatter={'int_kind': lambda x:' {0:d}'.format(x)})
-    print('correlation histogram {}'.format(corr_hist))
-    print('histogram bins{}'.format(corr_bins))
-       
-    start_time = time.time()
-    index_terms = [term.literal for term in index.keys()]
-    fuzzy_index, fuzzy_mat = MembershipCalculator().build_fuzzy_index(index_terms, corr, docs_ocurr_mat, 0.5)
-    elapsed_time = time.time() - start_time
-    print("built fuzzy index in {0:.5f} seconds".format(elapsed_time))
-    print("number of fuzzy index entries: {}".format(len(fuzzy_index)))
-       
-    fuzzy_hist, fuzzy_bins = HistogramBuilder().calc_symm_mat_hist(fuzzy_mat, 10)
-    print('fuzzy index histogram: {}'.format(fuzzy_hist))
-    print('histogram bins{}'.format(fuzzy_bins))
+    #===========================================================================
+    # start_time = time.time()
+    # corr, docs_ocurr_mat = MembershipCalculator().calc_correlation_mat(index, numdocs, 0.5)
+    # elapsed_time = time.time() - start_time
+    # print("built correlation matrix in {0:.5f} seconds".format(elapsed_time))
+    # 
+    # corr_hist, corr_bins = HistogramBuilder().calc_symm_mat_hist(corr, 10)        
+    # np.set_printoptions(formatter={'int_kind': lambda x:' {0:d}'.format(x)})
+    # print('correlation histogram {}'.format(corr_hist))
+    # print('histogram bins{}'.format(corr_bins))
+    # 
+    # start_time = time.time()
+    # index_terms = [term.literal for term in index.keys()]
+    # fuzzy_index, fuzzy_mat = MembershipCalculator().build_fuzzy_index(index_terms, corr, docs_ocurr_mat, 0.5)
+    # elapsed_time = time.time() - start_time
+    # print("built fuzzy index in {0:.5f} seconds".format(elapsed_time))
+    # print("number of fuzzy index entries: {}".format(len(fuzzy_index)))
+    # 
+    # fuzzy_hist, fuzzy_bins = HistogramBuilder().calc_symm_mat_hist(fuzzy_mat, 10)
+    # print('fuzzy index histogram: {}'.format(fuzzy_hist))
+    # print('histogram bins{}'.format(fuzzy_bins))
+    #===========================================================================
 
     print("number of dict entries:", len(index))
     pprint.pprint(docsDict)
@@ -90,7 +92,7 @@ if __name__ == '__main__':
     
     print('building clusters...')
     b1 = 3  # number of leaders per follower
-    b2 = 3  # number of Leaders considered for each query
+    b2 = 5  # number of Leaders considered for each query
     start_time = time.time()
     leaders, leaders_of_docs = ClusterBuilder().build_cluster(b1, b2, index, numdocs, docsDict)
     elapsed_time = time.time() - start_time
@@ -157,8 +159,8 @@ if __name__ == '__main__':
                         query_result = VectorKIRHandler().handle_query(query, b2, leader_index, follower_index, numdocs)
                     
                     elapsed_time = time.time() - start_time
+                    
                     if mode != IRMode.bool:
-                        # TODO kicken von ergebnissen mit rank = 0 sinnvoll?
                         query_result = [res for res in query_result if res.rank > 0]
                         query_result = heapq.nlargest(num_displayed_highest_elements, query_result, key=lambda post: post.rank)
                         logging.debug('{} best results: {}'.format(num_displayed_highest_elements, query_result))

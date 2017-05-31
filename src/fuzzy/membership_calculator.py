@@ -4,18 +4,19 @@ from scipy.sparse import coo_matrix
 from sklearn.metrics.pairwise import pairwise_distances
 from src.ranked_posting import RankedPosting
 from collections import OrderedDict
+from scipy.sparse.csr import csr_matrix
 
 
 class MembershipCalculator(object):
     
-    # berechnet die Korrelationsmatrix c(t,u) für Terme aus index
-    # mithilfe des Jaccard-Maßes
+    # berechnet die Korrelationsmatrix c(t,u) fï¿½r Terme aus index
+    # mithilfe des Jaccard-Maï¿½es
     # liefert 
     #   1. c(t,u) als numpy-Matrix 
     #   2. eine Matrix docs_ocurr_mat(t,D), die zu jedem Term t zu jedem Dokument D
-    #      speichert, ob er darin vorkommt (nötig für build_fuzzy_index())
-    # Einträge c(t,u) werden nur explizit gespeichert, falls das 
-    # Jaccard-Maß einen Wert >= threshold ergibt
+    #      speichert, ob er darin vorkommt (nï¿½tig fï¿½r build_fuzzy_index())
+    # Eintrï¿½ge c(t,u) werden nur explizit gespeichert, falls das 
+    # Jaccard-Maï¿½ einen Wert >= threshold ergibt
     def calc_correlation_mat(self, index, numdocs, threshold):
         logging.debug('keys {}'.format(index.keys())) 
         mat = []
@@ -35,22 +36,22 @@ class MembershipCalculator(object):
         #HistogramBuilder().show_symm_mat_hist(c, 10)
         
         return c, docs_ocurr_mat
-    
+        
     # berechnet den Fuzzy-Index W(D,t) aus dem booleschen Index index
-    # benötigt:
+    # benï¿½tigt:
     #   Term-Term-Korrelationsmatrix corr 
     #   Schwelle threshold (nur Postings mit W(D,t) >= threshold werden gespeichert)
     #   die Matrix docs_ocurr_mat(t,D) aus calc_correlation_mat()
-    # der Fuzzy-Index wird durch ein dict repräsentiert
+    # der Fuzzy-Index wird durch ein dict reprï¿½sentiert
     # das dict speichert zu jedem Term t eine RankedPosting-list
-    # jedes RankedPosting speichert ein Dokument dok und den Fuzzy-Zugehörigkeitsgrad W(D,t)
+    # jedes RankedPosting speichert ein Dokument dok und den Fuzzy-Zugehï¿½rigkeitsgrad W(D,t)
     def build_fuzzy_index(self, terms, corr, docs_ocurr_mat, threshold):
         logging.debug('terms {}'.format(terms))     
         logging.debug('docs_ocurr_mat shape {}'.format(docs_ocurr_mat.shape))  
         logging.debug('corr shape {}'.format(corr.shape))         
-        with np.errstate(divide='ignore'):  # log(0) = -inf -> ignoriere Warnung, da gewünscht
+        with np.errstate(divide='ignore'):  # log(0) = -inf -> ignoriere Warnung, da gewï¿½nscht
             one_minus_log = np.log(1 - corr)
-        one_minus_log = np.nan_to_num(one_minus_log)    # ersetze -inf durch kleinstmöglichen zulässigen Wert
+        one_minus_log = np.nan_to_num(one_minus_log)    # ersetze -inf durch kleinstmï¿½glichen zulï¿½ssigen Wert
         logging.debug('one_minus_log {}'.format(one_minus_log))
         # Matrizenmultiplikation
         # one_minus_log speichert log(1-c(u,t)) als Matrix zwischen allen u, t
