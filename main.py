@@ -16,6 +16,7 @@ from src.vector.vector_ir_handler import VectorIRHandler
 from src.vector.weight_calculator import WeightCalculator
 from src.vectorK.vectorK_ir_handler import VectorKIRHandler
 from src.vectorK.cluster_builder import ClusterBuilder
+from src.spell.k_gram_index_builder import k_gram_index_builder
 
 
 class IRMode(Enum):
@@ -109,6 +110,8 @@ if __name__ == '__main__':
     follower_elapsed_time = time.time() - follower_start_time
     print("built follower indices in {0:.5f} seconds".format(follower_elapsed_time))
     #print('follower index:\n{}'.format(pprint.pformat(follower_index)))    
+    
+    pprint.pprint(k_gram_index_builder().build_k_gramm(2, index))
     
     total_elapsed_time = time.time() - total_start_time
     print("total offline duration {0:.5f} seconds".format(total_elapsed_time))
