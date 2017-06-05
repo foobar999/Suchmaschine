@@ -111,7 +111,12 @@ if __name__ == '__main__':
     print("built follower indices in {0:.5f} seconds".format(follower_elapsed_time))
     #print('follower index:\n{}'.format(pprint.pformat(follower_index)))    
     
-    pprint.pprint(k_gram_index_builder().build_k_gramm(2, index))
+    
+    
+    pprint.pprint(k_gram_index_builder().build_k_gram(2, index))
+    #k_gram_index_builder().build_k_gram(2, index)
+    
+    
     
     total_elapsed_time = time.time() - total_start_time
     print("total offline duration {0:.5f} seconds".format(total_elapsed_time))
