@@ -6,6 +6,7 @@ import time
 import pprint
 import numpy as np
 import heapq
+import src.spell.levenshtein as lev
 from enum import Enum, auto
 from src.index_builder import IndexBuilder
 from src.boolean_ir_handler import BooleanIRHandler
@@ -118,6 +119,7 @@ if __name__ == '__main__':
     
     
     
+    
     total_elapsed_time = time.time() - total_start_time
     print("total offline duration {0:.5f} seconds".format(total_elapsed_time))
     
@@ -165,6 +167,7 @@ if __name__ == '__main__':
                             # select from k_gram_index AND with Jac > j
                             
                             # use levenshtein-distance to rank the found words
+                            # print(lev.levenshtein_numpy('somewordilike', 'anotherwordilike'))
                         
                         query_result = VectorKIRHandler().handle_query(query, b2, leader_index, follower_index, numdocs)
                     
