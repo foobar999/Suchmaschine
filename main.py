@@ -121,8 +121,11 @@ if __name__ == '__main__':
     total_elapsed_time = time.time() - total_start_time
     print("total offline duration {0:.5f} seconds".format(total_elapsed_time))
     
-    mode = IRMode.bool
+#    mode = IRMode.bool
+    mode = IRMode.vectork
     num_displayed_highest_elements = 10
+    r = num_displayed_highest_elements
+    j = 0.5
     while True: # user input loop
         try:
             print("current logic: {}".format(mode.name))
@@ -151,6 +154,18 @@ if __name__ == '__main__':
                     elif mode == IRMode.vector:
                         query_result = VectorIRHandler().handle_query(query, index, numdocs)
                     elif mode == IRMode.vectork:
+                        ##############################################
+                        # changed default mode to test spelling here #
+                        ##############################################
+                        
+                        # TODO
+                        # if len(query_result) < r:
+                            # Jaccard-Coefficient(X,Y) = |X n Y| / |X u Y|        # intersection / union
+                            
+                            # select from k_gram_index AND with Jac > j
+                            
+                            # use levenshtein-distance to rank the found words
+                        
                         query_result = VectorKIRHandler().handle_query(query, b2, leader_index, follower_index, numdocs)
                     
                     elapsed_time = time.time() - start_time
