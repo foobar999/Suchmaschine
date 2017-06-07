@@ -1,3 +1,4 @@
+import logging
 import src.spell.levenshtein as lev
 from src.spell.k_gram_index_builder import k_gram_index_builder
 
@@ -12,6 +13,7 @@ class SpellFixer(object):
             bi_grams = sorted(list(set(k_gram_index_builder().get_k_grams(2, word))))
             for bi_gram in bi_grams:
                 possible_words.update(k_gram_index[bi_gram])
+            logging.debug('possible words {}'.format(possible_words))
 
             remaining_possible_words = []
             for possible_word in possible_words:
@@ -25,10 +27,11 @@ class SpellFixer(object):
                 
                 if(jac > j):
                     remaining_possible_words.append(possible_word)
-                    print('{} x {} -> {}'.format(word, possible_word, jac))                            
-            
-            
-            winner = min(remaining_possible_words, key=lambda candidate: lev.levenshtein_mat(word, candidate))
-            corrected_Query += (winner + ' ')
+                    print('{} x {} -> {}'.format(word, possible_word, jac))
+                    
+            logging.debug('remaining possible {}'.format(remaining_possible_words))
+            if len(remaining_possible_words) > 0:    
+                winner = min(remaining_possible_words, key=lambda candidate: lev.levenshtein_mat(word, candidate))
+                corrected_Query += (winner + ' ')
         
         return corrected_Query
