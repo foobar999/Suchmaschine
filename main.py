@@ -117,6 +117,13 @@ if __name__ == '__main__':
     pprint.pprint(k_gram_index_builder().build_k_gram(2, index))
     #k_gram_index_builder().build_k_gram(2, index)
     
+    print(lev.levenshtein_mat('somewordilike', 'anotherwordilike'))
+    print(lev.levenshtein_wiki('somewordilike', 'anotherwordilike'))
+    
+    import timeit
+    print(timeit.timeit("lev.levenshtein_mat('somewordilike', 'anotherwordilike')",setup="import src.spell.levenshtein as lev"))
+    print(timeit.timeit("lev.levenshtein_numpy('somewordilike', 'anotherwordilike')",setup="import src.spell.levenshtein as lev"))
+    print(timeit.timeit("lev.levenshtein_wiki('somewordilike', 'anotherwordilike')",setup="import src.spell.levenshtein as lev"))
     
     
     
