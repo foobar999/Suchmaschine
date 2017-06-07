@@ -42,7 +42,7 @@ def generate_displayed_result(query_result, docs_dict):
     return displayed_result
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
     
     total_start_time = time.time()
     #data_folder = os.path.join(os.getcwd(), "data", "mini_mantxt")
@@ -114,17 +114,18 @@ if __name__ == '__main__':
     
     
     
-    pprint.pprint(k_gram_index_builder().build_k_gram(2, index))
+    k_gram_index = k_gram_index_builder().build_k_gram(2, index)
     #k_gram_index_builder().build_k_gram(2, index)
     
     print(lev.levenshtein_mat('somewordilike', 'anotherwordilike'))
     print(lev.levenshtein_wiki('somewordilike', 'anotherwordilike'))
     
+    '''
     import timeit
     print(timeit.timeit("lev.levenshtein_mat('somewordilike', 'anotherwordilike')",setup="import src.spell.levenshtein as lev"))
     print(timeit.timeit("lev.levenshtein_numpy('somewordilike', 'anotherwordilike')",setup="import src.spell.levenshtein as lev"))
     print(timeit.timeit("lev.levenshtein_wiki('somewordilike', 'anotherwordilike')",setup="import src.spell.levenshtein as lev"))
-    
+    '''
     
     
     total_elapsed_time = time.time() - total_start_time
@@ -134,7 +135,7 @@ if __name__ == '__main__':
     mode = IRMode.vectork
     num_displayed_highest_elements = 10
     r = num_displayed_highest_elements
-    j = 0.5
+    j = 0.4
     while True: # user input loop
         try:
             print("current logic: {}".format(mode.name))
@@ -163,9 +164,41 @@ if __name__ == '__main__':
                     elif mode == IRMode.vector:
                         query_result = VectorIRHandler().handle_query(query, index, numdocs)
                     elif mode == IRMode.vectork:
+                        query_result = VectorKIRHandler().handle_query(query, b2, leader_index, follower_index, numdocs)
+                        
                         ##############################################
                         # changed default mode to test spelling here #
                         ##############################################
+                        
+                        #if len(query_result) < r:
+                        
+                        corrected_Query = ''
+                        for word in query.lower().split():
+                            possible_words = set()
+                            bi_grams = sorted(list(set(k_gram_index_builder().get_k_grams(2, word))))
+                            for bi_gram in bi_grams:
+                                possible_words.update(k_gram_index[bi_gram])
+
+                            remaining_possible_words = []
+                            for possible_word in possible_words:
+                                #logging.debug('comparing {}, {}'.format(word, possible_word))
+                                possible_bi_grams = sorted(list(set(k_gram_index_builder().get_k_grams(2, possible_word))))
+                                
+                                intersect_count = k_gram_index_builder().intersect_grams(bi_grams, possible_bi_grams)
+                                union_count = len(possible_bi_grams) + len(bi_grams) - intersect_count
+                                
+                                jac = intersect_count / union_count
+                                
+                                if(jac > j):
+                                    remaining_possible_words.append(possible_word)
+                                    print('{} x {} -> {}'.format(word, possible_word, jac))
+                            
+                            
+                            winner = min(remaining_possible_words, key=lambda candidate: lev.levenshtein_mat(word, candidate))
+                            corrected_Query += (winner + ' ')
+                            
+                        print('Meinten sie: {}?'.format(corrected_Query))
+                        
                         
                         # TODO
                         # if len(query_result) < r:
@@ -176,7 +209,6 @@ if __name__ == '__main__':
                             # use levenshtein-distance to rank the found words
                             # print(lev.levenshtein_numpy('somewordilike', 'anotherwordilike'))
                         
-                        query_result = VectorKIRHandler().handle_query(query, b2, leader_index, follower_index, numdocs)
                     
                     elapsed_time = time.time() - start_time
                     
