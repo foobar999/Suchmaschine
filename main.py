@@ -18,6 +18,7 @@ from src.vector.weight_calculator import WeightCalculator
 from src.vectorK.vectorK_ir_handler import VectorKIRHandler
 from src.vectorK.cluster_builder import ClusterBuilder
 from src.spell.k_gram_index_builder import k_gram_index_builder
+from src.spell.spell_fixer import SpellFixer
 
 
 class IRMode(Enum):
@@ -112,21 +113,9 @@ if __name__ == '__main__':
     print("built follower indices in {0:.5f} seconds".format(follower_elapsed_time))
     #print('follower index:\n{}'.format(pprint.pformat(follower_index)))    
     
-    
-    
-    k_gram_index = k_gram_index_builder().build_k_gram(2, index)
-    #k_gram_index_builder().build_k_gram(2, index)
-    
-    print(lev.levenshtein_mat('somewordilike', 'anotherwordilike'))
-    print(lev.levenshtein_wiki('somewordilike', 'anotherwordilike'))
-    
-    '''
-    import timeit
-    print(timeit.timeit("lev.levenshtein_mat('somewordilike', 'anotherwordilike')",setup="import src.spell.levenshtein as lev"))
-    print(timeit.timeit("lev.levenshtein_numpy('somewordilike', 'anotherwordilike')",setup="import src.spell.levenshtein as lev"))
-    print(timeit.timeit("lev.levenshtein_wiki('somewordilike', 'anotherwordilike')",setup="import src.spell.levenshtein as lev"))
-    '''
-    
+    k = 2
+    k_gram_index = k_gram_index_builder().build_k_gram(k, index)
+    print('built k-gram index')
     
     total_elapsed_time = time.time() - total_start_time
     print("total offline duration {0:.5f} seconds".format(total_elapsed_time))
@@ -170,52 +159,17 @@ if __name__ == '__main__':
                         # changed default mode to test spelling here #
                         ##############################################
                         
-                        #if len(query_result) < r:
-                        
-                        corrected_Query = ''
-                        for word in query.lower().split():
-                            possible_words = set()
-                            bi_grams = sorted(list(set(k_gram_index_builder().get_k_grams(2, word))))
-                            for bi_gram in bi_grams:
-                                possible_words.update(k_gram_index[bi_gram])
-
-                            remaining_possible_words = []
-                            for possible_word in possible_words:
-                                #logging.debug('comparing {}, {}'.format(word, possible_word))
-                                possible_bi_grams = sorted(list(set(k_gram_index_builder().get_k_grams(2, possible_word))))
-                                
-                                intersect_count = k_gram_index_builder().intersect_grams(bi_grams, possible_bi_grams)
-                                union_count = len(possible_bi_grams) + len(bi_grams) - intersect_count
-                                
-                                jac = intersect_count / union_count
-                                
-                                if(jac > j):
-                                    remaining_possible_words.append(possible_word)
-                                    print('{} x {} -> {}'.format(word, possible_word, jac))
-                            
-                            
-                            winner = min(remaining_possible_words, key=lambda candidate: lev.levenshtein_mat(word, candidate))
-                            corrected_Query += (winner + ' ')
-                            
-                        print('Meinten sie: {}?'.format(corrected_Query))
-                        
-                        
-                        # TODO
-                        # if len(query_result) < r:
-                            # Jaccard-Coefficient(X,Y) = |X n Y| / |X u Y|        # intersection / union
-                            
-                            # select from k_gram_index AND with Jac > j
-                            
-                            # use levenshtein-distance to rank the found words
-                            # print(lev.levenshtein_numpy('somewordilike', 'anotherwordilike'))
-                        
-                    
                     elapsed_time = time.time() - start_time
                     
                     if mode != IRMode.bool:
                         query_result = [res for res in query_result if res.rank > 0]
                         query_result = heapq.nlargest(num_displayed_highest_elements, query_result, key=lambda post: post.rank)
                         logging.debug('{} best results: {}'.format(num_displayed_highest_elements, query_result))
+                        
+                        if len(query_result) < r:
+                            corrected_Query = SpellFixer().fix(query, k_gram_index, j)
+                            print('Meinten sie: {}?'.format(corrected_Query))
+                        
                     
                     logging.info('{} results: {}'.format(mode, query_result))
                     print('{} results -  '.format(len(query_result)), end='')
